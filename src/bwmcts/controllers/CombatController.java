@@ -1,6 +1,7 @@
 package bwmcts.controllers;
 
 
+import bwmcts.combat.AttackClosestLogic;
 import bwmcts.combat.ICombatLogic;
 import javabot.BWAPIEventListener;
 import javabot.JNIBWAPI;
@@ -19,7 +20,7 @@ public class CombatController implements BWAPIEventListener {
 	public CombatController() {
 		bwapi = new JNIBWAPI(this);
 		
-		// combatLogic = new 
+		combatLogic = new AttackClosestLogic();
 		
 		bwapi.start();
 	} 
@@ -36,7 +37,7 @@ public class CombatController implements BWAPIEventListener {
 		
 		// set game speed to 30 (0 is the fastest. Tournament speed is 20)
 		// You can also change the game speed from within the game by "/speed X" command.
-		//bwapi.setGameSpeed(20);
+		bwapi.setGameSpeed(20);
 		
 		// analyze the map
 		bwapi.loadMapData(true);
@@ -56,21 +57,20 @@ public class CombatController implements BWAPIEventListener {
 		// ==========================================================
 	}
 	
-	// Method called once every second.
 	public void act() {
 		
 		// ============== YOUR CODE GOES HERE =======================
-
+		System.out.println("Act called");
 		int time = 20;	// 20 ms
 		combatLogic.act(bwapi, time);
-		
+		System.out.println("Act done");
 	}
 	
 	// Method called on every frame (approximately 30x every second).
 	public void gameUpdate() {
 			
 		// Draw debug information on screen
-		drawDebugInfo();
+		// drawDebugInfo();
 
 		// Call the act() method every X frames
 		int x = 1;

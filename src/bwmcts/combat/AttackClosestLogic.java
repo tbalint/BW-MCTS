@@ -1,62 +1,70 @@
 package bwmcts.combat;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import bwmcts.Util;
 import bwmcts.simulator.Position;
 import javabot.JNIBWAPI;
 import javabot.model.Unit;
+import javabot.util.BWColor;
 
 public class AttackClosestLogic implements ICombatLogic {
 
+	Map<Integer, Integer> attackingUnits = new HashMap<Integer, Integer>();
+	
 	@Override
 	public void act(JNIBWAPI bwapi, int time) {
 		
-		for(Unit unit : bwapi.getMyUnits()){
+		System.out.println("--------------- " + bwapi.getMyUnits().size() + " units.");
+	
+		List<Unit> myUnits = bwapi.getMyUnits();
+		List<Unit> enemyUnits = bwapi.getEnemyUnits();
+		
+		for(Unit unit : myUnits){
+			
+			System.out.println(bwapi.getUnitType(unit.getTypeID()).getName());
+			
+			bwapi.drawCircle(unit.getX(), unit.getY(), 6, BWColor.YELLOW, false, false);
 			
 			Position position = new Position(unit.getX(), unit.getY());
 			
 			// Find closest units enemy
 			int closestDistance = Integer.MAX_VALUE;
 			Unit closestEnemy = null;
-			for(Unit enemy : bwapi.getEnemyUnits()){
+			for(Unit enemy : enemyUnits){
 				
 				Position enemyPosition = new Position(enemy.getX(), enemy.getY());
 				
 				int distance = Util.distance(position, enemyPosition);
+				System.out.println("d = " + distance);
 				
-				if (enemy.isLifted() || bwapi.getUnitType(enemy.getID()).isFlyer()){
-					if (distance < closestDistance && bwapi.getUnitType(unit.getID()).isCanAttackAir()){
-						closestEnemy = enemy;
-						closestDistance = distance;
-					}
-				} else {
-					if (distance < closestDistance && bwapi.getUnitType(unit.getID()).isCanAttackGround()){
-						closestEnemy = enemy;
-						closestDistance = distance;
-					}
+				if (distance < closestDistance){
+					closestEnemy = enemy;
+					closestDistance = distance;
 				}
 				
 			}
 			
-			if (closestEnemy == null)
+			if (closestEnemy == null){
+				System.out.println("No enemy found");
 				continue;
+			}
 			
-			int airWeapon = bwapi.getUnitType(unit.getID()).getAirWeaponID();
-			int airRange = bwapi.getWeaponType(airWeapon).getMinRange();
-			int groundWeapon = bwapi.getUnitType(unit.getID()).getGroundWeaponID();
-			int groundRange = bwapi.getWeaponType(groundWeapon).getMinRange();
-			int range = groundRange;
+			Unit lastTarget = null;
+			if (attackingUnits.containsKey(unit.getID()))
+				lastTarget = bwapi.getUnit(attackingUnits.get(unit.getID()));
+				
+			if (lastTarget == null || closestEnemy.getID() != lastTarget.getID()){
+				bwapi.rightClick(unit.getID(), closestEnemy.getID());
+				attackingUnits.put(unit.getID(), closestEnemy.getID());
+			}
 			
-			if (closestEnemy.isLifted() || bwapi.getUnitType(closestEnemy.getID()).isFlyer())
-				range = airRange;
-			
-			if (closestDistance <= range)
-				bwapi.attack(unit.getID(), closestEnemy.getID());
-			else
-				bwapi.move(unit.getID(), closestEnemy.getX(), closestEnemy.getY());
-			
+			Unit newTarget = bwapi.getUnit(attackingUnits.get(unit.getID()));
+			bwapi.drawLine(unit.getX(), unit.getY(), newTarget.getX(), newTarget.getY(), BWColor.RED, false);
 			
 		}
-		
 	}
-
 }
