@@ -127,8 +127,5 @@ public class CombatController implements BWAPIEventListener {
 		
 	}
 	
-	private int distance(int ax, int ay, int bx, int by) {
-		return (int) Math.sqrt( (ax - bx)*(ax - bx) + (ay - by)*(ay - by) );
-	}
 	
 }
