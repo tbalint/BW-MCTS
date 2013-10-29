@@ -25,6 +25,11 @@ public class Unit {
 		this.nextMove = nextMove;
 		this.type = type;
 	}
+	
+	public Unit clone(){
+		Unit clone = new Unit(new Position(position.getX(), position.getY()), hitPoints, nextAttack, nextMove, type);
+		return clone;
+	}
 
 	public Position getPosition() {
 		return position;

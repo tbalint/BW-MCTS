@@ -2,7 +2,10 @@ package bwmcts.controllers;
 
 
 import bwmcts.combat.AttackClosestLogic;
+import bwmcts.combat.AttackValueLogic;
+import bwmcts.combat.AttackWeakestLogic;
 import bwmcts.combat.ICombatLogic;
+import bwmcts.combat.NoOverKillAttackValueLogic;
 import javabot.BWAPIEventListener;
 import javabot.JNIBWAPI;
 import javabot.model.*;
@@ -20,7 +23,9 @@ public class CombatController implements BWAPIEventListener {
 	public CombatController() {
 		bwapi = new JNIBWAPI(this);
 		
-		combatLogic = new AttackClosestLogic();
+		//combatLogic = new NoOverKillAttackValueLogic();
+		//combatLogic = new AttackValueLogic();
+		combatLogic = new NoOverKillAttackValueLogic();
 		
 		bwapi.start();
 	} 
@@ -37,7 +42,7 @@ public class CombatController implements BWAPIEventListener {
 		
 		// set game speed to 30 (0 is the fastest. Tournament speed is 20)
 		// You can also change the game speed from within the game by "/speed X" command.
-		bwapi.setGameSpeed(20);
+		bwapi.setGameSpeed(30);
 		
 		// analyze the map
 		bwapi.loadMapData(true);
@@ -48,11 +53,6 @@ public class CombatController implements BWAPIEventListener {
 		// initialize some data structures (or do something similar) 
 		// if needed. For example, you should maintain a memory of seen 
 		// enemy buildings.
-		
-		bwapi.printText("Hello world!");
-		bwapi.printText("This map is called "+bwapi.getMap().getName());
-		bwapi.printText("My race ID: "+String.valueOf(bwapi.getSelf().getRaceID()));				// Z=0,T=1,P=2
-		bwapi.printText("Enemy race ID: "+String.valueOf(bwapi.getEnemies().get(0).getRaceID()));	// Z=0,T=1,P=2
 		
 		// ==========================================================
 	}

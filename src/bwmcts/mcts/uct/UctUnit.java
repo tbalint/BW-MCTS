@@ -1,4 +1,4 @@
-package bwmcts.mcts;
+package bwmcts.mcts.uct;
 
 public class UctUnit {
 
