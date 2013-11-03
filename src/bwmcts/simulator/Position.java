@@ -51,5 +51,49 @@ public class Position {
 			return false;
 		return true;
 	}
+
+	public int getDistanceSq(Position p) {
+		return (x-p.getX())*(x-p.getX()) + (y-p.getY())*(y-p.getY());
+	}
+
+	public void subtractPosition(Position pos) {
+		x -= pos.getX();
+		y -= pos.getY();
+	}
+
+	public void scalePosition(float f) {
+		x = (int)(f * x);
+        y = (int)(f * y);
+		
+	}
+
+	public void addPosition(Position pos) {
+		x += pos.getX();
+		y += pos.getY();
+	}
+
+	public void moveTo(Position pos) {
+		x=pos.getX();
+		y=pos.getY();
+		
+	}
+
+	public int getDistance(Position pos) {
+		int dX = x - pos.getX();
+        int dY = y - pos.getY();
+
+        if (dX == 0)
+        {
+            return Math.abs(dY);
+        }
+        else if (dY == 0)
+        {
+            return Math.abs(dX);
+        }
+        else
+        {
+            return (int)Math.sqrt((double)(dX*dX - dY*dY));
+        }
+	}
 	
 }
