@@ -264,8 +264,10 @@ public class GameState {
 				//TODO Sort units
 	            //sort(_unitIndex[p][0], _unitIndex[p][0] + _prevNumUnits[p], UnitIndexCompare(*this, p));
 				
-				Arrays.sort(_unitIndex[p]);
 				
+				Arrays.sort(_units[p],0,_prevNumUnits[p]);
+
+				//System.out.println(_unitIndex[p].length);
 				_prevNumUnits[p]= _numUnits[p];
 			}
 		}	
@@ -563,7 +565,7 @@ public class GameState {
 					if (enemyUnit!=null)
 						if (unit.canAttackTarget(enemyUnit, _currentTime) && enemyUnit.isAlive())
 						{
-							actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.ATTACK, u));
+							actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.ATTACK, u, enemyUnit.pos()));
 		                    //moves.add(UnitAction(unitIndex, playerIndex, UnitActionTypes::ATTACK, unit.ID()));
 						}
 				}
@@ -582,7 +584,7 @@ public class GameState {
 					if (ourUnit!=null)
 						if (unit.canHealTarget(ourUnit, _currentTime) && ourUnit.isAlive())
 						{
-							actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.HEAL, u));
+							actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.HEAL, u,unit.pos()));
 		                    //moves.add(UnitAction(unitIndex, playerIndex, UnitActionTypes::HEAL, unit.ID()));
 						}
 				}
@@ -592,7 +594,7 @@ public class GameState {
 			{
 				if (!unit.canHeal())
 				{
-					actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.RELOAD, 0));
+					actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.RELOAD, 0,unit.pos()));
 				}
 			}
 			
@@ -646,7 +648,7 @@ public class GameState {
 			// if no moves were generated for this unit, it must be issued a 'PASS' move
 			if (actionTemp.isEmpty())
 			{
-				actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.PASS, 0));
+				actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.PASS, 0,unit.pos()));
 			}
 			moves.put(unitIndex, actionTemp);
 		}
@@ -739,6 +741,10 @@ public class GameState {
 		// if there is no map, then return true
 		return true;
 	}            
+	
+	public Unit[][] getAllUnit(){
+		return _units;
+	}
 
 	    // hashing functions
 	public int calculateHash(int hashNum) {return 0;}

@@ -71,4 +71,9 @@ public class UnitAction {
 
 	
 	public UnitActionTypes type(){return _moveType;}
+	
+	public String toString(){
+		return this._moveIndex+","+this._player+","+this._unit+","+this.moveString()+","+this.pos();
+		
+	}
 }

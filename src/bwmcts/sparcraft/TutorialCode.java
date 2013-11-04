@@ -29,7 +29,7 @@ public class TutorialCode implements BWAPIEventListener  {
 	    int player = Players.Player_One.ordinal();
 
 	    // A Position, measured in Pixel coordinates
-	    Position p =new Position(0,0);
+	    Position p =new Position(5,5);
 
 	    // Simple unit constructor
 	    Unit marineAtOrigin= new Unit(marine, player, p);
@@ -42,6 +42,7 @@ public class TutorialCode implements BWAPIEventListener  {
 	    // GameState only has a default constructor, you must add units to it manually
 	    GameState state=new GameState();
 	    state._maxUnits=50;
+	    state.setMap(new Map(50, 50));
 	    // The recommended way of adding a unit to a state is to just construct a unit and add it with:
 	    try {
 	    state.addUnit(getSampleUnit());
@@ -51,7 +52,10 @@ public class TutorialCode implements BWAPIEventListener  {
 	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(),new Position(10,10));
 	    } catch (Exception e){}
 	    try {
-	    state.addUnit(bwapi.getUnitType(UnitTypes.Protoss_Dragoon.ordinal()), Players.Player_Two.ordinal(), new Position(40,40));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,300));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(305,305));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(315,315));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(310,310));
 	    } catch (Exception e){}
 	    // Units added with those 2 functions will be given a unique unitID inside GameState
 	    // If you require setting your own unique unitID for a unit, for example when translating a BWAPI::Broodwar state to GameState
@@ -81,7 +85,7 @@ public class TutorialCode implements BWAPIEventListener  {
 	    // Example: A Map of size 32*32 BuildTiles has size 128*128 WalkTiles or 1024*1024 pixels
 	    
 	    // The Map object constructor takes in size coordinates in BWAPI BuildTile resolution    
-	    Map smallMap=new Map(32, 32);
+	    Map smallMap=new Map(100, 100);
 
 	    // We can set the walkable values of WalkTile resolution via
 	    // void setMapData(const size_t & buildTileX, const size_t & buildTileY, const bool val)
@@ -162,7 +166,7 @@ public class TutorialCode implements BWAPIEventListener  {
 	    int moveLimit = 1000;
 
 	    // contruct the game
-	    Game g=new Game(initialState, p1, p2, moveLimit);
+	    Game g=new Game(initialState, p1, p2, moveLimit,true);
 
 	    // play the game
 	    g.play();

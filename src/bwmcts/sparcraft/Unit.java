@@ -42,6 +42,7 @@ public class Unit implements Comparable<Unit> {
 	    _prevCurrentPosTime   =0;
 	    _position=pos;
 	    _prevCurrentPos=pos;
+	    _previousPosition=pos;
 		
 	}
 	//Unit(BWAPI::Unit * unit, BWAPI::Game * game, const IDType & playerID, const TimeType & gameTime);
@@ -64,6 +65,7 @@ public class Unit implements Comparable<Unit> {
 	    _previousActionTime   =0;
 	    _prevCurrentPosTime   =0;
 	    _prevCurrentPos=pos;
+	    _previousPosition=pos;
     }
 
 	
@@ -101,7 +103,6 @@ public class Unit implements Comparable<Unit> {
 	        updateMoveActionTime      (gameTime + attackInitFrameTime() + 2);
 	        updateAttackActionTime    (gameTime + attackCooldown());
 	    }
-
 	    setPreviousAction(move, gameTime);
 	}
 	public void heal(UnitAction move, Unit target, int gameTime){
@@ -138,7 +139,7 @@ public class Unit implements Comparable<Unit> {
 		    // update the position
 		    //_position.addPosition(dist * dir.x(), dist * dir.y());
 		    _position.moveTo(move.pos());
-
+		    
 		    setPreviousAction(move, gameTime);
 	}
 	public void waitUntilAttack(UnitAction move, int gameTime){
@@ -280,11 +281,11 @@ public class Unit implements Comparable<Unit> {
                 _prevCurrentPosTime = gameTime;
 
                 // calculate the new current position
-                _prevCurrentPos = _position;
+                _prevCurrentPos = new Position(_position.getX(),_position.getY());
                 _prevCurrentPos.subtractPosition(_previousPosition);
                 _prevCurrentPos.scalePosition(moveTimeRatio);
                 _prevCurrentPos.addPosition(_previousPosition);
-
+               
                 //_prevCurrentPos = _previousPosition + (_position - _previousPosition).scale(moveTimeRatio);
                 return _prevCurrentPos;
             }
@@ -408,20 +409,24 @@ public class Unit implements Comparable<Unit> {
 		// TODO Auto-generated method stub
 		if (!isAlive())
 	    {
-	        return -1;
+			return 1;
+	        //return -1;
 	    }
 	    else if (!u.isAlive())
 	    {
-	        return 1;
+	    	return -1;
+	        //return 1;
 	    }
 
 	    if (firstTimeFree() == u.firstTimeFree())
 	    {
-	        return getId() < u.getId()? 1:-1;
+	    	return getId() >= u.getId()? 1:-1;
+	        //return getId() < u.getId()? 1:-1;
 	    }
 	    else
 	    {
-	        return firstTimeFree() < u.firstTimeFree()? 1:-1;
+	    	return firstTimeFree() >= u.firstTimeFree()? 1:-1;
+	        //return firstTimeFree() < u.firstTimeFree()? 1:-1;
 	    }
 		
 	}
