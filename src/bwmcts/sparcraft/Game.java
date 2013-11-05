@@ -18,7 +18,6 @@ public class Game {
 	private GameState state;
 	
 	private Player[]	_players=new Player[2];
-	private int	_numPlayers;
 	int	_playerToMoveMethod;
 	private int				rounds;
 	private Timer				t=new Timer();
@@ -27,17 +26,9 @@ public class Game {
 	
 	private boolean display=false;
 	private SparcraftUI ui;
-	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-
-	
+		
 	public Game(GameState initialState){
-		
-		
-		
+
 	}
 	
 	
@@ -61,7 +52,7 @@ public class Game {
 	        
 	        // Setup of the frame containing the game
 	        JFrame f = new JFrame();
-	        f.setSize(1000,800);
+	        f.setSize(1000,700);
 	        f.setTitle("Sparcraft in JAVA");
 	        f.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
 	        f.getContentPane().add(ui);    
@@ -159,69 +150,7 @@ public class Game {
 	    gameTimeMS = t.getElapsedTimeInMilliSec();
 	}
 
-// play the game until there is a winner
-/*	public void playIndividualScripts(UnitScriptData scriptData){
-	    // array which will hold all the script moves for players
-	    Array2D<std::vector<UnitAction>, Constants::Num_Players, PlayerModels::Size> allScriptMoves;
-	
-	    scriptMoves[Players::Player_One] = std::vector<UnitAction>(state.numUnits(Players::Player_One));
-	    scriptMoves[Players::Player_Two] = std::vector<UnitAction>(state.numUnits(Players::Player_Two));
 
-	    t.start();
-	
-	    // play until there is no winner
-	    while (!gameOver())
-	    {
-	        if (moveLimit && rounds > moveLimit)
-	        {
-	            break;
-	        }
-	
-	        Timer frameTimer;
-	        frameTimer.start();
-	
-	        // clear all script moves for both players
-	        for (IDType p(0); p<Constants::Num_Players; p++)
-	        {
-	            for (IDType s(0); s<PlayerModels::Size; ++s)
-	            {
-	                allScriptMoves[p][s].clear();
-	            }
-	        }
-	
-	        // clear the moves we will actually be doing
-	        scriptMoves[0].clear();
-	        scriptMoves[1].clear();
-	
-	        // the playr that will move next
-	        int playerToMove=getPlayerToMove();
-	        int enemyPlayer=state.getEnemy(playerToMove);
-	
-	        // generate the moves possible from this state
-	        state.generateMoves(moves[playerToMove], playerToMove);
-	
-	        // calculate the moves the unit would do given its script preferences
-	        scriptData.calculateMoves(playerToMove, moves[playerToMove], state, scriptMoves[playerToMove]);
-	
-	        // if both players can move, generate the other player's moves
-	        if (state.bothCanMove())
-	        {
-	            state.generateMoves(moves[enemyPlayer], enemyPlayer);
-	
-	            scriptData.calculateMoves(enemyPlayer, moves[enemyPlayer], state, scriptMoves[enemyPlayer]);
-	
-	            state.makeMoves(scriptMoves[enemyPlayer]);
-	        }
-	
-	        // make the moves
-	        state.makeMoves(scriptMoves[playerToMove]);
-	        state.finishedMoving();
-	        rounds++;
-	    }
-	
-	    gameTimeMS = t.getElapsedTimeInMilliSec();
-	}
-*/
 	 public int getRounds(){
 	    return this.rounds;
 	 }

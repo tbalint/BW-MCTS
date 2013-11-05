@@ -9,13 +9,13 @@ import java.util.HashMap;
 
 public class SparcraftUI extends JComponent {
 	
-	int offSetX=30;
-	int offSetY=30;
+	int offSetX=250;
+	int offSetY=10;
 	
 	
 	HashMap<String,Image> images=new HashMap<String,Image>();
 	Image background;
-	String dirPath="c:\\itu\\Sparcraft\\starcraft_images\\";
+	String dirPath="img\\";
 	//Image Terran_Marine;
 	/**
 	 * 
@@ -48,6 +48,7 @@ public class SparcraftUI extends JComponent {
 		}
 		
 		g.setColor(Color.blue);
+		int k=0;
 		for (Unit a : _state.getAllUnit()[0]){
 			if (a!=null && a.isAlive()){
 				Image i=images.get(a.type().getName().replaceAll(" ", "_"));
@@ -59,7 +60,7 @@ public class SparcraftUI extends JComponent {
 				if (a._previousAction!=null && a._previousAction._moveType==UnitActionTypes.ATTACK){
 					g.drawLine(a.pos().getX()-2+offSetX, a.pos().getY()-2+offSetY, a._previousAction.pos().getX()-2+offSetX, a._previousAction.pos().getY()-2+offSetY);
 				}
-					
+				drawUnitInformation(g,a,++k);
 			}
 			
 		}
@@ -75,11 +76,17 @@ public class SparcraftUI extends JComponent {
 				if (a._previousAction!=null && a._previousAction._moveType==UnitActionTypes.ATTACK){
 					g.drawLine(a.pos().getX()-2+offSetX, a.pos().getY()-2+offSetY, a._previousAction.pos().getX()-2+offSetX, a._previousAction.pos().getY()-2+offSetY);
 				}
+				drawUnitInformation(g,a,++k);
+				
 			}
 			
 		} 
 	}
 	
+	private void drawUnitInformation(Graphics g, Unit u, int i) {
+		g.drawString(u.getId()+":"+u.name()+" HP:"+u.currentHP()+" A:"+u.getArmor()+" D:"+u.damageGround()+"/"+u.damageAir(), 3, i*20);
+	}
+
 	public void setGameState(GameState state){
 		_state=state;
 	}

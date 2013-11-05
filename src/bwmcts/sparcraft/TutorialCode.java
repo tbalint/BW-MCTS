@@ -44,7 +44,7 @@ public class TutorialCode implements BWAPIEventListener  {
 	    // GameState only has a default constructor, you must add units to it manually
 	    GameState state=new GameState();
 	    state._maxUnits=50;
-	    state.setMap(new Map(50, 50));
+	    state.setMap(new Map(40, 40));
 	    // The recommended way of adding a unit to a state is to just construct a unit and add it with:
 	    try {
 	    state.addUnit(getSampleUnit());
@@ -57,7 +57,8 @@ public class TutorialCode implements BWAPIEventListener  {
 	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,300));
 	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(305,305));
 	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Ghost.ordinal()), Players.Player_Two.ordinal(), new Position(315,315));
-	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(310,310));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Goliath.ordinal()), Players.Player_Two.ordinal(), new Position(310,310));
+	    
 	    } catch (Exception e){}
 	    // Units added with those 2 functions will be given a unique unitID inside GameState
 	    // If you require setting your own unique unitID for a unit, for example when translating a BWAPI::Broodwar state to GameState
@@ -162,8 +163,8 @@ public class TutorialCode implements BWAPIEventListener  {
 
 	    // get the players
 	    Player p1 = getSamplePlayer(Players.Player_One.ordinal());
-	    //Player p2 = getSamplePlayer(Players.Player_Two.ordinal());
-	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1));
+	    Player p2 = getSamplePlayer(Players.Player_Two.ordinal());
+	    //Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1));
 	    p2.setID(1);
 	    
 	    // enter a maximum move limit for the game to go on for

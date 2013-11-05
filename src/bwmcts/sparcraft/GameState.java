@@ -2,7 +2,6 @@ package bwmcts.sparcraft;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,13 +12,12 @@ import javabot.types.UnitType;
 
 public class GameState {
 
-	 Map   _map;               
-
-	 //Array2D<Unit, Constants::Num_Players, Constants::Max_Units>     _units;             
+	 private Map   _map;               
+            
 	 Unit[][] _units=new Unit[Constants.Num_Players][Constants.Max_Moves];
-	 //Array2D<int, Constants::Num_Players, Constants::Max_Units>      _unitIndex;        
+	      
 	 int[][] _unitIndex=new int[Constants.Num_Players][Constants.Max_Moves];
-	 List<Unit>                                                  _neutralUnits;
+	 List<Unit> _neutralUnits;
 
 	 int[]  _numUnits=new int[Constants.Num_Players];
 	 int[]  _prevNumUnits=new int[Constants.Num_Players];
@@ -27,12 +25,12 @@ public class GameState {
 	 float[]  _totalLTD=new float[Constants.Num_Players];
 	 float[] _totalSumSQRT=new float[Constants.Num_Players];
 
-	 int[]                   _numMovements=new int[Constants.Num_Players];
-	 int[]  _prevHPSum=new int[Constants.Num_Players];
+	 int[] _numMovements=new int[Constants.Num_Players];
+	 int[] _prevHPSum=new int[Constants.Num_Players];
 		
-	    int                                                        _currentTime;
-	    int                                                          _maxUnits;
-	    int                                                        _sameHPFrames;
+    int  _currentTime;
+    int _maxUnits;
+    int _sameHPFrames;
 
 	    // checks to see if the unit array is full before adding a unit to the state
 	    private boolean   checkFull(int player){return true;}
@@ -100,7 +98,6 @@ public class GameState {
 	public GameState(){
 		_map=null;
 		_currentTime=0;
-		//TODO MAX unit?
 		_maxUnits=Constants.Max_Moves;
 	    _sameHPFrames=0;
 	    for (int u=0; u<_maxUnits; u++)
@@ -115,6 +112,54 @@ public class GameState {
 	public GameState(JNIBWAPI bwapi) {
 	
 		// TODO Auto-generated constructor stub
+		
+		
+		//Update PlayerProperties
+		PlayerProperties.props[0]=new PlayerProperties(bwapi.getPlayer(0));
+		PlayerProperties.props[1]=new PlayerProperties(bwapi.getPlayer(1));
+		
+		//bwapi.getFrameCount();
+		//bwapi.getRemainingLatencyFrames();
+		
+		
+		_units=new Unit[Constants.Num_Players][Constants.Max_Moves];
+		int i=0;
+		for (javabot.model.Unit u: bwapi.getMyUnits()){
+			_units[bwapi.getSelf().getID()][i]=Unit.translateUnit(u);
+			i++;
+		}
+		i=0;
+		for (javabot.model.Unit u: bwapi.getEnemyUnits()){
+			_units[bwapi.getEnemies().get(0).getID()][i]=Unit.translateUnit(u);
+			i++;
+		}
+		
+		_maxUnits=Constants.Max_Moves; 
+		 _unitIndex=new int[Constants.Num_Players][Constants.Max_Moves];
+		 //TODO check!!!!
+		 for (int u=0; u<_maxUnits; u++)
+			{
+		        _unitIndex[0][u] = u;
+				_unitIndex[1][u] = u;
+			}
+		 _neutralUnits=new ArrayList<Unit>();
+
+		 _numUnits=new int[]{};
+		 _prevNumUnits=new int[]{};
+
+		 _totalLTD=new float[Constants.Num_Players];
+		 _totalSumSQRT=new float[Constants.Num_Players];
+
+		 _numMovements=new int[]{0,0};
+		 _prevHPSum=new int[]{0,0};//TODO
+			
+	    _currentTime=bwapi.getFrameCount();
+	    
+	    _sameHPFrames=0;
+		
+		
+		this._map=Map.translateMap(bwapi.getMap());
+		
 	}
 	
 	// misc functions

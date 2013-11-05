@@ -316,6 +316,17 @@ public class Unit implements Comparable<Unit> {
 			        2 * (int)WeaponProperties.Get(_unitType.getGroundWeaponID()).type.getDamageAmount() : 
 			    (int)WeaponProperties.Get(_unitType.getGroundWeaponID()).type.getDamageAmount(); 
 	}
+	
+	public int damageGround()  {
+		 return _unitType.getID() == UnitTypes.Protoss_Zealot.ordinal() ? 
+			        2 * (int)WeaponProperties.Get(_unitType.getGroundWeaponID()).type.getDamageAmount() : 
+			    (int)WeaponProperties.Get(_unitType.getGroundWeaponID()).type.getDamageAmount(); 
+	}
+	
+	public int damageAir(){
+		return WeaponProperties.Get(_unitType.getAirWeaponID()).type.getDamageAmount();
+	}
+	
 	public int healAmount() {
 		 return canHeal() ? 6 : 0;
 	}
@@ -350,7 +361,6 @@ public class Unit implements Comparable<Unit> {
 	public WeaponType getWeapon(UnitType target) {
 		return target.isFlyer() ? WeaponProperties.Get(_unitType.getAirWeaponID()).type : WeaponProperties.Get(_unitType.getGroundWeaponID()).type;
 	}
-	public int getDamageTo(Unit unit){return 0;}
 	public PlayerWeapon getWeapon(Unit target){
 		 return new PlayerWeapon(PlayerProperties.Get(player()), target.type().isFlyer() ? WeaponProperties.Get(_unitType.getAirWeaponID()).type : WeaponProperties.Get(_unitType.getGroundWeaponID()).type);
 	}
@@ -460,6 +470,10 @@ public class Unit implements Comparable<Unit> {
 	    if (this._prevCurrentPos!=null)
 	    	u._prevCurrentPos=new Position(this._prevCurrentPos.getX(),this._prevCurrentPos.getY());
 		return u;
+	}
+	
+	public static Unit translateUnit(javabot.model.Unit u){
+		return new Unit();
 	}
 	
 	// hash functions
