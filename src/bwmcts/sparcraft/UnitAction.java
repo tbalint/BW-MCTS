@@ -1,6 +1,5 @@
 package bwmcts.sparcraft;
 
-import bwmcts.simulator.Position;
 
 public class UnitAction {
 

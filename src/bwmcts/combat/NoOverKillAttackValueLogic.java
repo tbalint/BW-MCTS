@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import bwmcts.Util;
-import bwmcts.simulator.Position;
+import bwmcts.sparcraft.Position;
 import javabot.JNIBWAPI;
 import javabot.model.Unit;
 import javabot.types.DamageType;

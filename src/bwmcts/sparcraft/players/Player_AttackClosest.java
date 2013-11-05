@@ -3,9 +3,9 @@ package bwmcts.sparcraft.players;
 import java.util.HashMap;
 import java.util.List;
 
-import bwmcts.simulator.Position;
 import bwmcts.sparcraft.Constants;
 import bwmcts.sparcraft.GameState;
+import bwmcts.sparcraft.Position;
 import bwmcts.sparcraft.Unit;
 import bwmcts.sparcraft.UnitAction;
 import bwmcts.sparcraft.UnitActionTypes;

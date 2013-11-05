@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import bwmcts.Util;
-import bwmcts.simulator.Position;
+import bwmcts.sparcraft.Position;
 import javabot.JNIBWAPI;
 import javabot.model.Unit;
 import javabot.util.BWColor;

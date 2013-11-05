@@ -1,4 +1,4 @@
-package bwmcts.simulator;
+package bwmcts.sparcraft;
 
 public class Position {
 

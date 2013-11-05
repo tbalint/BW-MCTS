@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import javabot.JNIBWAPI;
 import javabot.types.UnitType;
 
-import bwmcts.simulator.Position;
 
 
 public class GameState {
@@ -112,7 +112,12 @@ public class GameState {
 	
 	public GameState(String filename){}
 
-		// misc functions
+	public GameState(JNIBWAPI bwapi) {
+	
+		// TODO Auto-generated constructor stub
+	}
+	
+	// misc functions
 	public void finishedMoving(){
 		sortUnits();
 
@@ -769,5 +774,11 @@ public class GameState {
 	}
 	public void write(String filename){}
 	public void read(String filename){}
+	
+	public GameState clone(){
+		return null;
+		
+		// TODO:
+	}
 
 }

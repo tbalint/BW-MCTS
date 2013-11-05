@@ -1,6 +1,6 @@
 package bwmcts;
 
-import bwmcts.simulator.Position;
+import bwmcts.sparcraft.Position;
 
 public class Util {
 	

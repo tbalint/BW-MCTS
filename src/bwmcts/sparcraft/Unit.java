@@ -4,7 +4,6 @@ import javabot.types.UnitSizeType;
 import javabot.types.UnitType;
 import javabot.types.UnitType.UnitTypes;
 import javabot.types.WeaponType;
-import bwmcts.simulator.Position;
 
 public class Unit implements Comparable<Unit> {
     UnitType     _unitType;				// the BWAPI unit type that we are mimicing

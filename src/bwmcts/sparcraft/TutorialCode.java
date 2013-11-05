@@ -8,7 +8,8 @@ import javabot.BWAPIEventListener;
 import javabot.JNIBWAPI;
 import javabot.types.UnitType;
 import javabot.types.UnitType.UnitTypes;
-import bwmcts.simulator.Position;
+import bwmcts.combat.UctcdLogic;
+import bwmcts.mcts.uctcd.UCTCD;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_AttackClosest;
 
@@ -54,14 +55,14 @@ public class TutorialCode implements BWAPIEventListener  {
 	    try {
 	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,300));
 	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(305,305));
-	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(315,315));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Ghost.ordinal()), Players.Player_Two.ordinal(), new Position(315,315));
 	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(310,310));
 	    } catch (Exception e){}
 	    // Units added with those 2 functions will be given a unique unitID inside GameState
 	    // If you require setting your own unique unitID for a unit, for example when translating a BWAPI::Broodwar state to GameState
 
 	    // Construct the unit
-	    Unit u=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(0,0));
+	    Unit u=new Unit(bwapi.getUnitType(UnitTypes.Terran_Battlecruiser.ordinal()), Players.Player_One.ordinal(), new Position(0,0));
 
 	    // Set the unitID
 	    u.setUnitID(5);
@@ -160,8 +161,9 @@ public class TutorialCode implements BWAPIEventListener  {
 
 	    // get the players
 	    Player p1 = getSamplePlayer(Players.Player_One.ordinal());
-	    Player p2 = getSamplePlayer(Players.Player_Two.ordinal());
-
+	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1));
+	    p2.setID(1);
+	    
 	    // enter a maximum move limit for the game to go on for
 	    int moveLimit = 1000;
 

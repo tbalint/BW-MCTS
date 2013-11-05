@@ -1,7 +1,6 @@
 package bwmcts.sparcraft;
 
 import javabot.JNIBWAPI;
-import bwmcts.simulator.Position;
 
 public class Map {
 	

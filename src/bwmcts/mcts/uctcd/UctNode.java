@@ -3,7 +3,7 @@ package bwmcts.mcts.uctcd;
 import java.util.ArrayList;
 import java.util.List;
 
-import bwmcts.simulator.Move;
+import bwmcts.sparcraft.UnitAction;
 
 public class UctNode {
 
@@ -11,14 +11,14 @@ public class UctNode {
 	float totalScore;
 	float uctValue;
 	
-	Move move;
+	List<UnitAction> move;
 	int movingPlayerIndex;
 	NodeType type;
 	
 	List<UctNode> children;
 	UctNode parent;
 	
-	public UctNode(UctNode parent, NodeType type, Move move, int movingPlayerIndex) {
+	public UctNode(UctNode parent, NodeType type, List<UnitAction> move, int movingPlayerIndex) {
 		
 		this.visits = 0;
 		this.totalScore = 0;
@@ -40,11 +40,11 @@ public class UctNode {
 		return mostVisited;
 	}
 	
-	public Move getMove() {
+	public List<UnitAction> getMove() {
 		return move;
 	}
 
-	public void setMove(Move move) {
+	public void setMove(List<UnitAction> move) {
 		this.move = move;
 	}
 

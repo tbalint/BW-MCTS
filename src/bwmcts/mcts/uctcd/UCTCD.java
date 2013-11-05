@@ -4,10 +4,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
-import bwmcts.simulator.GameState;
-import bwmcts.simulator.Move;
+import bwmcts.sparcraft.Game;
+import bwmcts.sparcraft.GameState;
+import bwmcts.sparcraft.Players;
+import bwmcts.sparcraft.UnitAction;
+import bwmcts.sparcraft.players.Player;
+import bwmcts.sparcraft.players.Player_AttackClosest;
 
 public class UCTCD {
 
@@ -19,7 +27,7 @@ public class UCTCD {
 	public static void main(String[] args) {
 		
 		UCTCD uctcd = new UCTCD();
-		GameState state = new GameState(0);
+		GameState state = new GameState();
 		uctcd.search(state, 40L);
 		
 	}
@@ -37,15 +45,18 @@ public class UCTCD {
 		this.maxPlayerIndex = maxPlayerIndex;
 	}
 
-	public Move search(GameState state, long timeBudget){
+	public List<UnitAction> search(GameState state, long timeBudget){
 		
 		Date start = new Date();
 		
-		UctNode root = new UctNode(null, NodeType.ROOT, new Move(), maxPlayerIndex);
+		UctNode root = new UctNode(null, NodeType.ROOT, new ArrayList<UnitAction>(), maxPlayerIndex);
+		root.setVisits(1);
 		
+		int t = 0;
 		while(new Date().getTime() <= start.getTime() + timeBudget){
 			
 			traverse(root, state.clone());
+			System.out.println("Traversal " + (t++));
 			
 		}
 		
@@ -86,11 +97,11 @@ public class UCTCD {
 		float score = 0;
 		if (node.getVisits() == 0){
 			updateState(node, state, true);
-			score = state.evaluate();
+			score = evaluate(state);
 		} else {
 			updateState(node, state, true);
 			if (state.isTerminal()){
-				score = state.evaluate();
+				score = evaluate(state);
 			} else {
 				if (node.getChildren().isEmpty())
 					generateChildren(node, state);
@@ -102,18 +113,48 @@ public class UCTCD {
 		return score;
 	}
 
+	private float evaluate(GameState state) {
+		
+		// get the players
+	    Player p1 = new Player_AttackClosest(Players.Player_One.ordinal());
+	    Player p2 = new Player_AttackClosest(Players.Player_Two.ordinal());
+
+	    // enter a maximum move limit for the game to go on for
+	    int moveLimit = 1000;
+
+	    // contruct the game
+	    Game g=new Game(state, p1, p2, moveLimit,false);
+
+	    // play the game
+	    g.play();
+
+	    // you can access the resulting game state after g has been played via getState
+	    GameState finalState = g.getState();
+	    System.out.println(finalState.playerDead(0) + "  "+finalState.playerDead(1));
+	    // you can now evaluate the state however you wish. let's use an LTD2 evaluation from the point of view of player one
+	    int score = finalState.eval(Players.Player_One.ordinal(), 0,0,0);
+		
+		return score;
+	}
+
 	private void generateChildren(UctNode node, GameState state) {
 		
 		// Figure out who is next to move
 		int playerToMove = getPlayerToMove(node, state);
 		
-		// Generate possible moves?
-		// state.getPossibleMoves();...
+		HashMap<Integer, List<UnitAction>> map = new HashMap<Integer, List<UnitAction>>();
 		
+		// Generate possible moves?
+		try {
+			state.generateMoves(map, node.movingPlayerIndex);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		int children = 0;
 		while(children < maxChildren ){
 			
-			Move move = getNextMove(playerToMove, state); // Possible moves?
+			List<UnitAction> move = getNextMove(playerToMove, state, map); // Possible moves?
 			if (move == null)
 				break;
 			
@@ -140,7 +181,12 @@ public class UCTCD {
 			
 		}
 		
-		return state.whoCanMove();
+		if (state.whoCanMove() == Players.Player_One)
+			return 0;
+		else if (state.whoCanMove() == Players.Player_Two)
+			return 1;
+		
+		return -1;
 		
 	}
 
@@ -174,9 +220,19 @@ public class UCTCD {
 		return null;
 	}
 
-	private Move getNextMove(int playerToMove, GameState state) {
+	private List<UnitAction> getNextMove(int playerToMove, GameState state, HashMap<Integer, List<UnitAction>> map) {
 		
-		return new Move();
+		ArrayList<UnitAction> move = new ArrayList<UnitAction>();
+		
+		Random r = new Random();
+		for(Integer i : map.keySet()){
+			
+			// Add random possible action
+			move.add(map.get(i).get(r.nextInt(map.get(i).size())));
+			
+		}
+		
+		return move;
 		
 	}
 
@@ -186,13 +242,23 @@ public class UCTCD {
 			
 			if (node.getType() == NodeType.SECOND){
 				
-				if (node.getParent() != null)
-					state.applyMoves(node.getParent().getMove());
-								
+				if (node.getParent() != null){
+					try {
+						state.makeMoves(node.getParent().getMove());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
 			
-			state.applyMoves(node.getMove());
-			state.makeMove();
+			try {
+				state.makeMoves(node.getMove());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			state.finishedMoving();
 			
 		}
 		

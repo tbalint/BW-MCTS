@@ -8,7 +8,6 @@ import javabot.JNIBWAPI;
 import javabot.types.UnitType;
 import javabot.types.UnitType.UnitTypes;
 
-import bwmcts.simulator.Position;
 import bwmcts.sparcraft.players.Player;
 
 public class SearchExperiment {
