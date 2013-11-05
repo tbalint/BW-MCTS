@@ -75,4 +75,18 @@ public class UnitAction {
 		return this._moveIndex+","+this._player+","+this._unit+","+this.moveString()+","+this.pos();
 		
 	}
+	
+	public UnitAction clone(){
+		UnitAction a=new UnitAction();
+		
+		a._unit=this._unit;
+		a._player=this._player;
+		a._moveIndex=this._moveIndex;
+		a._moveType=this._moveType;
+		if (this._p!=null)
+			a._p=new Position(this._p.x,this._p.y);
+	
+		return a;
+		
+	}
 }

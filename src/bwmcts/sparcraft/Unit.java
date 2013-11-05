@@ -70,7 +70,10 @@ public class Unit implements Comparable<Unit> {
 	
 	
 
-    // action functions
+    public Unit() {
+		// TODO Auto-generated constructor stub
+	}
+	// action functions
 	public void setPreviousAction(UnitAction m, int previousMoveTime){
 		 _previousAction = m;
 		 _previousActionTime = previousMoveTime; 
@@ -430,6 +433,35 @@ public class Unit implements Comparable<Unit> {
 		
 	}
     
+	public Unit clone(){
+		Unit u=new Unit();
+		u._unitType=this._unitType;				// the BWAPI unit type that we are mimicing
+	    u._range=this._range;
+		
+	    if (this._position!=null)
+	    	u._position=new Position(this._position.getX(),this._position.getY());				// current location in a possibly infinite space
+		
+		u._unitID=this._unitID;				// unique unit ID to the state it's contained in
+	    u._playerID=this._playerID;				// the player who controls the unit
+		
+		u._currentHP=this._currentHP;				// current HP of the unit
+		u._currentEnergy=this._currentEnergy;
+
+		u._timeCanMove=this._timeCanMove;			// time the unit can next move
+		u._timeCanAttack=this._timeCanAttack;			// time the unit can next attack
+
+		if (this._previousAction!=null)
+			u._previousAction=this._previousAction.clone();;		// the previous move that the unit performed
+		u._previousActionTime=this._previousActionTime;	// the time the previous move was performed
+		if (this._previousPosition!=null)
+			u._previousPosition=new Position(this._previousPosition.getX(),this._previousPosition.getY());
+
+	    u._prevCurrentPosTime=this._prevCurrentPosTime;
+	    if (this._prevCurrentPos!=null)
+	    	u._prevCurrentPos=new Position(this._prevCurrentPos.getX(),this._prevCurrentPos.getY());
+		return u;
+	}
+	
 	// hash functions
 	//const HashType          calculateHash(const size_t & hashNum, const TimeType & gameTime) const;
 	//void                    debugHash(const size_t & hashNum, const TimeType & gameTime) const;
