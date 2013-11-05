@@ -776,8 +776,48 @@ public class GameState {
 	public void read(String filename){}
 	
 	public GameState clone(){
-		return null;
+		GameState s=new GameState();
+		 s._map=this._map.clone();               
+          
+		 s._units=new Unit[Constants.Num_Players][Constants.Max_Moves];
+        
+		 s._unitIndex=new int[Constants.Num_Players][Constants.Max_Moves];
+		 s._neutralUnits=new ArrayList<Unit>();
+
+		 s._numUnits=new int[Constants.Num_Players];
+		 s._prevNumUnits=new int[Constants.Num_Players];
+
+		 s._totalLTD=new float[Constants.Num_Players];
+		 s._totalSumSQRT=new float[Constants.Num_Players];
+
+		 s._numMovements=new int[Constants.Num_Players];
+		 s._prevHPSum=new int[Constants.Num_Players];
+			
+		 s._currentTime=this._currentTime;
+		 s._maxUnits=this._maxUnits;
+		 s._sameHPFrames=this._sameHPFrames;
+
+		for (int i=0; i<Constants.Num_Players;i++){
+			for (int j=0; j<Constants.Max_Moves;j++){
+				if (this._units[i][j]!=null)
+					s._units[i][j]=this._units[i][j].clone();
+				s._unitIndex[i][j]=this._unitIndex[i][j];
+			}
+			s._numUnits[i]=this._numUnits[i];
+			s._prevNumUnits[i]=this._prevNumUnits[i];
+			s._totalLTD[i]=this._totalLTD[i];
+			s._totalSumSQRT[i]=this._totalSumSQRT[i];
+			s._numMovements[i]=this._numMovements[i];
+			s._prevHPSum[i]=this._prevHPSum[i];
+			
+		}
+		if (this._neutralUnits!=null && !this._neutralUnits.isEmpty())
+		for (Unit u:this._neutralUnits){
+			if (u!=null)
+				s._neutralUnits.add(u.clone());
+		}
 		
+		return s;
 		// TODO:
 	}
 

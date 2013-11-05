@@ -161,6 +161,7 @@ public class TutorialCode implements BWAPIEventListener  {
 
 	    // get the players
 	    Player p1 = getSamplePlayer(Players.Player_One.ordinal());
+	    //Player p2 = getSamplePlayer(Players.Player_Two.ordinal());
 	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1));
 	    p2.setID(1);
 	    

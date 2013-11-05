@@ -275,5 +275,30 @@ public class Map {
 
 		fin.close();*/
 	}
+	public Map clone(){
+		//TODO
+		
+		Map m = new Map();
+		m._walkTileWidth=this._walkTileWidth;
+		m._walkTileHeight=this._walkTileHeight;
+		m._buildTileWidth=this._buildTileWidth;
+		m._buildTileHeight=this._buildTileHeight;
+		m._mapData =          new boolean[_walkTileWidth][_walkTileHeight];
+		m._unitData =         new boolean[_buildTileWidth][_buildTileHeight];
+		m._buildingData =     new boolean[_buildTileWidth][_buildTileHeight];
+		for (int i=0; i<_walkTileWidth;i++){
+			for (int j=0; j<_walkTileHeight;j++){
+				m._mapData[i][j]=this._mapData[i][j];
+			}
+		}
+		
+		for (int i=0; i<_buildTileWidth;i++){
+			for (int j=0; j<_buildTileHeight;j++){
+				m._buildingData[i][j]=this._buildingData[i][j];
+				m._unitData[i][j]=this._unitData[i][j];
+			}
+		}
+		return m;
+	}
 
 }
