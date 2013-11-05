@@ -12,6 +12,7 @@ import bwmcts.combat.UctcdLogic;
 import bwmcts.mcts.uctcd.UCTCD;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_AttackClosest;
+import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
 public class TutorialCode implements BWAPIEventListener  {
 	
@@ -161,8 +162,9 @@ public class TutorialCode implements BWAPIEventListener  {
 
 	    // get the players
 	    Player p1 = getSamplePlayer(Players.Player_One.ordinal());
-	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1));
-	    p2.setID(1);
+	    Player p2 = new Player_NoOverKillAttackValue(Players.Player_Two.ordinal());
+	    //Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1));
+	    //p2.setID(1);
 	    
 	    // enter a maximum move limit for the game to go on for
 	    int moveLimit = 1000;
