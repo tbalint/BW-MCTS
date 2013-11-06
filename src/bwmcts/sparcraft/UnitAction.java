@@ -89,4 +89,44 @@ public class UnitAction {
 		return a;
 		
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + _moveIndex;
+		result = prime * result
+				+ ((_moveType == null) ? 0 : _moveType.hashCode());
+		result = prime * result + ((_p == null) ? 0 : _p.hashCode());
+		result = prime * result + _player;
+		result = prime * result + _unit;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UnitAction other = (UnitAction) obj;
+		if (_moveIndex != other._moveIndex)
+			return false;
+		if (_moveType != other._moveType)
+			return false;
+		if (_p == null) {
+			if (other._p != null)
+				return false;
+		} else if (!_p.equals(other._p))
+			return false;
+		if (_player != other._player)
+			return false;
+		if (_unit != other._unit)
+			return false;
+		return true;
+	}
+	
+	
 }

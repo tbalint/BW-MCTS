@@ -48,18 +48,38 @@ public class TutorialCode implements BWAPIEventListener  {
 	    
 	    // Or it can be added to the state via unit construction parameters
 	    try {
-	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(),new Position(100,100));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(),new Position(100,100));
+	    
 	    } catch (Exception e){}
+	    
 	    try {
-	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,200));
-	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,250));
-	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,300));
-	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,350));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(300,200));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(300,250));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(300,300));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(300,350));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(300,400));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(300,450));
+	    //state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,400));
+	    //state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,450));
+	    //state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,400));
+	    //state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,450));
+	    //state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,500));
+	   // state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,550));
+	    
 	    } catch (Exception e){}
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(),new Position(100,150));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(),new Position(100,200));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(),new Position(100,250));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(),new Position(100,300));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(),new Position(100,350));
+	   //state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(),new Position(100,400));
+	    //state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(),new Position(100,450));
+	    //state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(),new Position(100,500));
 	    // Units added with those 2 functions will be given a unique unitID inside GameState
 	    // If you require setting your own unique unitID for a unit, for example when translating a BWAPI::Broodwar state to GameState
 
 	    // Construct the unit
+	    /*
 	    Unit u=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(100,150));
 	    u.setUnitID(15);
 	    state.addUnitWithID(u);
@@ -71,7 +91,24 @@ public class TutorialCode implements BWAPIEventListener  {
 	    Unit u2=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(100,250));
 	    u.setUnitID(17);
 	    state.addUnitWithID(u2);
+
+	    Unit u3=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(100,300));
+	    u.setUnitID(18);
+	    state.addUnitWithID(u3);
 	    
+	    Unit u4=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(100,350));
+	    u.setUnitID(19);
+	    state.addUnitWithID(u4);
+
+	    Unit u5=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(100,400));
+	    u.setUnitID(20);
+	    state.addUnitWithID(u5);
+	    
+	    
+	    Unit u6=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(100,450));
+	    u.setUnitID(21);
+	    state.addUnitWithID(u6);
+	    */
 	    return state;
 	}
 
@@ -121,7 +158,7 @@ public class TutorialCode implements BWAPIEventListener  {
 	    // Scripted players all have the same constructor which is just the player ID which will be using this script
 	    // It is imoprtant to set that player ID correctly, as that player will only be generating and returning moves for that player
 
-		Player attackClosest=new Player_AttackClosest(playerID);
+		Player attackClosest=new Player_NoOverKillAttackValue(playerID);
 		System.out.println("Player created");
 	    return attackClosest;
 	}
@@ -161,9 +198,9 @@ public class TutorialCode implements BWAPIEventListener  {
 	    GameState initialState = getSampleState();
 
 	    // get the players
-	    Player p1 = getSamplePlayer(Players.Player_One.ordinal());
+	    Player p1 = new Player_NoOverKillAttackValue(Players.Player_One.ordinal());
 	    //Player p2 = getSamplePlayer(Players.Player_Two.ordinal());
-	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1,500,true));
+	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,100,0,1,5000,true));
 	    p2.setID(1);
 	    
 	    // enter a maximum move limit for the game to go on for
@@ -218,6 +255,17 @@ public class TutorialCode implements BWAPIEventListener  {
 		System.out.println("BWAPI created"+ bwapi.getUnitType(3).getName());
 		//System.out.println(getSamplePlayerActionsFromState());
 			runSampleGame();
+			/*
+			runSampleGame();
+			runSampleGame();
+			runSampleGame();
+			runSampleGame();
+			runSampleGame();
+			runSampleGame();
+			runSampleGame();
+			runSampleGame();
+			runSampleGame();
+			*/
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

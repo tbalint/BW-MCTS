@@ -1,22 +1,26 @@
 package bwmcts.mcts.uctcd;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import bwmcts.sparcraft.UnitAction;
 
 public class UctNode {
 
-	int visits;
-	float totalScore;
-	float uctValue;
+	private int visits;
+	private float totalScore;
+	private float uctValue;
 	
-	List<UnitAction> move;
-	int movingPlayerIndex;
-	NodeType type;
+	private List<UnitAction> move;
+	private int movingPlayerIndex;
+	private NodeType type;
+	private boolean fullyExpanded;
+	private int expansions;
 	
-	List<UctNode> children;
-	UctNode parent;
+	private List<UctNode> children;
+	private UctNode parent;
+	private HashMap<Integer, List<UnitAction>> possibleMoves;
 	
 	public UctNode(UctNode parent, NodeType type, List<UnitAction> move, int movingPlayerIndex) {
 		
@@ -28,6 +32,8 @@ public class UctNode {
 		this.children = new ArrayList<UctNode>();
 		this.type = type;
 		this.move = move;
+		this.fullyExpanded = false;
+		this.expansions = 0;
 		
 	}
 	
@@ -140,4 +146,31 @@ public class UctNode {
 		return out;
 		
 	}
+
+	public HashMap<Integer, List<UnitAction>> getPossibleMoves() {
+		return possibleMoves;
+	}
+
+	public void setPossibleMoves(HashMap<Integer, List<UnitAction>> possibleMoves) {
+		this.possibleMoves = possibleMoves;
+	}
+
+	public boolean isFullyExpanded() {
+		return fullyExpanded;
+	}
+
+	public void setFullyExpanded(boolean expanded) {
+		this.fullyExpanded = expanded;
+	}
+
+	public int getExpansions() {
+		return expansions;
+	}
+
+	public void setExpansions(int expansions) {
+		this.expansions = expansions;
+	}
+	
+	
+	
 }

@@ -17,7 +17,6 @@ import bwmcts.sparcraft.Players;
 import bwmcts.sparcraft.StateEvalScore;
 import bwmcts.sparcraft.UnitAction;
 import bwmcts.sparcraft.players.Player;
-import bwmcts.sparcraft.players.Player_AttackClosest;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
 public class UCTCD {
@@ -28,14 +27,6 @@ public class UCTCD {
 	private int minPlayerIndex = 1;
 	private boolean debug;
 	private int simulationSteps;
-	
-	public static void main(String[] args) {
-		
-		UCTCD uctcd = new UCTCD();
-		GameState state = new GameState();
-		uctcd.search(state, 40L);
-		
-	}
 	
 	public UCTCD() {
 		
@@ -53,6 +44,12 @@ public class UCTCD {
 	}
 
 	public List<UnitAction> search(GameState state, long timeBudget){
+		
+		if (maxPlayerIndex == 0 && state.whoCanMove() == Players.Player_Two){
+			return new ArrayList<UnitAction>(); 
+		} else if (maxPlayerIndex == 1 && state.whoCanMove() == Players.Player_One){
+			return new ArrayList<UnitAction>(); 
+		}
 		
 		Date start = new Date();
 		
@@ -79,28 +76,6 @@ public class UCTCD {
 		
 	}
 
-	private void writeToFile(String out, String filename) {
-		// Write to file
-		System.out.println("Ready to write file.");
-        FileWriter fw = null;
-		try {
-			File old = new File(filename);
-			if (old.exists()){
-				old.delete();
-				System.out.println(filename + " deleted");
-			}
-			File file = new File(filename);
-			fw = new FileWriter(file);
-			fw.write(out);
-			fw.close();
-			System.out.println(filename + " saved.");
-		} catch (FileNotFoundException e1) {
-			System.out.println("Error saving " + filename + ". " + e1);
-		} catch (IOException e2) {
-			System.out.println("Error saving " + filename + ". " + e2);
-		}
-	}
-
 	private float traverse(UctNode node, GameState state) {
 		
 		float score = 0;
@@ -112,7 +87,7 @@ public class UCTCD {
 			if (state.isTerminal()){
 				score = evaluate(state);
 			} else {
-				if (node.getChildren().isEmpty())
+				if (!node.isFullyExpanded())
 					generateChildren(node, state);
 				score = traverse(selectNode(node), state);
 			}
@@ -149,24 +124,25 @@ public class UCTCD {
 		
 		HashMap<Integer, List<UnitAction>> map = new HashMap<Integer, List<UnitAction>>();
 		
-		// Generate possible moves?
 		try {
-			state.generateMoves(map, node.movingPlayerIndex);
+			state.generateMoves(map, playerToMove);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		int children = 0;
-		while(children < maxChildren ){
-			
-			List<UnitAction> move = getNextMove(playerToMove, state, map); // Possible moves?
-			if (move == null)
-				break;
-			
+
+		List<UnitAction> move = getNextMove(playerToMove, state, map); // Possible moves?
+		if (move == null)
+			return;
+		
+		if (uniqueMove(move, node)){
 			UctNode child = new UctNode(node, getChildNodeType(node, state), move, enemy(playerToMove));
-			node.children.add(child);
-			children++;
+			node.getChildren().add(child);
 		}
+		node.setExpansions(node.getExpansions() + 1);
+
+		if (node.getExpansions() >= maxChildren)
+			node.setFullyExpanded(true);
 		
 	}
 
@@ -180,9 +156,9 @@ public class UCTCD {
 			
 			if (node.getType() == NodeType.FIRST)
 				
-				return state.getEnemy(node.movingPlayerIndex);
+				return state.getEnemy(node.getMovingPlayerIndex());
 			
-			return node.movingPlayerIndex;
+			return node.getMovingPlayerIndex();
 			
 		}
 		
@@ -192,6 +168,32 @@ public class UCTCD {
 			return 1;
 		
 		return -1;
+		
+	}
+	
+	private boolean uniqueMove(List<UnitAction> move, UctNode node) {
+
+		if(node.getChildren().isEmpty())
+			return true;
+		
+		for (UctNode child : node.getChildren()){
+			boolean identical = true;
+			if (child.getMove().size() != move.size()){
+				identical = false;
+			} else {
+				for(int i = 0; i < move.size(); i++){
+					if (!child.getMove().get(i).equals(move.get(i))){
+						identical = false;
+						break;
+					}
+				}
+			}
+			if (identical){
+				return false;
+			}
+		}
+		
+		return true;
 		
 	}
 
@@ -255,22 +257,15 @@ public class UCTCD {
 			
 			if (node.getType() == NodeType.SECOND){
 				
-				if (node.getParent() != null){
-					try {
-						state.makeMoves(node.getParent().getMove());
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+				try {
+					state.makeMoves(node.getParent().getMove());
+				} catch (Exception e) {e.printStackTrace();}
 			}
 			
 			try {
 				state.makeMoves(node.getMove());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			} catch (Exception e) {e.printStackTrace();}
+			
 			state.finishedMoving();
 			
 		}
@@ -313,13 +308,32 @@ public class UCTCD {
 			
 		}
 		
-		if (bestNode == null){
-			int i = 0;
-			i++;
-		}
-		
 		return bestNode;
 	}
+	
+
+	private void writeToFile(String out, String filename) {
+		// Write to file
+		System.out.println("Ready to write file.");
+        FileWriter fw = null;
+		try {
+			File old = new File(filename);
+			if (old.exists()){
+				old.delete();
+				System.out.println(filename + " deleted");
+			}
+			File file = new File(filename);
+			fw = new FileWriter(file);
+			fw.write(out);
+			fw.close();
+			System.out.println(filename + " saved.");
+		} catch (FileNotFoundException e1) {
+			System.out.println("Error saving " + filename + ". " + e1);
+		} catch (IOException e2) {
+			System.out.println("Error saving " + filename + ". " + e2);
+		}
+	}
+
 
 	private UctNode mostVisitedChildOf(UctNode parent) {
 		int mostVisits = -1;

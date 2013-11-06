@@ -134,7 +134,7 @@ public class Game {
 		        ui.setGameState(state);
 		        ui.repaint();
 	        	try {
-					Thread.sleep(40);
+					Thread.sleep(0);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

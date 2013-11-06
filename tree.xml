@@ -1,22 +1,9 @@
-<node type=ROOT playerToMove=1 moves= totalScore=3.9277968E7 visited=392>
-	<node type=SOLO playerToMove=0 moves=MOVE(204,330); totalScore=100079.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=ATTACK(200,198); totalScore=9519380.0 visited=95/>
-	<node type=SOLO playerToMove=0 moves=MOVE(188,314); totalScore=100079.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=ATTACK(200,198); totalScore=9519380.0 visited=95/>
-	<node type=SOLO playerToMove=0 moves=ATTACK(200,198); totalScore=9419176.0 visited=94/>
-	<node type=SOLO playerToMove=0 moves=MOVE(172,330); totalScore=100079.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(188,314); totalScore=100079.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(188,346); totalScore=100079.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(172,330); totalScore=100079.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(188,314); totalScore=100079.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(172,330); totalScore=100079.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=ATTACK(200,198); totalScore=9118564.0 visited=91/>
-	<node type=SOLO playerToMove=0 moves=MOVE(188,314); totalScore=100079.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(204,330); totalScore=100079.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(188,346); totalScore=100079.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(188,314); totalScore=100079.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(188,314); totalScore=100079.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(188,346); totalScore=100079.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(188,314); totalScore=100079.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(188,314); totalScore=100079.0 visited=1/>
+<node type=ROOT playerToMove=1 moves= totalScore=3.5418408E7 visited=364>
+	<node type=SOLO playerToMove=0 moves=MOVE(80,200); totalScore=-200104.0 visited=2>
+		<node type=SOLO playerToMove=1 moves=MOVE(188,322); totalScore=-100052.0 visited=1/>
+	</node>
+	<node type=SOLO playerToMove=0 moves=MOVE(112,200); totalScore=-100052.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=MOVE(96,216); totalScore=-100052.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=ATTACK(188,306); totalScore=3.5818616E7 visited=358/>
+	<node type=SOLO playerToMove=0 moves=MOVE(96,184); totalScore=-100052.0 visited=1/>
 </node>

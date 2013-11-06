@@ -9,6 +9,7 @@ import bwmcts.mcts.uctcd.UCTCD;
 import bwmcts.sparcraft.AnimationFrameData;
 import bwmcts.sparcraft.GameState;
 import bwmcts.sparcraft.PlayerProperties;
+import bwmcts.sparcraft.Players;
 import bwmcts.sparcraft.UnitAction;
 import bwmcts.sparcraft.UnitProperties;
 import bwmcts.sparcraft.WeaponProperties;
@@ -37,16 +38,14 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		GameState state = new GameState(bwapi);
 		List<UnitAction> move = uctcd.search(state, time);
 		
-		
-		
-		
 	}
 	
-	public void getMoves(GameState  state, HashMap<Integer,List<UnitAction>> moves, List<UnitAction>  moveVec)
+	public void getMoves(GameState state, HashMap<Integer,List<UnitAction>> moves, List<UnitAction>  moveVec)
 	{
 		
 		GameState clone = state.clone();
 		moveVec.clear();
+		
 		for(UnitAction action : uctcd.search(clone, 40))
 			moveVec.add(action.clone());
 	
