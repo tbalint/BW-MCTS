@@ -1,22 +1,22 @@
-<node type=ROOT playerToMove=1 moves= totalScore=2.6866402E7 visited=268>
-	<node type=SOLO playerToMove=0 moves=ATTACK(212,180); totalScore=3709250.0 visited=37/>
-	<node type=SOLO playerToMove=0 moves=ATTACK(212,180); totalScore=3709250.0 visited=37/>
-	<node type=SOLO playerToMove=0 moves=MOVE(280,306); totalScore=100204.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(280,306); totalScore=100204.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(296,290); totalScore=100204.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=ATTACK(212,180); totalScore=3609000.0 visited=36/>
-	<node type=SOLO playerToMove=0 moves=MOVE(296,290); totalScore=100204.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(312,306); totalScore=100204.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=ATTACK(212,180); totalScore=3609000.0 visited=36/>
-	<node type=SOLO playerToMove=0 moves=MOVE(296,290); totalScore=100204.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(296,322); totalScore=100204.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(280,306); totalScore=100204.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=ATTACK(212,180); totalScore=3609000.0 visited=36/>
-	<node type=SOLO playerToMove=0 moves=MOVE(296,322); totalScore=100204.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(280,306); totalScore=100204.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=ATTACK(212,180); totalScore=3609000.0 visited=36/>
-	<node type=SOLO playerToMove=0 moves=MOVE(312,306); totalScore=100204.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=ATTACK(212,180); totalScore=3609000.0 visited=36/>
-	<node type=SOLO playerToMove=0 moves=MOVE(280,306); totalScore=100204.0 visited=1/>
-	<node type=SOLO playerToMove=0 moves=MOVE(296,290); totalScore=100204.0 visited=1/>
+<node type=ROOT playerToMove=1 moves= totalScore=3.9277968E7 visited=392>
+	<node type=SOLO playerToMove=0 moves=MOVE(204,330); totalScore=100079.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=ATTACK(200,198); totalScore=9519380.0 visited=95/>
+	<node type=SOLO playerToMove=0 moves=MOVE(188,314); totalScore=100079.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=ATTACK(200,198); totalScore=9519380.0 visited=95/>
+	<node type=SOLO playerToMove=0 moves=ATTACK(200,198); totalScore=9419176.0 visited=94/>
+	<node type=SOLO playerToMove=0 moves=MOVE(172,330); totalScore=100079.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=MOVE(188,314); totalScore=100079.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=MOVE(188,346); totalScore=100079.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=MOVE(172,330); totalScore=100079.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=MOVE(188,314); totalScore=100079.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=MOVE(172,330); totalScore=100079.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=ATTACK(200,198); totalScore=9118564.0 visited=91/>
+	<node type=SOLO playerToMove=0 moves=MOVE(188,314); totalScore=100079.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=MOVE(204,330); totalScore=100079.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=MOVE(188,346); totalScore=100079.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=MOVE(188,314); totalScore=100079.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=MOVE(188,314); totalScore=100079.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=MOVE(188,346); totalScore=100079.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=MOVE(188,314); totalScore=100079.0 visited=1/>
+	<node type=SOLO playerToMove=0 moves=MOVE(188,314); totalScore=100079.0 visited=1/>
 </node>

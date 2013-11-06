@@ -44,8 +44,8 @@ public class TutorialCode implements BWAPIEventListener  {
 	    // GameState only has a default constructor, you must add units to it manually
 	    GameState state=new GameState();
 	    state._maxUnits=50;
-	    state.setMap(new Map(50, 50));
-
+	    state.setMap(new Map(40, 40));
+	    
 	    // Or it can be added to the state via unit construction parameters
 	    try {
 	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(),new Position(100,100));
@@ -163,7 +163,7 @@ public class TutorialCode implements BWAPIEventListener  {
 	    // get the players
 	    Player p1 = getSamplePlayer(Players.Player_One.ordinal());
 	    //Player p2 = getSamplePlayer(Players.Player_Two.ordinal());
-	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1,100,true));
+	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1,500,true));
 	    p2.setID(1);
 	    
 	    // enter a maximum move limit for the game to go on for

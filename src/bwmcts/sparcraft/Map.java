@@ -276,8 +276,7 @@ public class Map {
 		fin.close();*/
 	}
 	public Map clone(){
-		//TODO
-		
+
 		Map m = new Map();
 		m._walkTileWidth=this._walkTileWidth;
 		m._walkTileHeight=this._walkTileHeight;
@@ -299,6 +298,11 @@ public class Map {
 			}
 		}
 		return m;
+	}
+	
+	public static Map translateMap(javabot.model.Map map){
+		//TODO
+		return new Map();
 	}
 
 }
