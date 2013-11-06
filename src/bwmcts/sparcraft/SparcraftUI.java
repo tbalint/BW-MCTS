@@ -15,7 +15,7 @@ public class SparcraftUI extends JComponent {
 	
 	HashMap<String,Image> images=new HashMap<String,Image>();
 	Image background;
-	String dirPath="c:\\itu\\Sparcraft\\starcraft_images\\";
+	String dirPath="C:\\Users\\Niels\\Dropbox\\AI Starcraft project\\SparCraft\\starcraft_images\\";
 	//Image Terran_Marine;
 	/**
 	 * 

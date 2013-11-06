@@ -46,7 +46,9 @@ public class UctcdLogic extends Player implements ICombatLogic {
 	{
 		
 		GameState clone = state.clone();
-		moveVec = uctcd.search(clone, 30);
+		moveVec.clear();
+		for(UnitAction action : uctcd.search(clone, 40))
+			moveVec.add(action.clone());
 	
 	}
 

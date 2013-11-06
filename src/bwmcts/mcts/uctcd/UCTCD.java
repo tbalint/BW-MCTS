@@ -10,12 +10,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import bwmcts.sparcraft.EvaluationMethods;
 import bwmcts.sparcraft.Game;
 import bwmcts.sparcraft.GameState;
 import bwmcts.sparcraft.Players;
+import bwmcts.sparcraft.StateEvalScore;
 import bwmcts.sparcraft.UnitAction;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_AttackClosest;
+import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
 public class UCTCD {
 
@@ -23,6 +26,8 @@ public class UCTCD {
 	private int maxChildren = 20;
 	private int maxPlayerIndex = 0;
 	private int minPlayerIndex = 1;
+	private boolean debug;
+	private int simulationSteps;
 	
 	public static void main(String[] args) {
 		
@@ -37,12 +42,14 @@ public class UCTCD {
 	}
 
 	public UCTCD(double k, int maxChildren, int minPlayerIndex,
-			int maxPlayerIndex) {
+			int maxPlayerIndex, int simulationSteps, boolean debug) {
 		super();
-		K = k;
+		this.K = k;
 		this.maxChildren = maxChildren;
 		this.minPlayerIndex = minPlayerIndex;
 		this.maxPlayerIndex = maxPlayerIndex;
+		this.debug = debug;
+		this.simulationSteps = simulationSteps;
 	}
 
 	public List<UnitAction> search(GameState state, long timeBudget){
@@ -50,21 +57,23 @@ public class UCTCD {
 		Date start = new Date();
 		
 		UctNode root = new UctNode(null, NodeType.ROOT, new ArrayList<UnitAction>(), maxPlayerIndex);
-		root.setVisits(1);
+		//root.setVisits(1);
 		
 		int t = 0;
 		while(new Date().getTime() <= start.getTime() + timeBudget){
 			
 			traverse(root, state.clone());
-			System.out.println("Traversal " + (t++));
+			t++;
 			
 		}
+		System.out.println("Traversals " + (t++));
 		
 		UctNode best = mostVisitedChildOf(root);
 		
-		String out = root.print(0);
-
-		writeToFile(out, "tree.xml");
+		if (debug){
+			String out = root.print(0);
+			writeToFile(out, "tree.xml");
+		}
 		
 		return best.getMove();
 		
@@ -99,7 +108,7 @@ public class UCTCD {
 			updateState(node, state, true);
 			score = evaluate(state);
 		} else {
-			updateState(node, state, true);
+			updateState(node, state, false);
 			if (state.isTerminal()){
 				score = evaluate(state);
 			} else {
@@ -116,25 +125,21 @@ public class UCTCD {
 	private float evaluate(GameState state) {
 		
 		// get the players
-	    Player p1 = new Player_AttackClosest(Players.Player_One.ordinal());
-	    Player p2 = new Player_AttackClosest(Players.Player_Two.ordinal());
-
-	    // enter a maximum move limit for the game to go on for
-	    int moveLimit = 1000;
+	    Player p1 = new Player_NoOverKillAttackValue(Players.Player_One.ordinal());
+	    Player p2 = new Player_NoOverKillAttackValue(Players.Player_Two.ordinal());
 
 	    // contruct the game
-	    Game g=new Game(state, p1, p2, moveLimit,false);
-
+	    Game g=new Game(state, p1, p2, simulationSteps, false);
+	    
 	    // play the game
 	    g.play();
 
 	    // you can access the resulting game state after g has been played via getState
 	    GameState finalState = g.getState();
-	    System.out.println(finalState.playerDead(0) + "  "+finalState.playerDead(1));
 	    // you can now evaluate the state however you wish. let's use an LTD2 evaluation from the point of view of player one
-	    int score = finalState.eval(Players.Player_One.ordinal(), 0,0,0);
-		
-		return score;
+	    StateEvalScore score = finalState.eval(maxPlayerIndex, EvaluationMethods.LTD2);
+
+		return score._val;
 	}
 
 	private void generateChildren(UctNode node, GameState state) {
@@ -167,17 +172,17 @@ public class UCTCD {
 
 	private int getPlayerToMove(UctNode node, GameState state) {
 		
-		if (state.bothCanMove()){
+		if (state.whoCanMove() == Players.Player_Both){
 		
 			if (node.getType() == NodeType.ROOT)
 				
 				return maxPlayerIndex;
 			
-			else if (node.getType() == NodeType.FIRST)
+			if (node.getType() == NodeType.FIRST)
 				
-				return minPlayerIndex;
+				return state.getEnemy(node.movingPlayerIndex);
 			
-			return maxPlayerIndex;
+			return node.movingPlayerIndex;
 			
 		}
 		
@@ -202,22 +207,30 @@ public class UCTCD {
 
 	private NodeType getChildNodeType(UctNode parent, GameState prevState) {
 		
-		if(!prevState.bothCanMove())
+		if(!prevState.bothCanMove()){
+			
 			return NodeType.SOLO;
+			
+		} else { 
+			
+			if (parent.getType() == NodeType.ROOT)
 		
-		if (parent.getType() == NodeType.ROOT)
-			return NodeType.FIRST;
-		
-		if (parent.getType() == NodeType.SOLO)
-			return NodeType.FIRST;
-		
-		if (parent.getType() == NodeType.SECOND)
-			return NodeType.FIRST;
-		
-		if (parent.getType() == NodeType.FIRST)
-			return NodeType.SECOND;
-		
-		return null;
+				return NodeType.FIRST;
+			
+			if (parent.getType() == NodeType.SOLO)
+				
+				return NodeType.FIRST;
+			
+			if (parent.getType() == NodeType.SECOND)
+				
+				return NodeType.FIRST;
+			
+			if (parent.getType() == NodeType.FIRST)
+				
+				return NodeType.SECOND;
+		}
+			
+		return NodeType.DEFAULT;
 	}
 
 	private List<UnitAction> getNextMove(int playerToMove, GameState state, HashMap<Integer, List<UnitAction>> map) {
@@ -267,9 +280,10 @@ public class UCTCD {
 	private UctNode selectNode(UctNode parent) {
 		
 		float bestScore = Float.MAX_VALUE;
-		boolean maxPlayer = parent.getChildren().get(0).getMovingPlayerIndex() == maxPlayerIndex;
+		//.getChildren().get(0)
+		boolean maxPlayer = parent.getMovingPlayerIndex() == maxPlayerIndex;
 		if (maxPlayer)
-			bestScore = Float.MIN_VALUE;
+			bestScore = -Float.MAX_VALUE;
 			
 		UctNode bestNode = null;
 		for(UctNode child : parent.getChildren()){
@@ -287,7 +301,7 @@ public class UCTCD {
 				return child;
 				
 			}
-				
+			
 			if (maxPlayer && child.getUctValue() > bestScore){
 				bestScore = child.getUctValue();
 				bestNode = child;
@@ -299,6 +313,11 @@ public class UCTCD {
 			
 		}
 		
+		if (bestNode == null){
+			int i = 0;
+			i++;
+		}
+		
 		return bestNode;
 	}
 
@@ -306,8 +325,10 @@ public class UCTCD {
 		int mostVisits = -1;
 		UctNode best = null;
 		for(UctNode node : parent.getChildren()){
-			if (node.getVisits()>mostVisits)
+			if (node.getVisits()>mostVisits){
 				best = node;
+				mostVisits = node.getVisits();
+			}
 		}
 		return best;
 	}
@@ -343,35 +364,5 @@ public class UCTCD {
 	public void setMaxPlayerIndex(int maxPlayerIndex) {
 		this.maxPlayerIndex = maxPlayerIndex;
 	}
-	
-	/*
-	private float evaluate(GameState state) {
-		float value = 0;
-		for(Unit unit : state.getUnits(maxPlayerIndex)){
-			UnitType type = unit.getType();
-			int hp = unit.getHitPoints();
-			int damage = maxDamageRate(type);
-			value += Math.sqrt(hp) * damage;
-		}
-		for(Unit unit : state.getUnits(minPlayerIndex)){
-			UnitType type = unit.getType();
-			int hp = unit.getHitPoints();
-			int damage = maxDamageRate(type);
-			value -= Math.sqrt(hp) * damage;
-		}
-		return value;
-	}
-
-	private int maxDamageRate(UnitType type) {
-		int airDamage = 0;
-		int groundDamage = 0;
-		if (type.isCanAttackAir()){
-			int weapon = type.getAirWeaponID();
-			int damage = 
-		}
-		return type.get
-	}
-	*/
-	
 	
 }

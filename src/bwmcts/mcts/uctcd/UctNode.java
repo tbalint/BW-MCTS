@@ -106,11 +106,16 @@ public class UctNode {
 
 	public String print(int level) {
 		
+		String moves = "";
+		for(UnitAction a : move){
+			moves += a.moveString() + "(" + a.pos().getX() + "," + a.pos().getY() + ");";
+		}
+		
 		String out = "";
 		for(int n = 0; n < level; n++){
 			out += "\t";
 		}
-		out += "<node type="+type+ " playerToMove=" + movingPlayerIndex + " totalScore=" + totalScore + " visited=" + visits;
+		out += "<node type="+type+ " playerToMove=" + movingPlayerIndex + " moves=" + moves + " totalScore=" + totalScore + " visited=" + visits;
 		
 		if (children.isEmpty()){
 			out += "/>\n";

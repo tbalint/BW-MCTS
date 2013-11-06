@@ -23,7 +23,7 @@ public class Game {
 	private int				rounds;
 	private Timer				t=new Timer();
 	private double				gameTimeMS;
-	private int				moveLimit;
+	public int				moveLimit;
 	
 	private boolean display=false;
 	private SparcraftUI ui;
@@ -143,7 +143,7 @@ public class Game {
 		        ui.setGameState(state);
 		        ui.repaint();
 	        	try {
-					Thread.sleep(400);
+					Thread.sleep(40);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -250,5 +250,8 @@ public class Game {
 	   //return (whoCanMove == Players::Player_Both) ? Players::Player_One : whoCanMove;
 		return whoCanMove==Players.Player_Both ? Players.Player_One.ordinal(): whoCanMove.ordinal();
 	}
+
+
+	
 	
 }

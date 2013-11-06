@@ -448,35 +448,29 @@ public class GameState {
 	}
 
 	    // evaluation functions
-	public int    eval( int player, int evalMethod, int p1Script,int p2Script)  {
-		int score=0;
+	public StateEvalScore eval( int player, EvaluationMethods evalMethod)  {
+		StateEvalScore score=new StateEvalScore(0, 0);
 		int enemyPlayer=getEnemy(player);
 
 		// if both players are dead, return 0
 		if (playerDead(enemyPlayer) && playerDead(player))
 		{
-			return 0;
+			return new StateEvalScore(0, 0);
 		}
 
-		//StateEvalScore simEval;
-
-		/*if (evalMethod == EvaluationMethods::LTD)
+		if (evalMethod == EvaluationMethods.LTD)
 		{
-			score = StateEvalScore(evalLTD(player), 0);
+			score = new StateEvalScore(evalLTD(player), 0);
 		}
-		else if (evalMethod == EvaluationMethods::LTD2)
+		else if (evalMethod == EvaluationMethods.LTD2)
 		{
-			score = StateEvalScore(evalLTD2(player), 0);
-		}
-		else if (evalMethod == EvaluationMethods::Playout)
-		{
-			score = evalSim(player, p1Script, p2Script);
+			score = new StateEvalScore(evalLTD2(player), 0);
 		}
 
-		if (score.val() == 0)
+		if (score._val == 0)
 		{
 			return score;
-		}*/
+		}
 
 		int winBonus=0;
 
@@ -489,13 +483,66 @@ public class GameState {
 			winBonus = -100000;
 		}
 
-		return score + winBonus;
+		return new StateEvalScore(score._val + winBonus, score._numMoves);
 	}
-	public int         evalLTD(int player){return 0;}
-	public int         evalLTD2(int player){return 0;}
-	public int         LTD(int player){return 0;}
-	public int         LTD2(int player){return 0;}
-	public StateEvalScore    evalSim(int player, int p1, int p2){return null;}
+	
+	// evaluate the state for _playerToMove
+	private int evalLTD(int player) 
+	{
+		int enemyPlayer = getEnemy(player);
+		
+		return LTD(player) - LTD(enemyPlayer);
+	}
+
+	// evaluate the state for _playerToMove
+	private int evalLTD2(int player)
+	{
+		int enemyPlayer = getEnemy(player);
+
+		return LTD2(player) - LTD2(enemyPlayer);
+	}
+	
+	public int LTD(int player)
+	{
+		if (numUnits(player) == 0)
+		{
+			return 0;
+		}
+
+		float sum = 0;
+
+		for (int u = 0; u<numUnits(player); ++u)
+		{
+			Unit unit = getUnit(player, u);
+
+			sum += unit.currentHP() * unit.dpf();
+		}
+
+		return (int) (1000 * sum / _totalLTD[player]);
+	}
+	
+	public int LTD2(int player)
+	{
+		if (numUnits(player) == 0)
+		{
+			return 0;
+		}
+
+		float sum = 0;
+
+		for (int u=0; u<numUnits(player); ++u)
+		{
+			Unit unit = getUnit(player, u);
+
+			sum += Math.sqrt(unit.currentHP()) * unit.dpf();
+		}
+
+		int ret = (int)(1000 * sum / _totalSumSQRT[player]);
+
+		return ret;
+	}
+	
+	
 	public int getEnemy(int player){
 		return (player + 1) % 2;
 	}

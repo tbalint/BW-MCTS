@@ -45,33 +45,33 @@ public class TutorialCode implements BWAPIEventListener  {
 	    GameState state=new GameState();
 	    state._maxUnits=50;
 	    state.setMap(new Map(50, 50));
-	    // The recommended way of adding a unit to a state is to just construct a unit and add it with:
-	    try {
-	    state.addUnit(getSampleUnit());
-	    } catch (Exception e){}
+
 	    // Or it can be added to the state via unit construction parameters
 	    try {
-	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(),new Position(10,10));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(),new Position(100,100));
 	    } catch (Exception e){}
 	    try {
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,200));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,250));
 	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,300));
-	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(305,305));
-	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Ghost.ordinal()), Players.Player_Two.ordinal(), new Position(315,315));
-	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(310,310));
+	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(), new Position(300,350));
 	    } catch (Exception e){}
 	    // Units added with those 2 functions will be given a unique unitID inside GameState
 	    // If you require setting your own unique unitID for a unit, for example when translating a BWAPI::Broodwar state to GameState
 
 	    // Construct the unit
-	    Unit u=new Unit(bwapi.getUnitType(UnitTypes.Terran_Battlecruiser.ordinal()), Players.Player_One.ordinal(), new Position(0,0));
-
-	    // Set the unitID
-	    u.setUnitID(5);
-
-	    // Add it to the state and tell it not to change the unitID.
-	    // If a state contains two units with the same ID, an error will occur
+	    Unit u=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(100,150));
+	    u.setUnitID(15);
 	    state.addUnitWithID(u);
+	    
+	    Unit u1=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(100,200));
+	    u.setUnitID(16);
+	    state.addUnitWithID(u1);
 
+	    Unit u2=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(100,250));
+	    u.setUnitID(17);
+	    state.addUnitWithID(u2);
+	    
 	    return state;
 	}
 
@@ -139,7 +139,7 @@ public class TutorialCode implements BWAPIEventListener  {
 	    GameState state = getSampleState();
 
 	    // Construct a MoveArray. This structure will hold all the legal moves for each unit possible for this state
-	   HashMap<Integer, List<UnitAction>>moveArray=new HashMap<Integer,List<UnitAction>>();
+	    HashMap<Integer, List<UnitAction>>moveArray=new HashMap<Integer,List<UnitAction>>();
 
 	    // Generate the moves possible by currentPlayer from state into moveArray
 	    try {
@@ -163,7 +163,7 @@ public class TutorialCode implements BWAPIEventListener  {
 	    // get the players
 	    Player p1 = getSamplePlayer(Players.Player_One.ordinal());
 	    //Player p2 = getSamplePlayer(Players.Player_Two.ordinal());
-	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1));
+	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1,100,true));
 	    p2.setID(1);
 	    
 	    // enter a maximum move limit for the game to go on for
@@ -177,17 +177,15 @@ public class TutorialCode implements BWAPIEventListener  {
 
 	    // you can access the resulting game state after g has been played via getState
 	    GameState finalState = g.getState();
-	    System.out.println(finalState.playerDead(0) + "  "+finalState.playerDead(1));
 	    // you can now evaluate the state however you wish. let's use an LTD2 evaluation from the point of view of player one
-	    int score = finalState.eval(Players.Player_One.ordinal(), 0,0,0);
-
+	    StateEvalScore score = finalState.eval(Players.Player_One.ordinal(), EvaluationMethods.LTD2);
 	    // StateEvalScore has two components, a numerical score and a number of Movement actions performed by each player
 	    // with this evaluation, positive val means win, negative means loss, 0 means tie
-	    if (score > 0)
+	    if (score._val > 0)
 	    {
 	        System.out.println( "Player One Wins!\n");
 	    }
-	    else if (score < 0)
+	    else if (score._val < 0)
 	    {
 	    	 System.out.println( "Player Two Wins!\n");
 	    }
