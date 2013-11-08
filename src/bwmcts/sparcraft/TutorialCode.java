@@ -193,7 +193,7 @@ public class TutorialCode implements BWAPIEventListener  {
 	    Player p1 = new Player_NoOverKillAttackValue(Players.Player_One.ordinal());
 	    //Player p2 = new Player_NoOverKillAttackValue(Players.Player_Two.ordinal());
 	    //Player p2 = getSamplePlayer(Players.Player_Two.ordinal());
-	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1,70,false));
+	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1,1000,false));
 	    p2.setID(1);
 	    
 	    // enter a maximum move limit for the game to go on for
