@@ -27,6 +27,7 @@ public class UCTCD {
 	private int minPlayerIndex = 1;
 	private boolean debug;
 	private int simulationSteps;
+	private Player baseScript;
 	
 	public UCTCD() {
 		
@@ -41,6 +42,7 @@ public class UCTCD {
 		this.maxPlayerIndex = maxPlayerIndex;
 		this.debug = debug;
 		this.simulationSteps = simulationSteps;
+		this.baseScript = new Player_NoOverKillAttackValue(maxPlayerIndex);
 	}
 
 	public List<UnitAction> search(GameState state, long timeBudget){
@@ -124,21 +126,33 @@ public class UCTCD {
 		
 		HashMap<Integer, List<UnitAction>> map = new HashMap<Integer, List<UnitAction>>();
 		
+		List<UnitAction> move = new ArrayList<UnitAction>();
+		
 		try {
 			state.generateMoves(map, playerToMove);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		List<UnitAction> move = getNextMove(playerToMove, state, map); // Possible moves?
+			
+		if (node.getChildren().isEmpty()){
+				
+			new Player_NoOverKillAttackValue(playerToMove).getMoves(state, map, move);
+				
+		} else {
+	
+			move = getNextMove(playerToMove, state, map); // Possible moves?
+			
+		}
+		
 		if (move == null)
 			return;
-		
+	
 		if (uniqueMove(move, node)){
 			UctNode child = new UctNode(node, getChildNodeType(node, state), move, playerToMove);
 			node.getChildren().add(child);
 		}
+		
 		node.setExpansions(node.getExpansions() + 1);
 
 		if (node.getExpansions() >= maxChildren)
