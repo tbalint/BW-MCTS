@@ -10,6 +10,7 @@ import javabot.types.UnitType;
 import javabot.types.UnitType.UnitTypes;
 import bwmcts.combat.UctcdLogic;
 import bwmcts.mcts.uctcd.UCTCD;
+import bwmcts.mcts.uctcd.UCTCDsingle;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_AttackClosest;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
@@ -45,7 +46,8 @@ public class TutorialCode implements BWAPIEventListener  {
 	    GameState state=new GameState();
 	    state._maxUnits=50;
 	    state.setMap(new Map(40, 40));
-	    int marines = 35;
+	    int marines = 20;
+	    int zealots = 15;
 	    int startY = 5;
 	    int space = 10;
 	    
@@ -56,8 +58,8 @@ public class TutorialCode implements BWAPIEventListener  {
 	    } catch (Exception e){}
 	    
 	    try {
-	    	for(int i = 0; i < marines; i++){
-	    		state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(500,startY + space*i));
+	    	for(int i = 0; i < zealots; i++){
+	    		state.addUnit(bwapi.getUnitType(UnitTypes.Protoss_Zealot.ordinal()), Players.Player_One.ordinal(), new Position(500,startY + space*i));
 	    	}
 	    
 	    } catch (Exception e){}
@@ -191,7 +193,7 @@ public class TutorialCode implements BWAPIEventListener  {
 	    Player p1 = new Player_NoOverKillAttackValue(Players.Player_One.ordinal());
 	    //Player p2 = new Player_NoOverKillAttackValue(Players.Player_Two.ordinal());
 	    //Player p2 = getSamplePlayer(Players.Player_Two.ordinal());
-	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1,5000,true));
+	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1,70,false));
 	    p2.setID(1);
 	    
 	    // enter a maximum move limit for the game to go on for

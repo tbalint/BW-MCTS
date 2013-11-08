@@ -148,6 +148,8 @@ public class Game {
 	    }
 	
 	    gameTimeMS = t.getElapsedTimeInMilliSec();
+	    
+	    //System.out.println("Game rounds: " + rounds);
 	}
 
 

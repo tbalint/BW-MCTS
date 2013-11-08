@@ -19,7 +19,7 @@ import bwmcts.sparcraft.UnitAction;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
-public class UCTCD {
+public class UCTCDsingle {
 
 	private double K = 1.6f;
 	private int maxChildren = 20;
@@ -29,12 +29,11 @@ public class UCTCD {
 	private int simulationSteps;
 	private Player baseScript;
 	
-	
-	public UCTCD() {
+	public UCTCDsingle() {
 		
 	}
 
-	public UCTCD(double k, int maxChildren, int minPlayerIndex,
+	public UCTCDsingle(double k, int maxChildren, int minPlayerIndex,
 			int maxPlayerIndex, int simulationSteps, boolean debug) {
 		super();
 		this.K = k;
@@ -75,10 +74,6 @@ public class UCTCD {
 			writeToFile(out, "tree.xml");
 		}
 		
-		if (best == null){
-			return new ArrayList<UnitAction>();
-		}
-		
 		return best.getMove();
 		
 	}
@@ -106,8 +101,6 @@ public class UCTCD {
 
 	private float evaluate(GameState state) {
 		
-		long start = System.nanoTime();
-		
 		// get the players
 	    Player p1 = new Player_NoOverKillAttackValue(Players.Player_One.ordinal());
 	    Player p2 = new Player_NoOverKillAttackValue(Players.Player_Two.ordinal());
@@ -123,10 +116,6 @@ public class UCTCD {
 	    // you can now evaluate the state however you wish. let's use an LTD2 evaluation from the point of view of player one
 	    StateEvalScore score = finalState.eval(maxPlayerIndex, EvaluationMethods.LTD2);
 
-	    long end = System.nanoTime();
-	    
-	    System.out.println((end - start));
-	    
 		return score._val;
 	}
 
@@ -150,9 +139,14 @@ public class UCTCD {
 				
 			new Player_NoOverKillAttackValue(playerToMove).getMoves(state, map, move);
 				
-		} else {
-	
+		} else if (node.getType() == NodeType.ROOT){
+		
 			move = getNextMove(playerToMove, state, map); // Possible moves?
+			
+		} else {
+			
+			node.setFullyExpanded(true);
+			return;
 			
 		}
 		
