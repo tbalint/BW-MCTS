@@ -26,8 +26,8 @@ public class SparcraftUI extends JComponent {
 	public SparcraftUI(GameState state) {
 		_state=state;
 		for (UnitTypes u: UnitTypes.values()){
-			System.out.println(u.toString());
-			System.out.println(dirPath+u.toString()+".png");
+			//System.out.println(u.toString());
+			//System.out.println(dirPath+u.toString()+".png");
 			images.put(u.toString(), Toolkit.getDefaultToolkit().getImage(dirPath+"units\\"+u.toString()+".png"));
 		}
 		//Terran_Marine = Toolkit.getDefaultToolkit().getImage("c:\\itu\\Sparcraft\\starcraft_images\\units\\Terran_Marine.png");
@@ -44,7 +44,7 @@ public class SparcraftUI extends JComponent {
 			} else {
 				g.drawRect(offSetX, offSetY, map.getPixelWidth(), map.getPixelHeight());
 			}
-			
+			drawScaleForMap(g, map.getPixelWidth(), map.getPixelHeight());
 		}
 		
 		g.setColor(Color.blue);
@@ -77,14 +77,32 @@ public class SparcraftUI extends JComponent {
 					g.drawLine(a.pos().getX()-2+offSetX, a.pos().getY()-2+offSetY, a._previousAction.pos().getX()-2+offSetX, a._previousAction.pos().getY()-2+offSetY);
 				}
 				drawUnitInformation(g,a,++k);
-				
 			}
 			
 		} 
 	}
 	
+	private void drawScaleForMap(Graphics g, int pixelWidth, int pixelHeight) {
+		for (int i=0; i<(int)pixelWidth;i+=50){
+			if (i!=0 && i % 100==0){
+				g.drawString(String.valueOf(i), offSetX+i, offSetY);
+			}
+			g.drawLine(offSetX+i, offSetY, offSetX+i, offSetY-10);
+		}
+		for (int i=0; i<(int)pixelHeight;i+=50){
+			if (i!=0 && i % 100==0){
+				g.drawString(String.valueOf(i), offSetX-20, offSetY+i);
+			}
+			g.drawLine(offSetX-10, offSetY+i, offSetX, offSetY+i);
+		}
+	}
+
+
 	private void drawUnitInformation(Graphics g, Unit u, int i) {
 		g.drawString(u.getId()+":"+u.name()+" HP:"+u.currentHP()+" A:"+u.getArmor()+" D:"+u.damageGround()+"/"+u.damageAir(), 3, i*20);
+		
+		g.drawRect(u.pos().getX()+offSetX-15, u.pos().getY()-15+offSetY, (int)(30*u._currentHP/u.maxHP()), 1);
+		
 	}
 
 	public void setGameState(GameState state){
