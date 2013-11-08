@@ -81,11 +81,11 @@ public class UCTCD {
 		float score = 0;
 		if (node.getVisits() == 0){
 			updateState(node, state, true);
-			score = evaluate(state);
+			score = evaluate(state.clone());
 		} else {
 			updateState(node, state, false);
 			if (state.isTerminal()){
-				score = evaluate(state);
+				score = evaluate(state.clone());
 			} else {
 				if (!node.isFullyExpanded())
 					generateChildren(node, state);
@@ -136,7 +136,7 @@ public class UCTCD {
 			return;
 		
 		if (uniqueMove(move, node)){
-			UctNode child = new UctNode(node, getChildNodeType(node, state), move, enemy(playerToMove));
+			UctNode child = new UctNode(node, getChildNodeType(node, state), move, playerToMove);
 			node.getChildren().add(child);
 		}
 		node.setExpansions(node.getExpansions() + 1);

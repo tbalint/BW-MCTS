@@ -72,7 +72,7 @@ public class TutorialCode implements BWAPIEventListener  {
 	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(),new Position(100,250));
 	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(),new Position(100,300));
 	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(),new Position(100,350));
-	   //state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(),new Position(100,400));
+	    //state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(),new Position(100,400));
 	    //state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(),new Position(100,450));
 	    //state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(),new Position(100,500));
 	    // Units added with those 2 functions will be given a unique unitID inside GameState
@@ -199,8 +199,9 @@ public class TutorialCode implements BWAPIEventListener  {
 
 	    // get the players
 	    Player p1 = new Player_NoOverKillAttackValue(Players.Player_One.ordinal());
+	    //Player p2 = new Player_NoOverKillAttackValue(Players.Player_Two.ordinal());
 	    //Player p2 = getSamplePlayer(Players.Player_Two.ordinal());
-	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,100,0,1,5000,true));
+	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1,5000,true));
 	    p2.setID(1);
 	    
 	    // enter a maximum move limit for the game to go on for
