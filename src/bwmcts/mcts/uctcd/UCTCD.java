@@ -66,11 +66,12 @@ public class UCTCD {
 			t++;
 			
 		}
-		System.out.println("Traversals " + (t++));
 		
 		UctNode best = mostVisitedChildOf(root);
 		
 		if (debug){
+			System.out.println("Traversals " + (t++));
+			
 			String out = root.print(0);
 			writeToFile(out, "tree.xml");
 		}
@@ -123,10 +124,10 @@ public class UCTCD {
 	    // you can now evaluate the state however you wish. let's use an LTD2 evaluation from the point of view of player one
 	    StateEvalScore score = finalState.eval(maxPlayerIndex, EvaluationMethods.LTD2);
 
-	    long end = System.nanoTime();
-	    
-	    System.out.println((end - start));
-	    
+	    if (debug){
+	    	long end = System.nanoTime();
+	    	System.out.println((end - start));
+	    }
 		return score._val;
 	}
 

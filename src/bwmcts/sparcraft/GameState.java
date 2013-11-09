@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javabot.JNIBWAPI;
+import javabot.types.UnitCommandType.UnitCommandTypes;
 import javabot.types.UnitType;
 
 
@@ -19,7 +20,7 @@ public class GameState {
 	 int[][] _unitIndex=new int[Constants.Num_Players][Constants.Max_Moves];
 	 List<Unit> _neutralUnits;
 
-	 int[]  _numUnits=new int[Constants.Num_Players];
+	 public int[]  _numUnits=new int[Constants.Num_Players];
 	 int[]  _prevNumUnits=new int[Constants.Num_Players];
 
 	 float[]  _totalLTD=new float[Constants.Num_Players];
@@ -28,7 +29,7 @@ public class GameState {
 	 int[] _numMovements=new int[Constants.Num_Players];
 	 int[] _prevHPSum=new int[Constants.Num_Players];
 		
-    int  _currentTime;
+    public int  _currentTime;
     int _maxUnits;
     int _sameHPFrames;
 
@@ -111,26 +112,44 @@ public class GameState {
 
 	public GameState(JNIBWAPI bwapi) {
 	
-		// TODO Auto-generated constructor stub
-		
-		
 		//Update PlayerProperties
 		PlayerProperties.props[0]=new PlayerProperties(bwapi.getPlayer(0));
 		PlayerProperties.props[1]=new PlayerProperties(bwapi.getPlayer(1));
 		
-		//bwapi.getFrameCount();
-		//bwapi.getRemainingLatencyFrames();
 		
 		
 		_units=new Unit[Constants.Num_Players][Constants.Max_Moves];
 		int i=0;
 		for (javabot.model.Unit u: bwapi.getMyUnits()){
-			_units[bwapi.getSelf().getID()][i]=Unit.translateUnit(u);
+			//System.out.println(bwapi.getFrameCount()+" - "+u.getLastCommandFrame()+": "+u.getGroundWeaponCooldown()+": "+u.getAirWeaponCooldown());
+			_units[bwapi.getSelf().getID()][i]=new Unit(UnitProperties.Get(u.getTypeID()).type,new Position(u.getX(),u.getY()), u.getID(), u.getPlayerID(), u.getHitPoints(), u.getEnergy(),(u.isMoving()?1:0),u.getGroundWeaponCooldown());
+			if (u.getLastCommandID()==UnitCommandTypes.Attack_Move.ordinal() || u.getLastCommandID()==UnitCommandTypes.Attack_Unit.ordinal() )
+			{
+				_units[bwapi.getSelf().getID()][i].updateMoveActionTime(_units[bwapi.getSelf().getID()][i].attackRepeatFrameTime());
+				_units[bwapi.getSelf().getID()][i].updateAttackActionTime( u.getGroundWeaponCooldown());
+			}
+			else if (u.getLastCommandID()==UnitCommandTypes.Move.ordinal() ){
+				_units[bwapi.getSelf().getID()][i].updateMoveActionTime(_units[bwapi.getSelf().getID()][i].attackInitFrameTime());
+				_units[bwapi.getSelf().getID()][i].updateAttackActionTime( u.getGroundWeaponCooldown());
+			}
+			
 			i++;
 		}
 		i=0;
 		for (javabot.model.Unit u: bwapi.getEnemyUnits()){
-			_units[bwapi.getEnemies().get(0).getID()][i]=Unit.translateUnit(u);
+
+			//TODO 
+			//System.out.println(bwapi.getFrameCount()+" - "+u.getLastCommandFrame()+": "+u.getGroundWeaponCooldown()+": "+u.getAirWeaponCooldown());
+			_units[bwapi.getEnemies().get(0).getID()][i]=new Unit(UnitProperties.Get(u.getTypeID()).type,new Position(u.getX(),u.getY()), u.getID(), u.getPlayerID(), u.getHitPoints(), u.getEnergy(),(u.isMoving()?1:0),u.getGroundWeaponCooldown());
+			if (u.getLastCommandID()==UnitCommandTypes.Attack_Move.ordinal() || u.getLastCommandID()==UnitCommandTypes.Attack_Unit.ordinal() )
+			{
+				_units[bwapi.getEnemies().get(0).getID()][i].updateMoveActionTime(_units[bwapi.getEnemies().get(0).getID()][i].attackRepeatFrameTime());
+				_units[bwapi.getEnemies().get(0).getID()][i].updateAttackActionTime( u.getGroundWeaponCooldown());
+			}
+			else if (u.getLastCommandID()==UnitCommandTypes.Move.ordinal() ){
+				_units[bwapi.getEnemies().get(0).getID()][i].updateMoveActionTime(_units[bwapi.getEnemies().get(0).getID()][i].attackInitFrameTime());
+				_units[bwapi.getEnemies().get(0).getID()][i].updateAttackActionTime( u.getGroundWeaponCooldown());
+			}
 			i++;
 		}
 		
@@ -144,8 +163,8 @@ public class GameState {
 			}
 		 _neutralUnits=new ArrayList<Unit>();
 
-		 _numUnits=new int[]{};
-		 _prevNumUnits=new int[]{};
+		 _numUnits=new int[]{bwapi.getMyUnits().size(),bwapi.getEnemyUnits().size()};
+		 _prevNumUnits=new int[]{bwapi.getMyUnits().size(),bwapi.getEnemyUnits().size()};
 
 		 _totalLTD=new float[Constants.Num_Players];
 		 _totalSumSQRT=new float[Constants.Num_Players];
@@ -153,13 +172,13 @@ public class GameState {
 		 _numMovements=new int[]{0,0};
 		 _prevHPSum=new int[]{0,0};//TODO
 			
-	    _currentTime=bwapi.getFrameCount();
+	    _currentTime=0;//bwapi.getFrameCount();
 	    
 	    _sameHPFrames=0;
 		
 		
-		this._map=Map.translateMap(bwapi.getMap());
-		
+		this._map=new Map(bwapi.getMap());
+		sortUnits();
 	}
 	
 	// misc functions
@@ -859,7 +878,7 @@ public class GameState {
 				Unit unit=getUnit(p, u);
 
 				
-				System.out.printf("  P%d %5d %5d    (%3d, %3d)     %s\n", unit.player(), unit.currentHP(), unit.firstTimeFree(), unit.x(), unit.y(), unit.name());
+				System.out.printf("  P%d %5d %5d    (%3d, %3d)     %s_%d\n", unit.player(), unit.currentHP(), unit.firstTimeFree(), unit.x(), unit.y(), unit.name(),unit._unitID);
 			}
 		}
 		System.out.println();
@@ -910,7 +929,6 @@ public class GameState {
 		}
 		
 		return s;
-		// TODO:
 	}
 
 }

@@ -300,9 +300,5 @@ public class Map {
 		return m;
 	}
 	
-	public static Map translateMap(javabot.model.Map map){
-		//TODO
-		return new Map();
-	}
 
 }

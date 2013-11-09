@@ -6,6 +6,9 @@ import bwmcts.combat.AttackValueLogic;
 import bwmcts.combat.AttackWeakestLogic;
 import bwmcts.combat.ICombatLogic;
 import bwmcts.combat.NoOverKillAttackValueLogic;
+import bwmcts.combat.UctcdLogic;
+import bwmcts.mcts.uctcd.UCTCD;
+import bwmcts.sparcraft.Position;
 import javabot.BWAPIEventListener;
 import javabot.JNIBWAPI;
 import javabot.model.*;
@@ -25,12 +28,14 @@ public class CombatController implements BWAPIEventListener {
 		
 		//combatLogic = new NoOverKillAttackValueLogic();
 		//combatLogic = new AttackValueLogic();
-		combatLogic = new NoOverKillAttackValueLogic();
+		//combatLogic = new NoOverKillAttackValueLogic();
+		
 		
 		bwapi.start();
 	} 
 	public void connected() {
 		bwapi.loadTypeData();
+		
 	}
 	
 	// Method called at the beginning of the game.
@@ -42,11 +47,12 @@ public class CombatController implements BWAPIEventListener {
 		
 		// set game speed to 30 (0 is the fastest. Tournament speed is 20)
 		// You can also change the game speed from within the game by "/speed X" command.
-		bwapi.setGameSpeed(30);
+		bwapi.setGameSpeed(40);
 		
 		// analyze the map
 		bwapi.loadMapData(true);
-		
+		bwapi.enablePerfectInformation();
+		combatLogic =new UctcdLogic(bwapi,new UCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),1000,false));
 		// ============== YOUR CODE GOES HERE =======================
 
 		// This is called at the beginning of the game. You can 
@@ -60,10 +66,10 @@ public class CombatController implements BWAPIEventListener {
 	public void act() {
 		
 		// ============== YOUR CODE GOES HERE =======================
-		System.out.println("Act called");
+		//System.out.println("Act called");
 		int time = 20;	// 20 ms
 		combatLogic.act(bwapi, time);
-		System.out.println("Act done");
+		//System.out.println("Act done");
 	}
 	
 	// Method called on every frame (approximately 30x every second).

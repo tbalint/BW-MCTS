@@ -156,6 +156,10 @@ public class UnitProperties {
 		return props[type2.getID()];
 	}
 	
+	public static UnitProperties Get(int unitTypeID) {
+		return props[unitTypeID];
+	}
+	
 	public int	GetArmor(PlayerProperties player){ return type.getArmor() + player.GetUpgradeLevel(type.getArmorUpgradeID()) + extraArmor[player.GetUpgradeLevel(extraArmorUpgrade)]; }
 	public int	GetCapacity(PlayerProperties player) { return capacity[player.GetUpgradeLevel(capacityUpgrade)]; }
 	public int	GetMaxEnergy(PlayerProperties player) { return maxEnergy[player.GetUpgradeLevel(maxEnergyUpgrade)]; }

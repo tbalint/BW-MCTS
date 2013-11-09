@@ -3,9 +3,11 @@ package bwmcts.sparcraft;
 
 public class UnitAction {
 
-	int	_unit,	_player,_moveIndex;
-	UnitActionTypes _moveType;
-	Position        _p;
+	public int	_unit;
+	public int _player;
+	public int _moveIndex;
+	public UnitActionTypes _moveType;
+	public Position        _p;
 
 	public UnitAction(){
 		_unit=255;
