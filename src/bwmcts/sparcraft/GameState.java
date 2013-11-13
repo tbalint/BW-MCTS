@@ -203,7 +203,7 @@ public class GameState {
 	    // if the hp sums match the last hp sum
 	    if (hpSum[0] == _prevHPSum[0] && hpSum[1] == _prevHPSum[1])
 	    {
-	        _sameHPFrames++;
+	        //_sameHPFrames++;
 	    }
 	    else
 	    {
@@ -878,10 +878,10 @@ public class GameState {
 				Unit unit=getUnit(p, u);
 
 				
-				System.out.printf("  P%d %5d %5d    (%3d, %3d)     %s_%d\n", unit.player(), unit.currentHP(), unit.firstTimeFree(), unit.x(), unit.y(), unit.name(),unit._unitID);
+				//System.out.printf("  P%d %5d %5d    (%3d, %3d)     %s_%d\n", unit.player(), unit.currentHP(), unit.firstTimeFree(), unit.x(), unit.y(), unit.name(),unit._unitID);
 			}
 		}
-		System.out.println();
+		//System.out.println();
 	}
 	public void write(String filename){}
 	public void read(String filename){}

@@ -1,4 +1,4 @@
-package bwmcts.mcts.uctcd;
+package bwmcts.mcts.guct;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,10 +18,11 @@ import bwmcts.sparcraft.StateEvalScore;
 import bwmcts.sparcraft.UnitAction;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_AttackClosest;
+import bwmcts.sparcraft.players.Player_Defense;
 import bwmcts.sparcraft.players.Player_Kite;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
-public class UCTCD {
+public class GUCTCD {
 
 	private double K = 1.6f;
 	private int maxChildren = 20;
@@ -32,11 +33,11 @@ public class UCTCD {
 	private Player baseScript;
 	
 	
-	public UCTCD() {
+	public GUCTCD() {
 		
 	}
 
-	public UCTCD(double k, int maxChildren, int minPlayerIndex,
+	public GUCTCD(double k, int maxChildren, int minPlayerIndex,
 			int maxPlayerIndex, int simulationSteps, boolean debug) {
 		super();
 		this.K = k;
@@ -58,7 +59,7 @@ public class UCTCD {
 		
 		Date start = new Date();
 		
-		UctNode root = new UctNode(null, NodeType.ROOT, new ArrayList<UnitAction>(), maxPlayerIndex);
+		GuctNode root = new GuctNode(null, NodeType.ROOT, new ArrayList<UnitState>(), maxPlayerIndex);
 		//root.setVisits(1);
 		
 		int t = 0;
@@ -69,7 +70,7 @@ public class UCTCD {
 			
 		}
 		
-		UctNode best = mostVisitedChildOf(root);
+		GuctNode best = mostVisitedChildOf(root);
 		
 		if (debug){
 			System.out.println("Traversals " + (t++));
@@ -82,11 +83,13 @@ public class UCTCD {
 			return new ArrayList<UnitAction>();
 		}
 		
-		return best.getMove();
+		List<UnitAction> actions = statesToActions(best.getMove(), state.clone());
+		
+		return actions;
 		
 	}
 
-	private float traverse(UctNode node, GameState state) {
+	private float traverse(GuctNode node, GameState state) {
 		
 		float score = 0;
 		if (node.getVisits() == 0){
@@ -134,14 +137,14 @@ public class UCTCD {
 		return score._val;
 	}
 
-	private void generateChildren(UctNode node, GameState state) {
+	private void generateChildren(GuctNode node, GameState state) {
 		
 		// Figure out who is next to move
 		int playerToMove = getPlayerToMove(node, state);
 		
 		HashMap<Integer, List<UnitAction>> map = new HashMap<Integer, List<UnitAction>>();
 		
-		List<UnitAction> move = new ArrayList<UnitAction>();
+		List<UnitState> move = new ArrayList<UnitState>();
 		
 		try {
 			state.generateMoves(map, playerToMove);
@@ -151,24 +154,26 @@ public class UCTCD {
 		}
 			
 		if (node.getChildren().isEmpty()){
-				
-			new Player_NoOverKillAttackValue(playerToMove).getMoves(state, map, move);
+			
+			move.addAll(getAllMove(UnitStateTypes.ATTACK, map));
 			
 		} else if (node.getChildren().size() == 1){
 			
-			new Player_Kite(playerToMove).getMoves(state, map, move);
+			move.addAll(getAllMove(UnitStateTypes.FLEE, map));
 			
 		} else {
 	
-			move = getNextMove(playerToMove, state, map); // Possible moves?
+			move = getRandomMove(playerToMove, map); // Possible moves?
 			
 		}
+		
+		move = getRandomMove(playerToMove, map); // Possible moves?
 		
 		if (move == null)
 			return;
 	
 		if (uniqueMove(move, node)){
-			UctNode child = new UctNode(node, getChildNodeType(node, state), move, playerToMove);
+			GuctNode child = new GuctNode(node, getChildNodeType(node, state), move, playerToMove);
 			node.getChildren().add(child);
 		}
 		
@@ -179,7 +184,25 @@ public class UCTCD {
 		
 	}
 
-	private int getPlayerToMove(UctNode node, GameState state) {
+	private List<UnitState> getAllMove(UnitStateTypes type, HashMap<Integer, List<UnitAction>> map) {
+
+		List<UnitState> states = new ArrayList<UnitState>();
+		
+		for(Integer i : map.keySet()){
+			
+			List<UnitAction> actions = map.get(i);
+			if (actions.isEmpty())
+				continue;
+			
+			UnitState state = new UnitState(type, actions.get(0)._unit, actions.get(0)._player);
+			states.add(state);
+			
+		}
+		
+		return states;
+	}
+
+	private int getPlayerToMove(GuctNode node, GameState state) {
 		
 		if (state.whoCanMove() == Players.Player_Both){
 		
@@ -204,12 +227,12 @@ public class UCTCD {
 		
 	}
 	
-	private boolean uniqueMove(List<UnitAction> move, UctNode node) {
+	private boolean uniqueMove(List<UnitState> move, GuctNode node) {
 
 		if(node.getChildren().isEmpty())
 			return true;
 		
-		for (UctNode child : node.getChildren()){
+		for (GuctNode child : node.getChildren()){
 			boolean identical = true;
 			if (child.getMove().size() != move.size()){
 				identical = false;
@@ -230,17 +253,7 @@ public class UCTCD {
 		
 	}
 
-	private int enemy(int player) {
-		
-		if (player == minPlayerIndex)
-			return maxPlayerIndex;
-		else if (player == maxPlayerIndex)
-			return minPlayerIndex;
-		
-		return -1;
-	}
-
-	private NodeType getChildNodeType(UctNode parent, GameState prevState) {
+	private NodeType getChildNodeType(GuctNode parent, GameState prevState) {
 		
 		if(!prevState.bothCanMove()){
 			
@@ -268,15 +281,21 @@ public class UCTCD {
 		return NodeType.DEFAULT;
 	}
 
-	private List<UnitAction> getNextMove(int playerToMove, GameState state, HashMap<Integer, List<UnitAction>> map) {
+	private List<UnitState> getRandomMove(int playerToMove, HashMap<Integer, List<UnitAction>> map) {
 		
-		ArrayList<UnitAction> move = new ArrayList<UnitAction>();
+		ArrayList<UnitState> move = new ArrayList<UnitState>();
 		
-		Random r = new Random();
 		for(Integer i : map.keySet()){
 			
+			// Random state
+			UnitStateTypes type = UnitStateTypes.ATTACK;
+			if (Math.random() >= 0.5f)
+				type = UnitStateTypes.FLEE;
+			
+			UnitState unitState = new UnitState(type, i, playerToMove);
+			
 			// Add random possible action
-			move.add(map.get(i).get(r.nextInt(map.get(i).size())));
+			move.add(unitState);
 			
 		}
 		
@@ -284,19 +303,23 @@ public class UCTCD {
 		
 	}
 
-	private void updateState(UctNode node, GameState state, boolean leaf) {
+	private void updateState(GuctNode node, GameState state, boolean leaf) {
 		
 		if (node.getType() != NodeType.FIRST || leaf){
 			
 			if (node.getType() == NodeType.SECOND){
 				
 				try {
-					state.makeMoves(node.getParent().getMove());
+					List<UnitState> move = node.getParent().getMove();
+					List<UnitAction> actions = statesToActions(move, state.clone());
+					state.makeMoves(actions);
 				} catch (Exception e) {e.printStackTrace();}
 			}
 			
 			try {
-				state.makeMoves(node.getMove());
+				List<UnitState> move = node.getMove();
+				List<UnitAction> actions = statesToActions(move, state.clone());
+				state.makeMoves(actions);
 			} catch (Exception e) {e.printStackTrace();}
 			
 			state.finishedMoving();
@@ -305,7 +328,61 @@ public class UCTCD {
 		
 	}
 
-	private UctNode selectNode(UctNode parent) {
+	private List<UnitAction> statesToActions(List<UnitState> move, GameState state) {
+		
+		int player = 0;
+		
+		if (move == null || move.isEmpty() || move.get(0) == null)
+			return new ArrayList<UnitAction>();
+		else
+			player = move.get(0).player;
+		
+		Player attack = new Player_NoOverKillAttackValue(player);
+		Player flee = new Player_Defense(player);
+		
+		HashMap<Integer, List<UnitAction>> map = new HashMap<Integer, List<UnitAction>>();
+		
+		try {
+			state.generateMoves(map, player);
+		} catch (Exception e) {e.printStackTrace();}
+		
+		List<Integer> attackingUnits = new ArrayList<Integer>();
+		List<Integer> fleeingUnits = new ArrayList<Integer>();
+		
+		// Divide units into two groups
+		for(UnitState unitState : move){
+			
+			if (unitState.type == UnitStateTypes.ATTACK)
+				attackingUnits.add(unitState.unit);
+			else if (unitState.type == UnitStateTypes.FLEE)
+				fleeingUnits.add(unitState.unit);
+			
+		}
+		
+		List<UnitAction> allActions = new ArrayList<UnitAction>();
+		HashMap<Integer, List<UnitAction>> attackingMap = new HashMap<Integer, List<UnitAction>>();
+		HashMap<Integer, List<UnitAction>> defendingMap = new HashMap<Integer, List<UnitAction>>();
+		
+		for(Integer i : attackingUnits)
+			attackingMap.put(i, map.get(i));
+		
+		for(Integer i : fleeingUnits)
+			defendingMap.put(i, map.get(i));
+		
+		// Add attack actions
+		List<UnitAction> attackActions = new ArrayList<UnitAction>();
+		attack.getMoves(state, attackingMap, attackActions);
+		allActions.addAll(attackActions);
+		
+		// Add defend actions
+		List<UnitAction> defendActions = new ArrayList<UnitAction>();
+		flee.getMoves(state, defendingMap, defendActions);
+		allActions.addAll(defendActions);
+		
+		return allActions;
+	}
+
+	private GuctNode selectNode(GuctNode parent) {
 		
 		float bestScore = Float.MAX_VALUE;
 		//.getChildren().get(0)
@@ -313,8 +390,8 @@ public class UCTCD {
 		if (maxPlayer)
 			bestScore = -Float.MAX_VALUE;
 			
-		UctNode bestNode = null;
-		for(UctNode child : parent.getChildren()){
+		GuctNode bestNode = null;
+		for(GuctNode child : parent.getChildren()){
 			
 			if (child.getVisits() > 0){
 				
@@ -368,10 +445,10 @@ public class UCTCD {
 	}
 
 
-	private UctNode mostVisitedChildOf(UctNode parent) {
+	private GuctNode mostVisitedChildOf(GuctNode parent) {
 		int mostVisits = -1;
-		UctNode best = null;
-		for(UctNode node : parent.getChildren()){
+		GuctNode best = null;
+		for(GuctNode node : parent.getChildren()){
 			if (node.getVisits()>mostVisits){
 				best = node;
 				mostVisits = node.getVisits();

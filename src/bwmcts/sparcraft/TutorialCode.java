@@ -8,11 +8,14 @@ import javabot.BWAPIEventListener;
 import javabot.JNIBWAPI;
 import javabot.types.UnitType;
 import javabot.types.UnitType.UnitTypes;
+import bwmcts.combat.GuctcdLogic;
 import bwmcts.combat.UctcdLogic;
+import bwmcts.mcts.guct.GUCTCD;
 import bwmcts.mcts.uctcd.UCTCD;
 import bwmcts.mcts.uctcd.UCTCDsingle;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_AttackClosest;
+import bwmcts.sparcraft.players.Player_Defense;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
 public class TutorialCode implements BWAPIEventListener  {
@@ -40,67 +43,32 @@ public class TutorialCode implements BWAPIEventListener  {
 	    return marineAtOrigin;
 	}
 
-	public GameState getSampleState() throws Exception
+	public GameState AvsBState(int numA, UnitTypes typeA, int numB, UnitTypes typeB) throws Exception
 	{
 	    // GameState only has a default constructor, you must add units to it manually
 	    GameState state=new GameState();
 	    state._maxUnits=50;
 	    state.setMap(new Map(40, 40));
-	    int marines = 20;
-	    int zealots = 15;
 	    int startY = 5;
 	    int space = 10;
 	    
 	    // Or it can be added to the state via unit construction parameters
 	    try {
-	    state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(),new Position(200,startY + space));
+	    state.addUnit(bwapi.getUnitType(typeB.ordinal()), Players.Player_Two.ordinal(),new Position(200,startY + space));
 	    
 	    } catch (Exception e){}
 	    
 	    try {
-	    	for(int i = 0; i < zealots; i++){
-	    		state.addUnit(bwapi.getUnitType(UnitTypes.Protoss_Zealot.ordinal()), Players.Player_One.ordinal(), new Position(500,startY + space*i));
+	    	for(int i = 0; i < numA; i++){
+	    		state.addUnit(bwapi.getUnitType(typeA.ordinal()), Players.Player_One.ordinal(), new Position(500,startY + space*i));
 	    	}
 	    
 	    } catch (Exception e){}
 	    
-	    for(int i = 1; i < marines; i++){
-	    	state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_Two.ordinal(),new Position(200,startY + space + space * i));
+	    for(int i = 1; i < numB; i++){
+	    	state.addUnit(bwapi.getUnitType(typeB.ordinal()), Players.Player_Two.ordinal(),new Position(200,startY + space + space * i));
 	    }
-	    // Units added with those 2 functions will be given a unique unitID inside GameState
-	    // If you require setting your own unique unitID for a unit, for example when translating a BWAPI::Broodwar state to GameState
-
-	    // Construct the unit
-	    /*
-	    Unit u=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(100,150));
-	    u.setUnitID(15);
-	    state.addUnitWithID(u);
 	    
-	    Unit u1=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(100,200));
-	    u.setUnitID(16);
-	    state.addUnitWithID(u1);
-
-	    Unit u2=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(100,250));
-	    u.setUnitID(17);
-	    state.addUnitWithID(u2);
-
-	    Unit u3=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(100,300));
-	    u.setUnitID(18);
-	    state.addUnitWithID(u3);
-	    
-	    Unit u4=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(100,350));
-	    u.setUnitID(19);
-	    state.addUnitWithID(u4);
-
-	    Unit u5=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(100,400));
-	    u.setUnitID(20);
-	    state.addUnitWithID(u5);
-	    
-	    
-	    Unit u6=new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(), new Position(100,450));
-	    u.setUnitID(21);
-	    state.addUnitWithID(u6);
-	    */
 	    return state;
 	}
 
@@ -184,16 +152,24 @@ public class TutorialCode implements BWAPIEventListener  {
 	    return move;
 	}
 
+	private GameState getSampleState() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	void runSampleGame() throws Exception
 	{
 	    // running a game is quite simple, you just need 2 players and an initial state
-	    GameState initialState = getSampleState();
-
+	    //GameState initialState = AvsBState(20, UnitTypes.Protoss_Dragoon, 24, UnitTypes.Protoss_Dragoon);
+		GameState initialState = AvsBState(20, UnitTypes.Terran_Marine, 20, UnitTypes.Terran_Marine);
+		
 	    // get the players
 	    Player p1 = new Player_NoOverKillAttackValue(Players.Player_One.ordinal());
 	    //Player p2 = new Player_NoOverKillAttackValue(Players.Player_Two.ordinal());
+	    //Player p2 = new Player_Defense(Players.Player_Two.ordinal());
 	    //Player p2 = getSamplePlayer(Players.Player_Two.ordinal());
-	    Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1,1000,false));
+	    //Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1,500,true));
+	    Player p2 = new GuctcdLogic(bwapi, new GUCTCD(1.6,20,0,1,5000,true));
 	    p2.setID(1);
 	    
 	    // enter a maximum move limit for the game to go on for

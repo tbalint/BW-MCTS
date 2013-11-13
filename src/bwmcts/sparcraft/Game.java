@@ -72,11 +72,13 @@ public class Game {
 	    
 	    // play until there is no winner
 	    while (!this.gameOver()){
+	    	
 	        if (rounds >= moveLimit)
 	        {
+	        	System.out.println(state._currentTime);
 	            break;
 	        }
-
+	    	
 	        Timer frameTimer=new Timer();
 	        frameTimer.start();
 	
@@ -97,9 +99,6 @@ public class Game {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-
-	        // the tuple of moves he wishes to make
-	        toMove.getMoves(state, moves_A, scriptMoves_A);
 	        
 	        // if both players can move, generate the other player's moves
 	        if (state.bothCanMove())
@@ -110,6 +109,7 @@ public class Game {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+	            
 	            enemy.getMoves(state, moves_B, scriptMoves_B);
 	
 	            try {
@@ -118,7 +118,11 @@ public class Game {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+	            
 	        }
+	        
+	        // the tuple of moves he wishes to make
+	        toMove.getMoves(state, moves_A, scriptMoves_A);
 	
 	        // make the moves
 	        try {
@@ -134,7 +138,7 @@ public class Game {
 		        ui.setGameState(state);
 		        ui.repaint();
 	        	try {
-					Thread.sleep(0);
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -142,8 +146,8 @@ public class Game {
 	        }
 	        
 	        state.finishedMoving();
+		    
 	        rounds++;
-	        
 	        
 	    }
 	

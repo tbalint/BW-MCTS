@@ -36,7 +36,9 @@ public class Player_NoOverKillAttackValue extends Player {
 			
 		}
 		
-		for (int u = 0; u<moves.size(); ++u)
+		//for (int u = 0; u<moves.size(); ++u){
+		
+		for (Integer u : moves.keySet())
 		{
 			boolean foundUnitAction = false;
 			int actionMoveIndex	= 0;
