@@ -67,16 +67,21 @@ public class GUCTCD {
 			
 			traverse(root, state.clone());
 			t++;
-			
+			/*
+			String out = root.print(0);
+			writeToFile(out, "tree.xml");
+			*/
 		}
 		
-		GuctNode best = mostVisitedChildOf(root);
+		//GuctNode best = mostVisitedChildOf(root);
+		GuctNode best = mostWinningChildOf(root);
 		
 		if (debug){
 			System.out.println("Traversals " + (t++));
-			
-			//String out = root.print(0);
-			//writeToFile(out, "tree.xml");
+			/*
+			String out = root.print(0);
+			writeToFile(out, "tree.xml");
+			*/
 		}
 		
 		if (best == null){
@@ -142,33 +147,30 @@ public class GUCTCD {
 		// Figure out who is next to move
 		int playerToMove = getPlayerToMove(node, state);
 		
-		HashMap<Integer, List<UnitAction>> map = new HashMap<Integer, List<UnitAction>>();
-		
 		List<UnitState> move = new ArrayList<UnitState>();
 		
-		try {
-			state.generateMoves(map, playerToMove);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-			
-		if (node.getChildren().isEmpty()){
-			
-			move.addAll(getAllMove(UnitStateTypes.ATTACK, map));
-			
-		} else if (node.getChildren().size() == 1){
-			
-			move.addAll(getAllMove(UnitStateTypes.FLEE, map));
-			
-		} else {
-	
-			move = getRandomMove(playerToMove, map); // Possible moves?
+		HashMap<Integer, List<UnitAction>> map;
+		if (node.getPossibleMoves() == null){
+
+			map = new HashMap<Integer, List<UnitAction>>();
+			try {
+				state.generateMoves(map, playerToMove);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			node.setPossibleMoves(map);
 			
 		}
 		
-		move = getRandomMove(playerToMove, map); // Possible moves?
-		
+			
+		if (node.getChildren().isEmpty())
+			move.addAll(getAllMove(UnitStateTypes.ATTACK, node.getPossibleMoves()));
+		else if (node.getChildren().size() == 0)
+			move.addAll(getAllMove(UnitStateTypes.FLEE, node.getPossibleMoves()));
+		else 
+			move = getRandomMove(playerToMove, node.getPossibleMoves()); // Possible moves?
+			
 		if (move == null)
 			return;
 	
@@ -338,7 +340,7 @@ public class GUCTCD {
 			player = move.get(0).player;
 		
 		Player attack = new Player_NoOverKillAttackValue(player);
-		Player flee = new Player_Defense(player);
+		Player flee = new Player_Kite(player);
 		
 		HashMap<Integer, List<UnitAction>> map = new HashMap<Integer, List<UnitAction>>();
 		
@@ -396,6 +398,7 @@ public class GUCTCD {
 			if (child.getVisits() > 0){
 				
 	            float winRate = child.getTotalScore() / child.getVisits();
+	            winRate = winRate / 500;
 	            float uctVal = (float) (K * Math.sqrt(Math.log(parent.getVisits()) / child.getVisits()));
 	            float currentVal = maxPlayer ? (winRate + uctVal) : (winRate - uctVal);
 	            
@@ -442,6 +445,18 @@ public class GUCTCD {
 		} catch (IOException e2) {
 			System.out.println("Error saving " + filename + ". " + e2);
 		}
+	}
+	
+	private GuctNode mostWinningChildOf(GuctNode parent) {
+		int bestScore = Integer.MIN_VALUE;
+		GuctNode best = null;
+		for(GuctNode node : parent.getChildren()){
+			if (node.getTotalScore()/node.getVisits() > bestScore){
+				best = node;
+				bestScore = (int) (node.getTotalScore()/node.getVisits());
+			}
+		}
+		return best;
 	}
 
 

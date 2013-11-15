@@ -26,7 +26,7 @@ public class Player_Kite extends Player {
 	public void getMoves(GameState  state, HashMap<Integer,List<UnitAction>> moves, List<UnitAction>  moveVec)
 	{
 		moveVec.clear();
-		for (int u = 0; u < moves.size(); ++u)
+		for (Integer u : moves.keySet())
 		{
 			boolean foundUnitAction					= false;
 			int actionMoveIndex						= 0;

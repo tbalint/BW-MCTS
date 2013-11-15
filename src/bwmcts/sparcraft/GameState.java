@@ -540,11 +540,11 @@ public class GameState {
 
 		if (playerDead(enemyPlayer) && !playerDead(player))
 		{
-			winBonus = 100000;
+			//winBonus = 500-getTime();
 		}
 		else if (playerDead(player) && !playerDead(enemyPlayer))
 		{
-			winBonus = -100000;
+			//winBonus = -100000;
 		}
 
 		return new StateEvalScore(score._val + winBonus, score._numMoves);
