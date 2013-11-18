@@ -1,5 +1,7 @@
 package bwmcts.sparcraft;
 
+import javabot.JNIBWAPI;
+import javabot.types.UnitCommandType.UnitCommandTypes;
 import javabot.types.UnitSizeType;
 import javabot.types.UnitType;
 import javabot.types.UnitType.UnitTypes;
@@ -33,7 +35,7 @@ public class Unit implements Comparable<Unit> {
 	    _range    =      new      PlayerWeapon(PlayerProperties.Get(playerID), WeaponProperties.Get(_unitType.getGroundWeaponID()).type).GetMaxRange() + Constants.Range_Addition;
 	    _unitID               =0;
 	    _playerID             =playerID;
-	    _currentHP            =unitType.getMaxHitPoints();
+	    _currentHP            =unitType.getMaxHitPoints()+unitType.getMaxShields();
 	    _currentEnergy        =unitType.getMaxEnergy()>0?50:0;
 	    _timeCanMove          =0;
 	    _timeCanAttack        =0;
@@ -52,7 +54,7 @@ public class Unit implements Comparable<Unit> {
 	public Unit(UnitType unitType,  Position pos, int unitID, int playerID, int hp, int energy, int tm, int ta){
 	
 		_unitType             =unitType;
-	    _range                =new PlayerWeapon(PlayerProperties.Get(playerID), WeaponProperties.Get(_unitType.getGroundWeaponID()).type).GetMaxRange() + Constants.Range_Addition;
+	    _range                =new PlayerWeapon(PlayerProperties.Get(playerID), WeaponProperties.Get(_unitType.getGroundWeaponID()).type).GetMaxRange()+ Constants.Range_Addition;
 	    //, _range                (unitType.groundWeapon().maxRange() + Constants::Range_Addition)
 	    _position             =pos;
 	    _unitID               =unitID;
@@ -472,11 +474,41 @@ public class Unit implements Comparable<Unit> {
 		return u;
 	}
 	
-	public static Unit translateUnit(javabot.model.Unit u){
-		return new Unit();
+	//Code from UalbertaBot
+	public void setUnitCooldown(JNIBWAPI bwapi,javabot.model.Unit unit){
+	        int attackCooldown=0;
+	        int moveCooldown=0;
+
+	        UnitCommandTypes lastCommand = UnitCommandTypes.values()[unit.getLastCommandID()];
+	        int lastCommandFrame = unit.getLastCommandFrame();
+	        int currentFrame = bwapi.getFrameCount();
+	        int framesSinceCommand = currentFrame - lastCommandFrame;
+
+	        
+	        attackCooldown = currentFrame + unit.getGroundWeaponCooldown();
+	        // if the last attack was an attack command
+	        if (lastCommand == UnitCommandTypes.Attack_Unit)
+	        {
+	            moveCooldown = currentFrame +Math.max(0, attackInitFrameTime() - framesSinceCommand);
+
+	        }
+	        // if the last command was a move command
+	        else if (lastCommand == UnitCommandTypes.Move)
+	        {
+        		
+                moveCooldown = currentFrame + Math.max(0, moveCooldown() - framesSinceCommand);
+	        }
+
+	        if (moveCooldown - currentFrame < 4)
+	        {
+	        	
+	                moveCooldown = currentFrame;
+	        }
+
+	        moveCooldown = Math.min(moveCooldown, attackCooldown);
+
+	        this._timeCanMove=moveCooldown;
+	        this._timeCanAttack=attackCooldown;
 	}
-	
-	// hash functions
-	//const HashType          calculateHash(const size_t & hashNum, const TimeType & gameTime) const;
-	//void                    debugHash(const size_t & hashNum, const TimeType & gameTime) const;
+
 }
