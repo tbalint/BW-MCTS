@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import bwmcts.mcts.UnitState;
+import bwmcts.mcts.UnitStateTypes;
 import bwmcts.sparcraft.EvaluationMethods;
 import bwmcts.sparcraft.Game;
 import bwmcts.sparcraft.GameState;
@@ -167,7 +169,7 @@ public class IUCTCD {
 		if (node.getChildren().isEmpty())
 			move.addAll(getAllMove(UnitStateTypes.ATTACK, node.getPossibleMoves()));
 		else if (node.getChildren().size() == 1)
-			move.addAll(getAllMove(UnitStateTypes.FLEE, node.getPossibleMoves()));
+			move.addAll(getAllMove(UnitStateTypes.KITE, node.getPossibleMoves()));
 		else 
 			move = getRandomMove(playerToMove, node.getPossibleMoves()); // Possible moves?
 			
@@ -292,7 +294,7 @@ public class IUCTCD {
 			// Random state
 			UnitStateTypes type = UnitStateTypes.ATTACK;
 			if (Math.random() >= 0.5f)
-				type = UnitStateTypes.FLEE;
+				type = UnitStateTypes.KITE;
 			
 			UnitState unitState = new UnitState(type, i, playerToMove);
 			
@@ -356,7 +358,7 @@ public class IUCTCD {
 			
 			if (unitState.type == UnitStateTypes.ATTACK)
 				attackingUnits.add(unitState.unit);
-			else if (unitState.type == UnitStateTypes.FLEE)
+			else if (unitState.type == UnitStateTypes.KITE)
 				fleeingUnits.add(unitState.unit);
 			
 		}

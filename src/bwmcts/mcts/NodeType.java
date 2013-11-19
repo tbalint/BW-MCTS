@@ -1,4 +1,4 @@
-package bwmcts.mcts.uctcd;
+package bwmcts.mcts;
 
 public enum NodeType {
 

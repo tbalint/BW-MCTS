@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import bwmcts.mcts.UnitState;
 import bwmcts.sparcraft.UnitAction;
 
 public class IuctNode {

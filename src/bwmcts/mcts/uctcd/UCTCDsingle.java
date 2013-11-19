@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import bwmcts.mcts.NodeType;
 import bwmcts.sparcraft.EvaluationMethods;
 import bwmcts.sparcraft.Game;
 import bwmcts.sparcraft.GameState;

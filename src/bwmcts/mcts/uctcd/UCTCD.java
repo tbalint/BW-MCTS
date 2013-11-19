@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import bwmcts.mcts.NodeType;
 import bwmcts.sparcraft.EvaluationMethods;
 import bwmcts.sparcraft.Game;
 import bwmcts.sparcraft.GameState;
@@ -17,7 +18,6 @@ import bwmcts.sparcraft.Players;
 import bwmcts.sparcraft.StateEvalScore;
 import bwmcts.sparcraft.UnitAction;
 import bwmcts.sparcraft.players.Player;
-import bwmcts.sparcraft.players.Player_AttackClosest;
 import bwmcts.sparcraft.players.Player_Kite;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
