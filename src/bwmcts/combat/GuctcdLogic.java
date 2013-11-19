@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import bwmcts.mcts.guct.GUCTCD;
+import bwmcts.mcts.iuct.IUCTCD;
 import bwmcts.mcts.uctcd.UCTCD;
 import bwmcts.mcts.uctcd.UCTCDsingle;
 
@@ -26,9 +26,9 @@ import javabot.JNIBWAPI;
 
 public class GuctcdLogic extends Player implements ICombatLogic {
 
-	private GUCTCD guctcd;
+	private IUCTCD guctcd;
 	private SparcraftUI ui;
-	public GuctcdLogic(JNIBWAPI bwapi, GUCTCD guctcd){
+	public GuctcdLogic(JNIBWAPI bwapi, IUCTCD guctcd){
 		
 		this.guctcd = guctcd;
 		

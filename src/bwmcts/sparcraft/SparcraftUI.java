@@ -84,8 +84,8 @@ public class SparcraftUI extends JComponent {
 			
 		} 
 		
-		UPGMA clustering=new UPGMA(_state.getAllUnit()[1],5);
-	    HashMap<Integer,List<Unit>>clusters=  clustering.getClusters();
+		UPGMA clustering=new UPGMA(_state.getAllUnit()[1]);
+	    HashMap<Integer,List<Unit>>clusters=  clustering.getClusters(5);
 	    int clusterId=0;
 	    for (List<Unit> list : clusters.values()){
 	    	g.setColor(getColor(clusterId++));
@@ -130,6 +130,7 @@ public class SparcraftUI extends JComponent {
 	}
 	
 	private Color getColor(int i){
+		
 		switch (i){
 			case 0:
 				return Color.CYAN;

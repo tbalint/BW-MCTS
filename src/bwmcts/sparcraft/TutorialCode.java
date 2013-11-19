@@ -10,7 +10,7 @@ import javabot.types.UnitType;
 import javabot.types.UnitType.UnitTypes;
 import bwmcts.combat.GuctcdLogic;
 import bwmcts.combat.UctcdLogic;
-import bwmcts.mcts.guct.GUCTCD;
+import bwmcts.mcts.iuct.IUCTCD;
 import bwmcts.mcts.uctcd.UCTCD;
 import bwmcts.mcts.uctcd.UCTCDsingle;
 import bwmcts.sparcraft.players.Player;
@@ -162,16 +162,18 @@ public class TutorialCode implements BWAPIEventListener  {
 	{
 	    // running a game is quite simple, you just need 2 players and an initial state
 	    //GameState initialState = AvsBState(20, UnitTypes.Protoss_Dragoon, 24, UnitTypes.Protoss_Dragoon);
-		GameState initialState = AvsBState(30, UnitTypes.Protoss_Zealot, 40, UnitTypes.Terran_Marine);
+		GameState initialState = AvsBState(25, UnitTypes.Protoss_Zealot, 40, UnitTypes.Terran_Marine);
 		
 	    // get the players
 	    Player p1 = new Player_NoOverKillAttackValue(Players.Player_One.ordinal());
+	    //Player p2 = new Player_NoOverKillAttackValue(Players.Player_Two.ordinal());
+	    //Player p2 = new Player_Kite(Players.Player_Two.ordinal());
 	    //Player p2 = new Player_Kite(Players.Player_Two.ordinal());
 	    //Player p2 = new Player_Kite(Players.Player_Two.ordinal());
 	    //Player p2 = getSamplePlayer(Players.Player_Two.ordinal());
-	    //Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6,20,0,1,500,true));
+	    //Player p2 = new UctcdLogic(bwapi, new GUCTCD(1.6,20,0,1,500,true));
 	    
-	    Player p2 = new GuctcdLogic(bwapi, new GUCTCD(1.6,20,0,1,5000,false));
+	    Player p2 = new GuctcdLogic(bwapi, new IUCTCD(1.6,20,0,1,5000,false));
 	    p2.setID(1);
 	    
 	    // enter a maximum move limit for the game to go on for

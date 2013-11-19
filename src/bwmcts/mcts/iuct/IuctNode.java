@@ -1,4 +1,4 @@
-package bwmcts.mcts.guct;
+package bwmcts.mcts.iuct;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.List;
 
 import bwmcts.sparcraft.UnitAction;
 
-public class GuctNode {
+public class IuctNode {
 
 	private int visits;
 	private float totalScore;
@@ -18,18 +18,18 @@ public class GuctNode {
 	private boolean fullyExpanded;
 	private int expansions;
 	
-	private List<GuctNode> children;
-	private GuctNode parent;
+	private List<IuctNode> children;
+	private IuctNode parent;
 	private HashMap<Integer, List<UnitAction>> possibleMoves;
 	
-	public GuctNode(GuctNode parent, NodeType type, List<UnitState> move, int movingPlayerIndex) {
+	public IuctNode(IuctNode parent, NodeType type, List<UnitState> move, int movingPlayerIndex) {
 		
 		this.visits = 0;
 		this.totalScore = 0;
 		this.uctValue = 0;
 		this.movingPlayerIndex = movingPlayerIndex;
 		this.parent = parent;
-		this.children = new ArrayList<GuctNode>();
+		this.children = new ArrayList<IuctNode>();
 		this.type = type;
 		this.move = move;
 		this.fullyExpanded = false;
@@ -37,9 +37,9 @@ public class GuctNode {
 		
 	}
 	
-	public GuctNode mostVisitedChild(){
-		GuctNode mostVisited = null;
-		for(GuctNode child : children){
+	public IuctNode mostVisitedChild(){
+		IuctNode mostVisited = null;
+		for(IuctNode child : children){
 			if (mostVisited == null || child.getVisits() > mostVisited.getVisits())
 				mostVisited = child;
 		}
@@ -54,19 +54,19 @@ public class GuctNode {
 		this.move = move;
 	}
 
-	public List<GuctNode> getChildren() {
+	public List<IuctNode> getChildren() {
 		return children;
 	}
 
-	public void setChildren(List<GuctNode> children) {
+	public void setChildren(List<IuctNode> children) {
 		this.children = children;
 	}
 
-	public GuctNode getParent() {
+	public IuctNode getParent() {
 		return parent;
 	}
 
-	public void setParent(GuctNode parent) {
+	public void setParent(IuctNode parent) {
 		this.parent = parent;
 	}
 
@@ -130,7 +130,7 @@ public class GuctNode {
 		}
 		
 		int next = level+1;
-		for(GuctNode child : children){
+		for(IuctNode child : children){
 			
 			out += child.print(next);
 			

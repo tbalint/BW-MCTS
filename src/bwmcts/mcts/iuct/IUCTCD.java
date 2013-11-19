@@ -1,4 +1,4 @@
-package bwmcts.mcts.guct;
+package bwmcts.mcts.iuct;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,7 +22,7 @@ import bwmcts.sparcraft.players.Player_Defense;
 import bwmcts.sparcraft.players.Player_Kite;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
-public class GUCTCD {
+public class IUCTCD {
 
 	private double K = 1.6f;
 	private int maxChildren = 20;
@@ -33,11 +33,11 @@ public class GUCTCD {
 	private Player baseScript;
 	
 	
-	public GUCTCD() {
+	public IUCTCD() {
 		
 	}
 
-	public GUCTCD(double k, int maxChildren, int minPlayerIndex,
+	public IUCTCD(double k, int maxChildren, int minPlayerIndex,
 			int maxPlayerIndex, int simulationSteps, boolean debug) {
 		super();
 		this.K = k;
@@ -59,7 +59,7 @@ public class GUCTCD {
 		
 		Date start = new Date();
 		
-		GuctNode root = new GuctNode(null, NodeType.ROOT, new ArrayList<UnitState>(), maxPlayerIndex);
+		IuctNode root = new IuctNode(null, NodeType.ROOT, new ArrayList<UnitState>(), maxPlayerIndex);
 		//root.setVisits(1);
 		
 		int t = 0;
@@ -74,7 +74,7 @@ public class GUCTCD {
 		}
 		
 		//GuctNode best = mostVisitedChildOf(root);
-		GuctNode best = mostWinningChildOf(root);
+		IuctNode best = mostWinningChildOf(root);
 		
 		if (debug){
 			System.out.println("Traversals " + (t++));
@@ -94,7 +94,7 @@ public class GUCTCD {
 		
 	}
 
-	private float traverse(GuctNode node, GameState state) {
+	private float traverse(IuctNode node, GameState state) {
 		
 		float score = 0;
 		if (node.getVisits() == 0){
@@ -142,7 +142,7 @@ public class GUCTCD {
 		return score._val;
 	}
 
-	private void generateChildren(GuctNode node, GameState state) {
+	private void generateChildren(IuctNode node, GameState state) {
 		
 		// Figure out who is next to move
 		int playerToMove = getPlayerToMove(node, state);
@@ -175,7 +175,7 @@ public class GUCTCD {
 			return;
 	
 		if (uniqueMove(move, node)){
-			GuctNode child = new GuctNode(node, getChildNodeType(node, state), move, playerToMove);
+			IuctNode child = new IuctNode(node, getChildNodeType(node, state), move, playerToMove);
 			node.getChildren().add(child);
 		}
 		
@@ -204,7 +204,7 @@ public class GUCTCD {
 		return states;
 	}
 
-	private int getPlayerToMove(GuctNode node, GameState state) {
+	private int getPlayerToMove(IuctNode node, GameState state) {
 		
 		if (state.whoCanMove() == Players.Player_Both){
 		
@@ -229,12 +229,12 @@ public class GUCTCD {
 		
 	}
 	
-	private boolean uniqueMove(List<UnitState> move, GuctNode node) {
+	private boolean uniqueMove(List<UnitState> move, IuctNode node) {
 
 		if(node.getChildren().isEmpty())
 			return true;
 		
-		for (GuctNode child : node.getChildren()){
+		for (IuctNode child : node.getChildren()){
 			boolean identical = true;
 			if (child.getMove().size() != move.size()){
 				identical = false;
@@ -255,7 +255,7 @@ public class GUCTCD {
 		
 	}
 
-	private NodeType getChildNodeType(GuctNode parent, GameState prevState) {
+	private NodeType getChildNodeType(IuctNode parent, GameState prevState) {
 		
 		if(!prevState.bothCanMove()){
 			
@@ -305,7 +305,7 @@ public class GUCTCD {
 		
 	}
 
-	private void updateState(GuctNode node, GameState state, boolean leaf) {
+	private void updateState(IuctNode node, GameState state, boolean leaf) {
 		
 		if (node.getType() != NodeType.FIRST || leaf){
 			
@@ -384,7 +384,7 @@ public class GUCTCD {
 		return allActions;
 	}
 
-	private GuctNode selectNode(GuctNode parent) {
+	private IuctNode selectNode(IuctNode parent) {
 		
 		float bestScore = Float.MAX_VALUE;
 		//.getChildren().get(0)
@@ -392,8 +392,8 @@ public class GUCTCD {
 		if (maxPlayer)
 			bestScore = -Float.MAX_VALUE;
 			
-		GuctNode bestNode = null;
-		for(GuctNode child : parent.getChildren()){
+		IuctNode bestNode = null;
+		for(IuctNode child : parent.getChildren()){
 			
 			if (child.getVisits() > 0){
 				
@@ -447,10 +447,10 @@ public class GUCTCD {
 		}
 	}
 	
-	private GuctNode mostWinningChildOf(GuctNode parent) {
+	private IuctNode mostWinningChildOf(IuctNode parent) {
 		int bestScore = Integer.MIN_VALUE;
-		GuctNode best = null;
-		for(GuctNode node : parent.getChildren()){
+		IuctNode best = null;
+		for(IuctNode node : parent.getChildren()){
 			if (node.getTotalScore()/node.getVisits() > bestScore){
 				best = node;
 				bestScore = (int) (node.getTotalScore()/node.getVisits());
@@ -460,10 +460,10 @@ public class GUCTCD {
 	}
 
 
-	private GuctNode mostVisitedChildOf(GuctNode parent) {
+	private IuctNode mostVisitedChildOf(IuctNode parent) {
 		int mostVisits = -1;
-		GuctNode best = null;
-		for(GuctNode node : parent.getChildren()){
+		IuctNode best = null;
+		for(IuctNode node : parent.getChildren()){
 			if (node.getVisits()>mostVisits){
 				best = node;
 				mostVisits = node.getVisits();

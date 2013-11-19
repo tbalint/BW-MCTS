@@ -16,7 +16,6 @@ public class UPGMA {
 	int K;			// The number of clusters created so far
 	UPCluster[] cluster;		// The nodes (clusters) of the resulting tree
 	static List<Unit> input;
-	int clusterLimit=5;
 	
 	public UPGMA(double[][] ds) {
 		int N = ds.length;
@@ -40,9 +39,8 @@ public class UPGMA {
 	    	findAndJoin();
 	}
 	
-	public UPGMA(Unit[] in,int clusterNumber) {
+	public UPGMA(Unit[] in) {
 		input = new ArrayList<Unit>();
-		this.clusterLimit=clusterNumber;
 		for (int i=0; i<in.length;i++){
 			if (in[i]!=null && in[i].isAlive())
 				input.add(in[i]);
@@ -101,14 +99,14 @@ public class UPGMA {
 	
 	    UPGMA upclu = new UPGMA(ds1);
 	    try {
-	    	System.out.println(upclu.getClusters());
+	    	System.out.println(upclu.getClusters(5));
 	    } catch (Exception e){
 	    	e.printStackTrace();
 	    }  
 	}
 	
-	public HashMap<Integer,List<Unit>> getClusters(){
-		List<UPCluster> up = cutTree(this.getRoot());
+	public HashMap<Integer,List<Unit>> getClusters(int clusters){
+		List<UPCluster> up = cutTree(this.getRoot(), clusters);
 		HashMap<Integer, List<Unit>> result = new HashMap<Integer,List<Unit>>();
 		for (int i=0; i < up.size(); i++){
 			List<Unit> tmp = new ArrayList<Unit>();
@@ -137,7 +135,7 @@ public class UPGMA {
 	}
 	
 	
-	public List<UPCluster> cutTree(UPCluster c){
+	public List<UPCluster> cutTree(UPCluster c, int clusterLimit){
 		List<UPCluster> up=new ArrayList<UPCluster>();
 		Queue<UPCluster> q=new LinkedList<UPCluster>();
 		if (c.card > 0 && c.left != null && c.right != null){/*

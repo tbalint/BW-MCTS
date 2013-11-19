@@ -1,4 +1,4 @@
-package bwmcts.mcts.guct;
+package bwmcts.mcts.iuct;
 
 public class UnitState {
 
