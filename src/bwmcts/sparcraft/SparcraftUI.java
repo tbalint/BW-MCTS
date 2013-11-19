@@ -4,8 +4,11 @@ import javabot.types.UnitType.UnitTypes;
 
 import javax.swing.*;
 
+import bwmcts.clustering.UPGMA;
+
 import java.awt.*;
 import java.util.HashMap;
+import java.util.List;
 
 public class SparcraftUI extends JComponent {
 	
@@ -80,6 +83,16 @@ public class SparcraftUI extends JComponent {
 			}
 			
 		} 
+		
+		UPGMA clustering=new UPGMA(_state.getAllUnit()[1],5);
+	    HashMap<Integer,List<Unit>>clusters=  clustering.getClusters();
+	    int clusterId=0;
+	    for (List<Unit> list : clusters.values()){
+	    	g.setColor(getColor(clusterId++));
+	    	for (Unit a:list){
+	    		g.drawOval(a.pos().getX()-10+offSetX, a.pos().getY()-10+offSetY, 20, 20);
+	    	}
+	    }
 	}
 	
 	private void drawScaleForMap(Graphics g, int pixelWidth, int pixelHeight) {
@@ -114,5 +127,30 @@ public class SparcraftUI extends JComponent {
 		int height=i.getHeight(this);
 
 		g.drawImage(i, p.getX()+offSetX-(int)(width/2), p.getY()+offSetY-(int)(height/2), width, height, this);
+	}
+	
+	private Color getColor(int i){
+		switch (i){
+			case 0:
+				return Color.CYAN;
+			case 1:
+				return Color.GREEN;
+			case 2:
+				return Color.WHITE;
+			case 3:
+				return Color.PINK;
+			case 4:
+				return Color.ORANGE;
+			case 5:
+				return Color.YELLOW;
+			case 6:
+				return Color.LIGHT_GRAY;
+			case 7:
+				return Color.RED;
+			case 8:
+				return Color.BLUE;
+			default:
+				return Color.BLACK;
+		}
 	}
 }

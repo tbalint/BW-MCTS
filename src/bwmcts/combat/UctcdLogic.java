@@ -1,6 +1,7 @@
 package bwmcts.combat;
 
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import bwmcts.sparcraft.Game;
 import bwmcts.sparcraft.GameState;
 import bwmcts.sparcraft.PlayerProperties;
 import bwmcts.sparcraft.Players;
+import bwmcts.sparcraft.Position;
 import bwmcts.sparcraft.SparcraftUI;
 import bwmcts.sparcraft.Unit;
 import bwmcts.sparcraft.UnitAction;
@@ -27,6 +29,8 @@ public class UctcdLogic extends Player implements ICombatLogic {
 
 	private UCTCD uctcd;
 	private SparcraftUI ui;
+	private HashMap<Integer,UnitAction> actions=new HashMap<Integer,UnitAction>();
+	
 	public UctcdLogic(JNIBWAPI bwapi, UCTCD uctcd){
 		
 		this.uctcd = uctcd;
@@ -36,29 +40,16 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		PlayerProperties.Init();
 		WeaponProperties.Init(bwapi);
 		UnitProperties.Init(bwapi);
-		/*ui = new SparcraftUI(null);
-        
-        // Setup of the frame containing the game
-        JFrame f = new JFrame();
-        f.setSize(1000,700);
-        f.setTitle("Sparcraft in JAVA");
-        f.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
-        f.getContentPane().add(ui);    
-        f.setVisible(true);*/
 
 	}
-	
-	@Override
+
+	@Override	
 	public void act(JNIBWAPI bwapi, int time) {
 		GameState state = new GameState(bwapi);
-		/*ui.setGameState(state);
-		ui.repaint();*/
 		try{
-		//state.print();
-		
-		List<UnitAction> move = uctcd.search(state, time);
-		
-		executeActions(bwapi,state,move);
+			state.print();
+			List<UnitAction> move = uctcd.search(state.clone(), time);
+			executeActions(bwapi,state,move);
 		} catch(Exception e){
 			//e.printStackTrace();
 		}
@@ -71,60 +62,43 @@ public class UctcdLogic extends Player implements ICombatLogic {
 				Unit ourUnit		= state.getUnit(move._player, move._unit);
 		    	int player		= ourUnit.player();
 		    	int enemyPlayer  = state.getEnemy(player);
-		    	//System.out.println(bwapi.getUnit(ourUnit.getId()).getGroundWeaponCooldown()+" cooldown;     "+ ourUnit.attackCooldown()+ "; "+  move.toString());
-		    	if (move._moveType == UnitActionTypes.ATTACK)
+		    	System.out.println(bwapi.getUnit(ourUnit.getId()).getGroundWeaponCooldown()+" cooldown "+  move.toString());
+		    	drawUnitOneInfo(bwapi);
+		    	bwapi.drawCircle(bwapi.getUnit(ourUnit.getId()).getX(),bwapi.getUnit(ourUnit.getId()).getY(),ourUnit.range(),179,false,false);
+		    	if (bwapi.getUnit(ourUnit.getId()).isAttackFrame()){continue;}
+		    	
+		    	if (move._moveType == UnitActionTypes.ATTACK && bwapi.getUnit(ourUnit.getId()).getGroundWeaponCooldown()==0)
 		    	{
 		    		Unit enemyUnit=state.getUnit(enemyPlayer,move._moveIndex);
-		            //Unit & enemyUnit(getUnitByID(enemyPlayer ,move._moveIndex));
-		    			
-		    		// attack the unit
-		    		//ourUnit.attack(move, enemyUnit, state._currentTime);
-
-		    		bwapi.attack(ourUnit.getId(), enemyUnit.getId());
-
-		    		// enemy unit takes damage if it is alive
-		    		/*if (enemyUnit.isAlive())
-		    		{				
-		    			enemyUnit.takeAttack(ourUnit);
-
-		    			// check to see if enemy unit died
-		    			if (!enemyUnit.isAlive())
-		    			{
-		    				// if it died, remove it
-		    				state._numUnits[enemyPlayer]--;
-		    			}
-		    		}*/			
+		    		
+		    		
+		    		
+		    		if (!bwapi.getUnit(ourUnit.getId()).isAccelerating()){
+		    			System.out.println("CanAttack: "+ourUnit.canAttackTarget(enemyUnit, bwapi.getFrameCount())+", isMoving: "+bwapi.getUnit(ourUnit.getId()).isMoving()+",isAttacking: "+bwapi.getUnit(ourUnit.getId()).isAttacking());	
+		    			bwapi.attack(ourUnit.getId(), enemyUnit.getId());
+		    		}
 		    	}
 		    	else if (move._moveType == UnitActionTypes.MOVE)
 		    	{
-		    		//_numMovements[player]++;
-
-		    		//ourUnit.move(move, _currentTime);
-		    		
 		    		bwapi.move(ourUnit.getId(), move.pos().getX(), move.pos().getY());
-		    		//bwapi.move(ourUnit.getId(), move.pos().getX(), move.pos().getY());
 		    	}
 		    	else if (move._moveType == UnitActionTypes.HEAL)
 		    	{
 		    		Unit ourOtherUnit=state.getUnit(player,move._moveIndex);
-		    			
-		    		// attack the unit
-		    		//ourUnit.heal(move, ourOtherUnit, _currentTime);
+
 		    		bwapi.rightClick(ourUnit.getId(), ourOtherUnit.getId());	
-		    		/*if (ourOtherUnit.isAlive())
-		    		{
-		    			ourOtherUnit.takeHeal(ourUnit);
-		    		}*/
+
 		    	}
 		    	else if (move._moveType == UnitActionTypes.RELOAD)
 		    	{
-		    		//ourUnit.waitUntilAttack(move, _currentTime);
 		    	}
 		    	else if (move._moveType == UnitActionTypes.PASS)
 		    	{
-		    		//ourUnit.pass(move, _currentTime);
 		    	}
 			}
+		} else {
+			System.out.println("---------------------NO MOVES----------------------------");
+			
 		}
 	}
 
@@ -137,6 +111,17 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		for(UnitAction action : uctcd.search(clone, 40))
 			moveVec.add(action.clone());
 	
+	}
+	
+	public void drawUnitOneInfo(JNIBWAPI bwapi){
+		javabot.model.Unit my=bwapi.getUnit(0);
+		
+		bwapi.drawText(0, 0, "isMoving: "+my.isMoving(), false);
+		bwapi.drawText(0, 20, "isattacking: "+my.isAttacking(), false);
+		bwapi.drawText(0, 40, "isattackframe: "+my.isAttackFrame(), false);
+		bwapi.drawText(0, 60, "isacc: "+my.isAccelerating(), false);
+		bwapi.drawText(0, 80, "isIdle: "+my.isIdle(), false);
+		bwapi.drawText(0, 100, "isStartingAttack: "+my.isStartingAttack(), false);
 	}
 
 }

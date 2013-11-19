@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javabot.JNIBWAPI;
+import javabot.types.UnitCommandType;
 import javabot.types.UnitCommandType.UnitCommandTypes;
 import javabot.types.UnitType;
 
@@ -122,17 +123,9 @@ public class GameState {
 		int i=0;
 		for (javabot.model.Unit u: bwapi.getMyUnits()){
 			//System.out.println(bwapi.getFrameCount()+" - "+u.getLastCommandFrame()+": "+u.getGroundWeaponCooldown()+": "+u.getAirWeaponCooldown());
-			_units[bwapi.getSelf().getID()][i]=new Unit(UnitProperties.Get(u.getTypeID()).type,new Position(u.getX(),u.getY()), u.getID(), u.getPlayerID(), u.getHitPoints(), u.getEnergy(),(u.isMoving()?1:0),u.getGroundWeaponCooldown());
-			if (u.getLastCommandID()==UnitCommandTypes.Attack_Move.ordinal() || u.getLastCommandID()==UnitCommandTypes.Attack_Unit.ordinal() )
-			{
-				_units[bwapi.getSelf().getID()][i].updateMoveActionTime(_units[bwapi.getSelf().getID()][i].attackRepeatFrameTime());
-				_units[bwapi.getSelf().getID()][i].updateAttackActionTime( u.getGroundWeaponCooldown());
-			}
-			else if (u.getLastCommandID()==UnitCommandTypes.Move.ordinal() ){
-				_units[bwapi.getSelf().getID()][i].updateMoveActionTime(_units[bwapi.getSelf().getID()][i].attackInitFrameTime());
-				_units[bwapi.getSelf().getID()][i].updateAttackActionTime( u.getGroundWeaponCooldown());
-			}
-			
+			_units[bwapi.getSelf().getID()][i]=new Unit(UnitProperties.Get(u.getTypeID()).type,new Position(u.getX(),u.getY()), u.getID(), u.getPlayerID(), u.getHitPoints()+u.getShield(), u.getEnergy(),bwapi.getFrameCount(),bwapi.getFrameCount());
+			_units[bwapi.getSelf().getID()][i].setUnitCooldown(bwapi, u);
+			  
 			i++;
 		}
 		i=0;
@@ -140,16 +133,9 @@ public class GameState {
 
 			//TODO 
 			//System.out.println(bwapi.getFrameCount()+" - "+u.getLastCommandFrame()+": "+u.getGroundWeaponCooldown()+": "+u.getAirWeaponCooldown());
-			_units[bwapi.getEnemies().get(0).getID()][i]=new Unit(UnitProperties.Get(u.getTypeID()).type,new Position(u.getX(),u.getY()), u.getID(), u.getPlayerID(), u.getHitPoints(), u.getEnergy(),(u.isMoving()?1:0),u.getGroundWeaponCooldown());
-			if (u.getLastCommandID()==UnitCommandTypes.Attack_Move.ordinal() || u.getLastCommandID()==UnitCommandTypes.Attack_Unit.ordinal() )
-			{
-				_units[bwapi.getEnemies().get(0).getID()][i].updateMoveActionTime(_units[bwapi.getEnemies().get(0).getID()][i].attackRepeatFrameTime());
-				_units[bwapi.getEnemies().get(0).getID()][i].updateAttackActionTime( u.getGroundWeaponCooldown());
-			}
-			else if (u.getLastCommandID()==UnitCommandTypes.Move.ordinal() ){
-				_units[bwapi.getEnemies().get(0).getID()][i].updateMoveActionTime(_units[bwapi.getEnemies().get(0).getID()][i].attackInitFrameTime());
-				_units[bwapi.getEnemies().get(0).getID()][i].updateAttackActionTime( u.getGroundWeaponCooldown());
-			}
+			
+			_units[bwapi.getEnemies().get(0).getID()][i]=new Unit(UnitProperties.Get(u.getTypeID()).type,new Position(u.getX(),u.getY()), u.getID(), u.getPlayerID(), u.getHitPoints()+u.getShield(), u.getEnergy(),bwapi.getFrameCount(),bwapi.getFrameCount()+u.getGroundWeaponCooldown());
+
 			i++;
 		}
 		
@@ -172,11 +158,12 @@ public class GameState {
 		 _numMovements=new int[]{0,0};
 		 _prevHPSum=new int[]{0,0};//TODO
 			
-	    _currentTime=0;//bwapi.getFrameCount();
+	    _currentTime=bwapi.getFrameCount();
 	    
 	    _sameHPFrames=0;
+
 		
-		
+		calculateStartingHealth();
 		this._map=new Map(bwapi.getMap());
 		sortUnits();
 	}
@@ -656,7 +643,7 @@ public class GameState {
 		{
 			// unit reference
 			Unit unit =getUnit(playerIndex,unitIndex);
-			if (unit==null){continue;}
+			if (unit==null){break;}
 			// if this unit can't move at the same time as the first
 			if (unit.firstTimeFree() != firstUnitMoveTime)
 			{
@@ -751,7 +738,7 @@ public class GameState {
 
 	                // the final destination position of the unit
 	                Position dest = new Position(unit.pos().getX()+moveDistance*dir.getX(),unit.pos().getY()+ moveDistance*dir.getY());
-
+	               
 	                // if that poisition on the map is walkable
 	                if (isWalkable(dest) || (unit.type().isFlyer() && isFlyable(dest)))
 					{
@@ -878,7 +865,7 @@ public class GameState {
 				Unit unit=getUnit(p, u);
 
 				
-				//System.out.printf("  P%d %5d %5d    (%3d, %3d)     %s_%d\n", unit.player(), unit.currentHP(), unit.firstTimeFree(), unit.x(), unit.y(), unit.name(),unit._unitID);
+				System.out.printf("  P%d %5d %5d    (%3d, %3d)     %s_%d\n", unit.player(), unit.currentHP(), unit.firstTimeFree(), unit.x(), unit.y(), unit.name(),unit._unitID);
 			}
 		}
 		//System.out.println();

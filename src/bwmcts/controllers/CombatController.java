@@ -1,6 +1,7 @@
 package bwmcts.controllers;
 
 
+<<<<<<< HEAD
 import bwmcts.combat.AttackClosestLogic;
 import bwmcts.combat.AttackValueLogic;
 import bwmcts.combat.AttackWeakestLogic;
@@ -9,7 +10,11 @@ import bwmcts.combat.ICombatLogic;
 import bwmcts.combat.NoOverKillAttackValueLogic;
 import bwmcts.combat.UctcdLogic;
 import bwmcts.mcts.guct.GUCTCD;
+=======
+import bwmcts.combat.*;
+>>>>>>> e1e898c9fe4fae32499d4e5a62d1655a5c0601f5
 import bwmcts.mcts.uctcd.UCTCD;
+import bwmcts.mcts.guct.GUCTCD;
 import bwmcts.sparcraft.Position;
 import javabot.BWAPIEventListener;
 import javabot.JNIBWAPI;
@@ -31,7 +36,7 @@ public class CombatController implements BWAPIEventListener {
 		//combatLogic = new NoOverKillAttackValueLogic();
 		//combatLogic = new AttackValueLogic();
 		//combatLogic = new NoOverKillAttackValueLogic();
-		
+		//combatLogic = new AttackClosestLogic();
 		
 		bwapi.start();
 	} 
@@ -49,12 +54,17 @@ public class CombatController implements BWAPIEventListener {
 		
 		// set game speed to 30 (0 is the fastest. Tournament speed is 20)
 		// You can also change the game speed from within the game by "/speed X" command.
-		bwapi.setGameSpeed(40);
-		
+		bwapi.setGameSpeed(100);
+		bwapi.drawTargets(true);
+		bwapi.drawIDs(true);
+		//bwapi.drawHealth(true);
 		// analyze the map
 		bwapi.loadMapData(true);
 		bwapi.enablePerfectInformation();
-		combatLogic =new GuctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),5000,false));
+
+		//combatLogic =new GuctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),5000,false));
+		combatLogic =new UctcdLogic(bwapi,new UCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),1000,false));
+
 		// ============== YOUR CODE GOES HERE =======================
 
 		// This is called at the beginning of the game. You can 

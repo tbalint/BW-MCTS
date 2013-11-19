@@ -51,9 +51,12 @@ public class UCTCD {
 	public List<UnitAction> search(GameState state, long timeBudget){
 		
 		if (maxPlayerIndex == 0 && state.whoCanMove() == Players.Player_Two){
+			System.out.println("Exit without computing");
 			return new ArrayList<UnitAction>(); 
 		} else if (maxPlayerIndex == 1 && state.whoCanMove() == Players.Player_One){
-			return new ArrayList<UnitAction>(); 
+			System.out.println("Exit without computing");
+			return new ArrayList<UnitAction>();
+			
 		}
 		
 		Date start = new Date();
@@ -79,6 +82,7 @@ public class UCTCD {
 		}
 		
 		if (best == null){
+			System.out.println("Exit with computing");
 			return new ArrayList<UnitAction>();
 		}
 		
