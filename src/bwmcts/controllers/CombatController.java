@@ -1,7 +1,5 @@
 package bwmcts.controllers;
 
-
-<<<<<<< HEAD
 import bwmcts.combat.AttackClosestLogic;
 import bwmcts.combat.AttackValueLogic;
 import bwmcts.combat.AttackWeakestLogic;
@@ -10,9 +8,7 @@ import bwmcts.combat.ICombatLogic;
 import bwmcts.combat.NoOverKillAttackValueLogic;
 import bwmcts.combat.UctcdLogic;
 import bwmcts.mcts.guct.GUCTCD;
-=======
 import bwmcts.combat.*;
->>>>>>> e1e898c9fe4fae32499d4e5a62d1655a5c0601f5
 import bwmcts.mcts.uctcd.UCTCD;
 import bwmcts.mcts.guct.GUCTCD;
 import bwmcts.sparcraft.Position;
