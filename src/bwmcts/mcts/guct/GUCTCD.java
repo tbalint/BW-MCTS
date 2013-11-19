@@ -166,7 +166,7 @@ public class GUCTCD {
 			
 		if (node.getChildren().isEmpty())
 			move.addAll(getAllMove(UnitStateTypes.ATTACK, node.getPossibleMoves()));
-		else if (node.getChildren().size() == 0)
+		else if (node.getChildren().size() == 1)
 			move.addAll(getAllMove(UnitStateTypes.FLEE, node.getPossibleMoves()));
 		else 
 			move = getRandomMove(playerToMove, node.getPossibleMoves()); // Possible moves?

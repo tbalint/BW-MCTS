@@ -4,9 +4,11 @@ package bwmcts.controllers;
 import bwmcts.combat.AttackClosestLogic;
 import bwmcts.combat.AttackValueLogic;
 import bwmcts.combat.AttackWeakestLogic;
+import bwmcts.combat.GuctcdLogic;
 import bwmcts.combat.ICombatLogic;
 import bwmcts.combat.NoOverKillAttackValueLogic;
 import bwmcts.combat.UctcdLogic;
+import bwmcts.mcts.guct.GUCTCD;
 import bwmcts.mcts.uctcd.UCTCD;
 import bwmcts.sparcraft.Position;
 import javabot.BWAPIEventListener;
@@ -52,7 +54,7 @@ public class CombatController implements BWAPIEventListener {
 		// analyze the map
 		bwapi.loadMapData(true);
 		bwapi.enablePerfectInformation();
-		combatLogic =new UctcdLogic(bwapi,new UCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),1000,false));
+		combatLogic =new GuctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),5000,false));
 		// ============== YOUR CODE GOES HERE =======================
 
 		// This is called at the beginning of the game. You can 
