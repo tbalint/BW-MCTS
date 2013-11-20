@@ -2,11 +2,13 @@ package bwmcts.combat;
 
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JFrame;
 
+import bwmcts.mcts.iuct.IUCTCD;
 import bwmcts.mcts.uctcd.UCTCD;
 import bwmcts.mcts.uctcd.UCTCDsingle;
 
@@ -28,6 +30,7 @@ import javabot.JNIBWAPI;
 public class UctcdLogic extends Player implements ICombatLogic {
 
 	private UCTCD uctcd;
+	private IUCTCD iuctcd;
 	private SparcraftUI ui;
 	private HashMap<Integer,UnitAction> actions=new HashMap<Integer,UnitAction>();
 	
@@ -42,18 +45,37 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		UnitProperties.Init(bwapi);
 
 	}
+	
+	public UctcdLogic(JNIBWAPI bwapi, IUCTCD uctcd){
+		
+		this.iuctcd = uctcd;
+		
+		bwapi.loadTypeData();
+		AnimationFrameData.Init();
+		PlayerProperties.Init();
+		WeaponProperties.Init(bwapi);
+		UnitProperties.Init(bwapi);
+
+	}
 
 	@Override	
 	public void act(JNIBWAPI bwapi, int time) {
 		GameState state = new GameState(bwapi);
 		try{
-			state.print();
-			List<UnitAction> move = uctcd.search(state.clone(), time);
+			//state.print();
+			List<UnitAction> move=new ArrayList<UnitAction>();
+			if (uctcd!=null)
+				move = uctcd.search(state.clone(), time);
+			if (iuctcd!=null){
+				move = iuctcd.search(state.clone(), time);
+			}
 			executeActions(bwapi,state,move);
 		} catch(Exception e){
 			//e.printStackTrace();
 		}
 	}
+	
+	private HashMap<Integer,UnitAction> firstAttack=new HashMap<Integer,UnitAction>();
 	
 	private void executeActions(JNIBWAPI bwapi, GameState state, List<UnitAction> moves) {
 		if (moves!=null && !moves.isEmpty()){
@@ -62,21 +84,43 @@ public class UctcdLogic extends Player implements ICombatLogic {
 				Unit ourUnit		= state.getUnit(move._player, move._unit);
 		    	int player		= ourUnit.player();
 		    	int enemyPlayer  = state.getEnemy(player);
-		    	System.out.println(bwapi.getUnit(ourUnit.getId()).getGroundWeaponCooldown()+" cooldown "+  move.toString());
-		    	drawUnitOneInfo(bwapi);
-		    	bwapi.drawCircle(bwapi.getUnit(ourUnit.getId()).getX(),bwapi.getUnit(ourUnit.getId()).getY(),ourUnit.range(),179,false,false);
+		    	if (firstAttack.get(ourUnit.getId())!=null){
+		    		if (!bwapi.getUnit(firstAttack.get(ourUnit.getId())._moveIndex).isExists()){
+		    			firstAttack.remove(ourUnit.getId());
+		    		}
+		    		if (bwapi.getUnit(ourUnit.getId()).isAttackFrame()){
+		    			firstAttack.remove(ourUnit.getId());
+		    		}
+		    		if (bwapi.getUnit(ourUnit.getId()).getLastCommandFrame()+10<bwapi.getFrameCount()){
+		    			firstAttack.remove(ourUnit.getId());
+		    		}
+		    		
+		    	}
+		    	if (firstAttack.get(ourUnit.getId())!=null){continue;}
+		    	/* After assigning the attack for a unit it shouldn't assign any actions to it until the target is dead or we have an attackFrame 
+		    	 * 
+		    	 * 
+		    	 * 
+		    	 * 
+		    	 * */
+		    	
+		    	
+		    	//System.out.println(bwapi.getUnit(ourUnit.getId()).getGroundWeaponCooldown()+" cooldown "+  move.toString());
+	
+		    	//bwapi.drawCircle(bwapi.getUnit(ourUnit.getId()).getX(),bwapi.getUnit(ourUnit.getId()).getY(),ourUnit.range(),179,false,false);
 		    	if (bwapi.getUnit(ourUnit.getId()).isAttackFrame()){continue;}
 		    	
 		    	if (move._moveType == UnitActionTypes.ATTACK && bwapi.getUnit(ourUnit.getId()).getGroundWeaponCooldown()==0)
 		    	{
 		    		Unit enemyUnit=state.getUnit(enemyPlayer,move._moveIndex);
 		    		
+		    		bwapi.attack(ourUnit.getId(), enemyUnit.getId());
+		    		firstAttack.put(ourUnit.getId(), move.clone());
 		    		
-		    		
-		    		if (!bwapi.getUnit(ourUnit.getId()).isAccelerating()){
-		    			System.out.println("CanAttack: "+ourUnit.canAttackTarget(enemyUnit, bwapi.getFrameCount())+", isMoving: "+bwapi.getUnit(ourUnit.getId()).isMoving()+",isAttacking: "+bwapi.getUnit(ourUnit.getId()).isAttacking());	
-		    			bwapi.attack(ourUnit.getId(), enemyUnit.getId());
-		    		}
+		    		//if (!bwapi.getUnit(ourUnit.getId()).isAccelerating() && !bwapi.getUnit(ourUnit.getId()).isStartingAttack()){
+		    		//	System.out.println("CanAttack: "+ourUnit.canAttackTarget(enemyUnit, bwapi.getFrameCount())+", isMoving: "+bwapi.getUnit(ourUnit.getId()).isMoving()+",isAttacking: "+bwapi.getUnit(ourUnit.getId()).isAttacking());	
+		    		//	bwapi.attack(ourUnit.getId(), enemyUnit.getId());
+		    		//}
 		    	}
 		    	else if (move._moveType == UnitActionTypes.MOVE)
 		    	{

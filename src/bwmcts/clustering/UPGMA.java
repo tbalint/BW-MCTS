@@ -195,7 +195,7 @@ public class UPGMA {
 		if (a.typeID()!=b.typeID()){
 			distance=1000000;
 		}
-		distance+=a.getDistanceSqToUnit(b, b.firstTimeFree())*1000;
+		distance+=a.getDistanceSqToUnit(b, b.firstTimeFree());//*1000
 		distance+=Math.abs(a.currentHP()-b.currentHP());
 		
 		return distance;

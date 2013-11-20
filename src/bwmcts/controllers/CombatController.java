@@ -49,7 +49,7 @@ public class CombatController implements BWAPIEventListener {
 		
 		// set game speed to 30 (0 is the fastest. Tournament speed is 20)
 		// You can also change the game speed from within the game by "/speed X" command.
-		bwapi.setGameSpeed(100);
+		bwapi.setGameSpeed(30);
 		bwapi.drawTargets(true);
 		bwapi.drawIDs(true);
 		//bwapi.drawHealth(true);

@@ -485,7 +485,7 @@ public class Unit implements Comparable<Unit> {
 	        int framesSinceCommand = currentFrame - lastCommandFrame;
 
 	        
-	        attackCooldown = currentFrame + unit.getGroundWeaponCooldown();
+	        attackCooldown = currentFrame + Math.max(0, unit.getGroundWeaponCooldown()-2);
 	        // if the last attack was an attack command
 	        if (lastCommand == UnitCommandTypes.Attack_Unit)
 	        {
