@@ -351,7 +351,7 @@ public class IUCTCD {
 		} catch (Exception e) {e.printStackTrace();}
 		
 		List<Integer> attackingUnits = new ArrayList<Integer>();
-		List<Integer> fleeingUnits = new ArrayList<Integer>();
+		List<Integer> kitingUnits = new ArrayList<Integer>();
 		
 		// Divide units into two groups
 		for(UnitState unitState : move){
@@ -359,19 +359,29 @@ public class IUCTCD {
 			if (unitState.type == UnitStateTypes.ATTACK)
 				attackingUnits.add(unitState.unit);
 			else if (unitState.type == UnitStateTypes.KITE)
-				fleeingUnits.add(unitState.unit);
+				kitingUnits.add(unitState.unit);
 			
 		}
 		
 		List<UnitAction> allActions = new ArrayList<UnitAction>();
 		HashMap<Integer, List<UnitAction>> attackingMap = new HashMap<Integer, List<UnitAction>>();
-		HashMap<Integer, List<UnitAction>> defendingMap = new HashMap<Integer, List<UnitAction>>();
+		HashMap<Integer, List<UnitAction>> kitingMap = new HashMap<Integer, List<UnitAction>>();
 		
 		for(Integer i : attackingUnits)
 			attackingMap.put(i, map.get(i));
 		
-		for(Integer i : fleeingUnits)
-			defendingMap.put(i, map.get(i));
+		for(Integer i : kitingUnits)
+			kitingMap.put(i, map.get(i));
+		
+		/*
+		for(Integer i : map.keySet()){
+			int unitId = state.getUnit(player, i).getId();
+			if (attackingUnits.contains(unitId))
+				attackingMap.put(i, map.get(i)); 
+			if (kitingUnits.contains(unitId))
+				kitingMap.put(i, map.get(i));
+		}
+		*/
 		
 		// Add attack actions
 		List<UnitAction> attackActions = new ArrayList<UnitAction>();
@@ -380,7 +390,7 @@ public class IUCTCD {
 		
 		// Add defend actions
 		List<UnitAction> defendActions = new ArrayList<UnitAction>();
-		flee.getMoves(state, defendingMap, defendActions);
+		flee.getMoves(state, kitingMap, defendActions);
 		allActions.addAll(defendActions);
 		
 		return allActions;

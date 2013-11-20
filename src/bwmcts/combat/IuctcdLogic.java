@@ -6,8 +6,6 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import bwmcts.clustering.UPGMA;
-import bwmcts.mcts.guct.GUCTCD;
 import bwmcts.mcts.iuct.IUCTCD;
 import bwmcts.mcts.uctcd.UCTCD;
 import bwmcts.mcts.uctcd.UCTCDsingle;
@@ -26,11 +24,11 @@ import bwmcts.sparcraft.WeaponProperties;
 import bwmcts.sparcraft.players.Player;
 import javabot.JNIBWAPI;
 
-public class GuctcdLogic extends Player implements ICombatLogic {
+public class IuctcdLogic extends Player implements ICombatLogic {
 
-	private GUCTCD guctcd;
+	private IUCTCD guctcd;
 	private SparcraftUI ui;
-	public GuctcdLogic(JNIBWAPI bwapi, GUCTCD guctcd){
+	public IuctcdLogic(JNIBWAPI bwapi, IUCTCD guctcd){
 		
 		this.guctcd = guctcd;
 		
@@ -48,11 +46,9 @@ public class GuctcdLogic extends Player implements ICombatLogic {
 
 		try{
 
-			UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[0]);
-			UPGMA upgmaPlayerB = new UPGMA(state.getAllUnit()[1]);
-			List<UnitAction> move = guctcd.search(state, upgmaPlayerA, upgmaPlayerB, time);
+		List<UnitAction> move = guctcd.search(state, time);
 		
-			executeActions(bwapi,state,move);
+		executeActions(bwapi,state,move);
 		} catch(Exception e){
 			//e.printStackTrace();
 		}
@@ -97,12 +93,10 @@ public class GuctcdLogic extends Player implements ICombatLogic {
 	public void getMoves(GameState state, HashMap<Integer,List<UnitAction>> moves, List<UnitAction>  moveVec)
 	{
 		
+		GameState clone = state.clone();
 		moveVec.clear();
 		
-		UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[0]);
-		UPGMA upgmaPlayerB = new UPGMA(state.getAllUnit()[1]);
-		
-		for(UnitAction action : guctcd.search(state, upgmaPlayerA, upgmaPlayerB, 40))
+		for(UnitAction action : guctcd.search(clone, 40))
 			moveVec.add(action.clone());
 	
 	}

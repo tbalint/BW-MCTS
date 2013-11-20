@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import org.omg.CORBA._IDLTypeStub;
+
 import bwmcts.clustering.UPGMA;
 import bwmcts.mcts.UnitState;
 import bwmcts.mcts.UnitStateTypes;
@@ -35,7 +37,8 @@ public class GUCTCD {
 	private boolean debug;
 	private int simulationSteps;
 	private Player baseScript;
-	private HashMap<Integer, List<Unit>> clusters;
+	private HashMap<Integer, List<Unit>> clustersA;
+	private HashMap<Integer, List<Unit>> clustersB;
 	
 	public GUCTCD() {
 		
@@ -53,7 +56,7 @@ public class GUCTCD {
 		this.baseScript = new Player_NoOverKillAttackValue(maxPlayerIndex);
 	}
 
-	public List<UnitAction> search(GameState state, UPGMA upgma, long timeBudget){
+	public List<UnitAction> search(GameState state, UPGMA upgmaPlayerA, UPGMA upgmaPlayerB, long timeBudget){
 		
 		if (maxPlayerIndex == 0 && state.whoCanMove() == Players.Player_Two){
 			return new ArrayList<UnitAction>(); 
@@ -64,7 +67,8 @@ public class GUCTCD {
 		Date start = new Date();
 		
 		// Get clusters
-		clusters = upgma.getClusters(6);
+		clustersA = upgmaPlayerA.getClusters(6);
+		clustersB = upgmaPlayerB.getClusters(6);
 		
 		GuctNode root = new GuctNode(null, NodeType.ROOT, new ArrayList<UnitState>(), maxPlayerIndex);
 		
@@ -73,6 +77,9 @@ public class GUCTCD {
 			
 			traverse(root, state.clone());
 			t++;
+			
+			//String out = root.print(0);
+			//writeToFile(out, "tree.xml");
 			
 		}
 		
@@ -164,13 +171,17 @@ public class GUCTCD {
 			
 		}
 		
-			
+		// Which cluster?
+		HashMap<Integer, List<Unit>> clusters = clustersB;
+		if (playerToMove == maxPlayerIndex)
+			clusters = clustersA;
+		
 		if (node.getChildren().isEmpty())
-			move.addAll(getAllMove(UnitStateTypes.ATTACK));
+			move.addAll(getAllMove(UnitStateTypes.ATTACK, clusters));
 		else if (node.getChildren().size() == 1)
-			move.addAll(getAllMove(UnitStateTypes.KITE));
+			move.addAll(getAllMove(UnitStateTypes.KITE, clusters));
 		else 
-			move = getRandomMove(playerToMove); // Possible moves?
+			move = getRandomMove(playerToMove, clusters); // Possible moves?
 			
 		if (move == null)
 			return;
@@ -187,7 +198,7 @@ public class GUCTCD {
 		
 	}
 
-	private List<UnitState> getAllMove(UnitStateTypes type) {
+	private List<UnitState> getAllMove(UnitStateTypes type, HashMap<Integer, List<Unit>> clusters) {
 
 		List<UnitState> states = new ArrayList<UnitState>();
 		
@@ -280,9 +291,9 @@ public class GUCTCD {
 		return NodeType.DEFAULT;
 	}
 
-	private List<UnitState> getRandomMove(int playerToMove) {
+	private List<UnitState> getRandomMove(int playerToMove, HashMap<Integer, List<Unit>> clusters) {
 		
-		List<UnitState> move = new ArrayList<UnitState>();
+		List<UnitState> states = new ArrayList<UnitState>();
 		
 		for(Integer c : clusters.keySet()){
 			
@@ -291,14 +302,13 @@ public class GUCTCD {
 			if (Math.random() >= 0.5f)
 				type = UnitStateTypes.KITE;
 			
-			UnitState unitState = new UnitState(type, c, playerToMove);
 			
-			// Add random possible action
-			move.add(unitState);
+			UnitState state = new UnitState(type, c, clusters.get(c).get(0).player());
+			states.add(state);
 			
 		}
 		
-		return move;
+		return states;
 		
 	}
 
@@ -329,15 +339,13 @@ public class GUCTCD {
 
 	private List<UnitAction> statesToActions(List<UnitState> move, GameState state) {
 		
-		int player = 0;
-		
 		if (move == null || move.isEmpty() || move.get(0) == null)
 			return new ArrayList<UnitAction>();
-		else
-			player = move.get(0).player;
+		
+		int player = move.get(0).player;
 		
 		Player attack = new Player_NoOverKillAttackValue(player);
-		Player flee = new Player_Kite(player);
+		Player kite = new Player_Kite(player);
 		
 		HashMap<Integer, List<UnitAction>> map = new HashMap<Integer, List<UnitAction>>();
 		
@@ -346,27 +354,41 @@ public class GUCTCD {
 		} catch (Exception e) {e.printStackTrace();}
 		
 		List<Integer> attackingUnits = new ArrayList<Integer>();
-		List<Integer> fleeingUnits = new ArrayList<Integer>();
+		List<Integer> kitingUnits = new ArrayList<Integer>();
 		
 		// Divide units into two groups
 		for(UnitState unitState : move){
 			
-			if (unitState.type == UnitStateTypes.ATTACK)
-				attackingUnits.add(unitState.unit);
-			else if (unitState.type == UnitStateTypes.KITE)
-				fleeingUnits.add(unitState.unit);
+			// Which cluster?
+			HashMap<Integer, List<Unit>> clusters = clustersB;
+			if (player == maxPlayerIndex)
+				clusters = clustersA;
+			
+			// Add units in cluster
+			for(Unit u : clusters.get(unitState.unit)){
+				
+				if (unitState.type == UnitStateTypes.ATTACK)
+					attackingUnits.add(u.getId());
+				else if (unitState.type == UnitStateTypes.KITE)
+					kitingUnits.add(u.getId());
+				
+			}
 			
 		}
 		
 		List<UnitAction> allActions = new ArrayList<UnitAction>();
 		HashMap<Integer, List<UnitAction>> attackingMap = new HashMap<Integer, List<UnitAction>>();
-		HashMap<Integer, List<UnitAction>> defendingMap = new HashMap<Integer, List<UnitAction>>();
+		HashMap<Integer, List<UnitAction>> kitingMap = new HashMap<Integer, List<UnitAction>>();
 		
-		for(Integer i : attackingUnits)
-			attackingMap.put(i, map.get(i));
-		
-		for(Integer i : fleeingUnits)
-			defendingMap.put(i, map.get(i));
+		// TODO: Loop through the map instead
+		for(Integer i : map.keySet()){
+			int u = map.get(i).get(0)._unit;
+			int unitId = state.getUnit(player, u).getId();
+			if (attackingUnits.contains(unitId))
+				attackingMap.put(i, map.get(i)); 
+			if (kitingUnits.contains(unitId))
+				kitingMap.put(i, map.get(i));
+		}
 		
 		// Add attack actions
 		List<UnitAction> attackActions = new ArrayList<UnitAction>();
@@ -375,7 +397,7 @@ public class GUCTCD {
 		
 		// Add defend actions
 		List<UnitAction> defendActions = new ArrayList<UnitAction>();
-		flee.getMoves(state, defendingMap, defendActions);
+		kite.getMoves(state, kitingMap, defendActions);
 		allActions.addAll(defendActions);
 		
 		return allActions;

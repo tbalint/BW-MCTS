@@ -38,15 +38,21 @@ public class Player_NoOverKillAttackValue extends Player {
 		
 		//for (int u = 0; u<moves.size(); ++u){
 		
-		for (Integer u : moves.keySet())
-		{
+		for (Integer u : moves.keySet()){
 			boolean foundUnitAction = false;
 			int actionMoveIndex	= 0;
 			double actionHighestDPS	= 0;
 			int closestMoveIndex = 0;
 			int closestMoveDist	= Integer.MAX_VALUE;
 			
-			Unit ourUnit				= state.getUnit(_id, u);
+			Unit ourUnit = state.getUnit(_id, u);
+			//Unit ourUnit = state.getUnitByID(u);
+			/*
+			if (ourUnit == null)
+				state.print();
+			System.out.println(ourUnit + " " + _id + " " + u);
+			*/
+			
 			Unit closestUnit			= ourUnit.canHeal() ? state.getClosestOurUnit(_id, u) : state.getClosestEnemyUnit(_id, u);
 
 			for (int m=0; m<moves.get(u).size(); m++)

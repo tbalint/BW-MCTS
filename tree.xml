@@ -1,51 +1,27 @@
-<node type=ROOT playerToMove=1 moves= totalScore=-3693.0 visited=44>
-	<node type=SOLO playerToMove=1 moves=ATTACK totalScore=-1386.0 visited=27>
-		<node type=FIRST playerToMove=1 moves=ATTACK totalScore=-747.0 visited=13>
-			<node type=SECOND playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKATTACKATTACKATTACKATTACK totalScore=94.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEFLEEFLEEFLEEFLEEFLEEFLEEFLEEFLEE totalScore=-333.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=ATTACKATTACKFLEEFLEEFLEEATTACKFLEEATTACKFLEE totalScore=-163.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=ATTACKATTACKFLEEFLEEATTACKFLEEFLEEFLEEFLEE totalScore=-163.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=ATTACKFLEEFLEEATTACKFLEEATTACKATTACKFLEEFLEE totalScore=94.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEFLEEATTACKFLEEFLEEFLEEFLEEATTACKFLEE totalScore=-163.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEFLEEATTACKATTACKFLEEFLEEATTACKFLEEATTACK totalScore=94.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=ATTACKATTACKFLEEFLEEFLEEFLEEATTACKFLEEFLEE totalScore=94.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=ATTACKATTACKATTACKATTACKFLEEATTACKATTACKFLEEATTACK totalScore=94.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEATTACKFLEEATTACKATTACKFLEEFLEEFLEEFLEE totalScore=-163.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEFLEEATTACKFLEEFLEEATTACKFLEEATTACKATTACK totalScore=-163.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEFLEEATTACKATTACKATTACKFLEEFLEEFLEEATTACK totalScore=-163.0 visited=1/>
-		</node>
-		<node type=FIRST playerToMove=1 moves=FLEE totalScore=-733.0 visited=13>
-			<node type=SECOND playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKATTACKATTACKATTACKATTACK totalScore=31.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEFLEEFLEEFLEEFLEEFLEEFLEEFLEEFLEE totalScore=-242.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEATTACKFLEEATTACKATTACKFLEEFLEEATTACKATTACK totalScore=50.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEATTACKFLEEATTACKFLEEATTACKATTACKATTACKFLEE totalScore=-63.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEATTACKFLEEFLEEATTACKATTACKATTACKFLEEFLEE totalScore=-63.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=ATTACKFLEEATTACKATTACKATTACKATTACKFLEEATTACKFLEE totalScore=-174.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKATTACKFLEEFLEEFLEE totalScore=31.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=ATTACKFLEEFLEEATTACKFLEEATTACKATTACKATTACKATTACK totalScore=50.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEATTACKATTACKATTACKATTACKFLEEFLEEFLEEFLEE totalScore=50.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEFLEEFLEEATTACKATTACKFLEEFLEEATTACKFLEE totalScore=-242.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEATTACKFLEEFLEEATTACKFLEEFLEEFLEEATTACK totalScore=50.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEFLEEATTACKFLEEATTACKATTACKFLEEATTACKFLEE totalScore=-242.0 visited=1/>
-		</node>
+<node type=ROOT playerToMove=1 moves= totalScore=-6008.0 visited=22>
+	<node type=FIRST playerToMove=1 moves=ATTACKATTACKATTACKATTACKATTACKATTACK totalScore=-494.0 visited=2>
+		<node type=SECOND playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKATTACK totalScore=-247.0 visited=1/>
 	</node>
-	<node type=SOLO playerToMove=1 moves=FLEE totalScore=-2401.0 visited=16>
-		<node type=FIRST playerToMove=1 moves=ATTACK totalScore=-1270.0 visited=7>
-			<node type=SECOND playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKATTACKATTACKATTACKATTACK totalScore=-150.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEFLEEFLEEFLEEFLEEFLEEFLEEFLEEFLEE totalScore=-339.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=ATTACKATTACKFLEEATTACKATTACKATTACKATTACKATTACKFLEE totalScore=-155.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=ATTACKATTACKFLEEFLEEATTACKFLEEATTACKATTACKATTACK totalScore=-150.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEFLEEATTACKATTACKATTACKATTACKFLEEATTACKFLEE totalScore=-163.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEFLEEATTACKFLEEFLEEATTACKFLEEATTACKFLEE totalScore=-163.0 visited=1/>
-		</node>
-		<node type=FIRST playerToMove=1 moves=FLEE totalScore=-981.0 visited=8>
-			<node type=SECOND playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKATTACKATTACKATTACKATTACK totalScore=-63.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEFLEEFLEEFLEEFLEEFLEEFLEEFLEEFLEE totalScore=-192.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKATTACKFLEEFLEEFLEE totalScore=-131.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEFLEEFLEEATTACKATTACKATTACKATTACKATTACKFLEE totalScore=-207.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEATTACKFLEEATTACKATTACKATTACKFLEEFLEEATTACK totalScore=-131.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=ATTACKATTACKFLEEFLEEFLEEFLEEATTACKATTACKFLEE totalScore=-63.0 visited=1/>
-			<node type=SECOND playerToMove=0 moves=FLEEATTACKFLEEFLEEFLEEATTACKATTACKATTACKATTACK totalScore=-131.0 visited=1/>
-		</node>
+	<node type=FIRST playerToMove=1 moves=KITEKITEKITEKITEKITEKITE totalScore=-369.0 visited=1/>
+	<node type=FIRST playerToMove=1 moves=KITEKITEATTACKATTACKKITEATTACK totalScore=-328.0 visited=1/>
+	<node type=FIRST playerToMove=1 moves=KITEATTACKATTACKATTACKKITEKITE totalScore=-486.0 visited=2>
+		<node type=SECOND playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKATTACK totalScore=-243.0 visited=1/>
 	</node>
+	<node type=FIRST playerToMove=1 moves=KITEATTACKATTACKATTACKATTACKKITE totalScore=-486.0 visited=2>
+		<node type=SECOND playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKATTACK totalScore=-243.0 visited=1/>
+	</node>
+	<node type=FIRST playerToMove=1 moves=ATTACKKITEKITEATTACKKITEATTACK totalScore=-248.0 visited=1/>
+	<node type=FIRST playerToMove=1 moves=KITEATTACKKITEKITEKITEKITE totalScore=-311.0 visited=1/>
+	<node type=FIRST playerToMove=1 moves=ATTACKATTACKKITEATTACKKITEKITE totalScore=-265.0 visited=1/>
+	<node type=FIRST playerToMove=1 moves=ATTACKKITEATTACKKITEKITEATTACK totalScore=-280.0 visited=1/>
+	<node type=FIRST playerToMove=1 moves=KITEKITEKITEKITEATTACKATTACK totalScore=-282.0 visited=1/>
+	<node type=FIRST playerToMove=1 moves=ATTACKKITEKITEKITEATTACKATTACK totalScore=-311.0 visited=1/>
+	<node type=FIRST playerToMove=1 moves=ATTACKATTACKATTACKATTACKKITEKITE totalScore=-301.0 visited=1/>
+	<node type=FIRST playerToMove=1 moves=ATTACKKITEATTACKATTACKKITEKITE totalScore=-315.0 visited=1/>
+	<node type=FIRST playerToMove=1 moves=KITEATTACKKITEATTACKATTACKATTACK totalScore=-388.0 visited=2>
+		<node type=SECOND playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKATTACK totalScore=-194.0 visited=1/>
+	</node>
+	<node type=FIRST playerToMove=1 moves=ATTACKKITEATTACKKITEATTACKATTACK totalScore=-298.0 visited=1/>
+	<node type=FIRST playerToMove=1 moves=ATTACKKITEATTACKATTACKATTACKATTACK totalScore=-298.0 visited=1/>
+	<node type=FIRST playerToMove=1 moves=ATTACKATTACKATTACKKITEKITEKITE totalScore=-301.0 visited=1/>
 </node>
