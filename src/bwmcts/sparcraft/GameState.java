@@ -779,6 +779,9 @@ public class GameState {
 		return _numMovements[player];
 	}
 	public Players whoCanMove(){
+		if(getUnit(0,0)==null || getUnit(1,0) == null)
+			return Players.Player_None;
+		
 		int p1Time=getUnit(0,0).firstTimeFree();
 		int p2Time=getUnit(1,0).firstTimeFree();
 

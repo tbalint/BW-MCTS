@@ -16,6 +16,8 @@ public class UPGMA {
 	int K;			// The number of clusters created so far
 	UPCluster[] cluster;		// The nodes (clusters) of the resulting tree
 	List<Unit> input;
+	private float hpMultiplier;
+	private float distMultiplier;
 	
 	public UPGMA(double[][] ds) {
 		int N = ds.length;
@@ -39,7 +41,11 @@ public class UPGMA {
 	    	findAndJoin();
 	}
 	
-	public UPGMA(Unit[] in) {
+	public UPGMA(Unit[] in, float hpMultiplier, float distMultiplier) {
+		
+		this.hpMultiplier = hpMultiplier;
+		this.distMultiplier = distMultiplier;
+		
 		input = new ArrayList<Unit>();
 		for (int i=0; i<in.length;i++){
 			if (in[i]!=null && in[i].isAlive())
@@ -47,10 +53,13 @@ public class UPGMA {
 		}
 		double[][] ds = createDistanceMatrix(input);
 	    int N = ds.length;
+	    K = N;
+	    if (K==0)
+	    	return;
 	    cluster = new UPCluster[2*N-1];
 	    for (int i=0; i<N; i++) 
 	    	cluster[i] = new UPCluster(i, ds[i]);
-	    K = N;
+	    
 	    while (K < 2*N-1)
 	    	findAndJoin();
 	}
@@ -107,6 +116,8 @@ public class UPGMA {
 	}*/
 	
 	public HashMap<Integer,List<Unit>> getClusters(int clusters){
+		if (K==0)
+			return null;
 		List<UPCluster> up = cutTree(this.getRoot(), clusters);
 		HashMap<Integer, List<Unit>> result = new HashMap<Integer,List<Unit>>();
 		for (int i=0; i < up.size(); i++){
@@ -121,7 +132,7 @@ public class UPGMA {
 		return result;
 	}
 	
-	public static List<Integer> getLeafs(UPCluster c){
+	public List<Integer> getLeafs(UPCluster c){
 		List<Integer> ids = new ArrayList<Integer>();
 		if (c.left != null){
 			ids.addAll(getLeafs(c.left));
@@ -174,7 +185,7 @@ public class UPGMA {
 		return up;
 	}
 	
-	public static double[][] createDistanceMatrix(List<Unit> strings){
+	public double[][] createDistanceMatrix(List<Unit> strings){
 		double[][] ds = new double[strings.size()][];
 		
 		if (strings.size() > 0){
@@ -191,18 +202,18 @@ public class UPGMA {
 		return ds;
 	}
 	
-	private static double getDistance(Unit a, Unit b){
+	private double getDistance(Unit a, Unit b){
 		double distance=0;
 		if (a.typeID()!=b.typeID()){
 			distance=1000000;
 		}
-		distance+=a.getDistanceSqToUnit(b, b.firstTimeFree());//*1000
-		distance+=Math.abs(a.currentHP()-b.currentHP());
+		distance+=a.getDistanceSqToUnit(b, b.firstTimeFree())*distMultiplier;//*1000
+		distance+=Math.abs(a.currentHP()-b.currentHP())*hpMultiplier;
 		
 		return distance;
 	}
 		
-	public static void printMatrix(double[][] m){
+	public void printMatrix(double[][] m){
 		for (double[] d : m){
 			for (double i : d){
 				System.out.print(i+" ");

@@ -521,5 +521,23 @@ public class GUCTCD {
 	public void setMaxPlayerIndex(int maxPlayerIndex) {
 		this.maxPlayerIndex = maxPlayerIndex;
 	}
+
+	public HashMap<Integer, List<Unit>> getClustersA() {
+		return clustersA;
+	}
+
+	public void setClustersA(HashMap<Integer, List<Unit>> clustersA) {
+		this.clustersA = clustersA;
+	}
+
+	public HashMap<Integer, List<Unit>> getClustersB() {
+		return clustersB;
+	}
+
+	public void setClustersB(HashMap<Integer, List<Unit>> clustersB) {
+		this.clustersB = clustersB;
+	}
+	
+	
 	
 }

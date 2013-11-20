@@ -28,6 +28,7 @@ import bwmcts.sparcraft.UnitProperties;
 import bwmcts.sparcraft.WeaponProperties;
 import bwmcts.sparcraft.players.Player;
 import javabot.JNIBWAPI;
+import javabot.util.BWColor;
 
 public class UctcdLogic extends Player implements ICombatLogic {
 
@@ -87,9 +88,15 @@ public class UctcdLogic extends Player implements ICombatLogic {
 			if (guctcd!=null){
 				
 				try{
-					UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[0]);
-					UPGMA upgmaPlayerB = new UPGMA(state.getAllUnit()[1]);
+					UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[bwapi.getSelf().getID()], 1, 1);
+					UPGMA upgmaPlayerB = new UPGMA(state.getAllUnit()[bwapi.getEnemies().get(0).getID()], 1, 1);
 					move = guctcd.search(state, upgmaPlayerA, upgmaPlayerB, time);
+					HashMap<Integer, List<Unit>> clustersA = guctcd.getClustersA();
+					HashMap<Integer, List<Unit>> clustersB = guctcd.getClustersA();
+					
+					drawClusters(bwapi, clustersA);
+					drawClusters(bwapi, clustersB);
+					
 				} catch(Exception e){
 					e.printStackTrace();
 				}
@@ -102,6 +109,50 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		}
 	}
 	
+	private void drawClusters(JNIBWAPI bwapi, HashMap<Integer, List<Unit>> clusters) {
+		
+		if (clusters == null)
+			return;
+		
+		for(Integer i : clusters.keySet()){
+			
+			for (Unit u : clusters.get(i)){
+				
+				bwapi.drawCircle(u.pos().getX(), u.pos().getY(), 6, getColor(i), false, false);
+				
+			}
+			
+		}
+		
+	}
+	
+
+	private int getColor(Integer i) {
+		switch (i){
+		case 0:
+			return BWColor.CYAN;
+		case 1:
+			return BWColor.GREEN;
+		case 2:
+			return BWColor.WHITE;
+		case 3:
+			return BWColor.PURPLE;
+		case 4:
+			return BWColor.ORANGE;
+		case 5:
+			return BWColor.YELLOW;
+		case 6:
+			return BWColor.TEAL;
+		case 7:
+			return BWColor.RED;
+		case 8:
+			return BWColor.BLUE;
+		default:
+			return BWColor.BLACK;
+	}
+	}
+
+
 	private HashMap<Integer,UnitAction> firstAttack=new HashMap<Integer,UnitAction>();
 	
 	private void executeActions(JNIBWAPI bwapi, GameState state, List<UnitAction> moves) {
@@ -176,10 +227,26 @@ public class UctcdLogic extends Player implements ICombatLogic {
 	public void getMoves(GameState state, HashMap<Integer,List<UnitAction>> moves, List<UnitAction>  moveVec)
 	{
 		
-		GameState clone = state.clone();
 		moveVec.clear();
+		int time = 40;
+		List<UnitAction> move=new ArrayList<UnitAction>();
+		if (uctcd!=null)
+			move = uctcd.search(state.clone(), time);
+		if (iuctcd!=null){
+			move = iuctcd.search(state.clone(), time);
+		}
+		if (guctcd!=null){
+			
+			try{
+				UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[ID()], 1, 1);
+				UPGMA upgmaPlayerB = new UPGMA(state.getAllUnit()[state.getEnemy(ID())], 1, 1);
+				move = guctcd.search(state, upgmaPlayerA, upgmaPlayerB, time);
+			} catch (Exception e){
+				
+			}
+		}
 		
-		for(UnitAction action : uctcd.search(clone, 40))
+		for(UnitAction action : move)
 			moveVec.add(action.clone());
 	
 	}

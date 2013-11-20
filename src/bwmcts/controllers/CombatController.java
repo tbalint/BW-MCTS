@@ -46,14 +46,14 @@ public class CombatController implements BWAPIEventListener {
 		bwapi.setGameSpeed(30);
 		bwapi.drawTargets(true);
 		bwapi.drawIDs(true);
-		//bwapi.drawHealth(true);
+		bwapi.drawHealth(true);
 		// analyze the map
 		bwapi.loadMapData(true);
 		bwapi.enablePerfectInformation();
 
 		//combatLogic =new GuctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false));
 		//combatLogic
-		//combatLogic =new UctcdLogic(bwapi,new IUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),1000,false));
+		combatLogic =new UctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false));
 		//combatLogic =new IuctcdLogic(bwapi,new IUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),5000,false));
 		
 		// ============== YOUR CODE GOES HERE =======================

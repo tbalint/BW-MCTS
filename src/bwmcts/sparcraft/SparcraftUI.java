@@ -84,7 +84,7 @@ public class SparcraftUI extends JComponent {
 			
 		} 
 		
-		UPGMA clustering=new UPGMA(_state.getAllUnit()[1]);
+		UPGMA clustering=new UPGMA(_state.getAllUnit()[1], 1, 1);
 	    HashMap<Integer,List<Unit>>clusters=  clustering.getClusters(5);
 	    int clusterId=0;
 	    for (List<Unit> list : clusters.values()){
