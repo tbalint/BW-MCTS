@@ -15,7 +15,7 @@ import bwmcts.sparcraft.Unit;
 public class UPGMA {
 	int K;			// The number of clusters created so far
 	UPCluster[] cluster;		// The nodes (clusters) of the resulting tree
-	static List<Unit> input;
+	List<Unit> input;
 	
 	public UPGMA(double[][] ds) {
 		int N = ds.length;
@@ -93,6 +93,7 @@ public class UPGMA {
 	/**
 	 * @param args
 	 */
+	/*
 	public static void main(String[] args) {
 		
 		double[][] ds1 = createDistanceMatrix(input);
@@ -103,7 +104,7 @@ public class UPGMA {
 	    } catch (Exception e){
 	    	e.printStackTrace();
 	    }  
-	}
+	}*/
 	
 	public HashMap<Integer,List<Unit>> getClusters(int clusters){
 		List<UPCluster> up = cutTree(this.getRoot(), clusters);

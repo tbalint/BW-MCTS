@@ -54,7 +54,7 @@ public class GuctcdLogic extends Player implements ICombatLogic {
 		
 			executeActions(bwapi,state,move);
 		} catch(Exception e){
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 	
@@ -99,8 +99,8 @@ public class GuctcdLogic extends Player implements ICombatLogic {
 		
 		moveVec.clear();
 		
-		UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[0]);
-		UPGMA upgmaPlayerB = new UPGMA(state.getAllUnit()[1]);
+		UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[ID()]);
+		UPGMA upgmaPlayerB = new UPGMA(state.getAllUnit()[state.getEnemy(ID())]);
 		
 		for(UnitAction action : guctcd.search(state, upgmaPlayerA, upgmaPlayerB, 40))
 			moveVec.add(action.clone());

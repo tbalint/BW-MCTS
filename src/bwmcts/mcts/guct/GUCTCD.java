@@ -302,7 +302,6 @@ public class GUCTCD {
 			if (Math.random() >= 0.5f)
 				type = UnitStateTypes.KITE;
 			
-			
 			UnitState state = new UnitState(type, c, clusters.get(c).get(0).player());
 			states.add(state);
 			
@@ -367,9 +366,9 @@ public class GUCTCD {
 			// Add units in cluster
 			for(Unit u : clusters.get(unitState.unit)){
 				
-				if (unitState.type == UnitStateTypes.ATTACK)
+				if (unitState.type == UnitStateTypes.ATTACK && u.isAlive())
 					attackingUnits.add(u.getId());
-				else if (unitState.type == UnitStateTypes.KITE)
+				else if (unitState.type == UnitStateTypes.KITE && u.isAlive())
 					kitingUnits.add(u.getId());
 				
 			}

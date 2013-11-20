@@ -47,11 +47,11 @@ public class Player_NoOverKillAttackValue extends Player {
 			
 			Unit ourUnit = state.getUnit(_id, u);
 			//Unit ourUnit = state.getUnitByID(u);
-			/*
-			if (ourUnit == null)
+			
+			if (ourUnit == null || moves.get(u) == null){
 				state.print();
-			System.out.println(ourUnit + " " + _id + " " + u);
-			*/
+				System.out.println(ourUnit + " " + _id + " " + u);
+			}
 			
 			Unit closestUnit			= ourUnit.canHeal() ? state.getClosestOurUnit(_id, u) : state.getClosestEnemyUnit(_id, u);
 

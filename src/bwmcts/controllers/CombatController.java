@@ -1,14 +1,8 @@
 package bwmcts.controllers;
 
-import bwmcts.combat.AttackClosestLogic;
-import bwmcts.combat.AttackValueLogic;
-import bwmcts.combat.AttackWeakestLogic;
-import bwmcts.combat.GuctcdLogic;
-import bwmcts.combat.ICombatLogic;
-import bwmcts.combat.NoOverKillAttackValueLogic;
-import bwmcts.combat.UctcdLogic;
 import bwmcts.combat.*;
 import bwmcts.mcts.uctcd.UCTCD;
+import bwmcts.mcts.guct.GUCTCD;
 import bwmcts.mcts.iuct.IUCTCD;
 import bwmcts.sparcraft.Position;
 import javabot.BWAPIEventListener;
@@ -57,9 +51,11 @@ public class CombatController implements BWAPIEventListener {
 		bwapi.loadMapData(true);
 		bwapi.enablePerfectInformation();
 
-		//combatLogic =new GuctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),5000,false));
-		combatLogic =new UctcdLogic(bwapi,new UCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),1000,false));
-
+		//combatLogic =new GuctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false));
+		//combatLogic
+		//combatLogic =new UctcdLogic(bwapi,new IUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),1000,false));
+		//combatLogic =new IuctcdLogic(bwapi,new IUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),5000,false));
+		
 		// ============== YOUR CODE GOES HERE =======================
 
 		// This is called at the beginning of the game. You can 
@@ -74,7 +70,7 @@ public class CombatController implements BWAPIEventListener {
 		
 		// ============== YOUR CODE GOES HERE =======================
 		//System.out.println("Act called");
-		int time = 20;	// 20 ms
+		int time = 40;	// 40 ms
 		combatLogic.act(bwapi, time);
 		//System.out.println("Act done");
 	}

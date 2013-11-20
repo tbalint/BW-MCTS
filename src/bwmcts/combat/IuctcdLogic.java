@@ -46,9 +46,10 @@ public class IuctcdLogic extends Player implements ICombatLogic {
 
 		try{
 
-		List<UnitAction> move = guctcd.search(state, time);
+			List<UnitAction> move = guctcd.search(state, time);
 		
-		executeActions(bwapi,state,move);
+			executeActions(bwapi,state,move);
+			
 		} catch(Exception e){
 			//e.printStackTrace();
 		}

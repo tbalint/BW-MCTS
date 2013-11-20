@@ -63,23 +63,23 @@ public class TutorialCode implements BWAPIEventListener  {
 	    
 	    try {
 	    	for(int i = 0; i < numA; i++){
-	    		if(Math.random()<=0.6)
+	    		//if(Math.random()<=0.6)
 	    			state.addUnit(bwapi.getUnitType(typeA.ordinal()), Players.Player_One.ordinal(), new Position(500,startY + space*i));
-	    		else if(Math.random()<=0.9)
-	    			state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Firebat.ordinal()), Players.Player_One.ordinal(), new Position(500,startY + space*i));
-	    		else
-	    			state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Siege_Tank_Tank_Mode.ordinal()), Players.Player_One.ordinal(), new Position(500,startY + space*i));
+	    		//else if(Math.random()<=0.9)
+	    		//	state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Firebat.ordinal()), Players.Player_One.ordinal(), new Position(500,startY + space*i));
+	    		//else
+	    		//	state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Siege_Tank_Tank_Mode.ordinal()), Players.Player_One.ordinal(), new Position(500,startY + space*i));
 	    	}
 	    
 	    } catch (Exception e){}
 	    
 	    for(int i = 1; i < numB; i++){
-    		if(Math.random()<=0.6)
+    		//if(Math.random()<=0.6)
     			state.addUnit(bwapi.getUnitType(typeB.ordinal()), Players.Player_Two.ordinal(),new Position(200,startY + space + space * i));
-    		else if(Math.random()<=0.9)
-    			state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Firebat.ordinal()), Players.Player_Two.ordinal(),new Position(200,startY + space + space * i));
-    		else
-    			state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Siege_Tank_Tank_Mode.ordinal()), Players.Player_Two.ordinal(),new Position(200,startY + space + space * i));	
+    		//else if(Math.random()<=0.9)
+    		//	state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Firebat.ordinal()), Players.Player_Two.ordinal(),new Position(200,startY + space + space * i));
+    		//else
+    		//	state.addUnit(bwapi.getUnitType(UnitTypes.Terran_Siege_Tank_Tank_Mode.ordinal()), Players.Player_Two.ordinal(),new Position(200,startY + space + space * i));	
 	    }
 	    
 	    return state;
@@ -222,7 +222,7 @@ public class TutorialCode implements BWAPIEventListener  {
 		B.put(UnitTypes.Protoss_Dragoon, 5);
 		*/
 		
-		GameState initialState = AvsBState(20, UnitTypes.Terran_Marine, 20, UnitTypes.Terran_Marine);
+		GameState initialState = AvsBState(20, UnitTypes.Protoss_Zealot, 20, UnitTypes.Terran_Marine);
 		
 	    // get the players
 	    Player p1 = new Player_NoOverKillAttackValue(Players.Player_One.ordinal());
@@ -236,8 +236,8 @@ public class TutorialCode implements BWAPIEventListener  {
 	    //Player p1 = new IuctcdLogic(bwapi, new IUCTCD(1.6,20,1,0,5000,false));
 	    //p1.setID(0);
 	    
-	    //Player p2 = new IuctcdLogic(bwapi, new IUCTCD(1.6,20,0,1,5000,false));
-	    Player p2 = new GuctcdLogic(bwapi, new GUCTCD(1.6,20,0,1,200,false));
+	    Player p2 = new IuctcdLogic(bwapi, new IUCTCD(1.6,20,0,1,5000,false));
+	    //Player p2 = new GuctcdLogic(bwapi, new GUCTCD(1.6,20,0,1,200,false));
 	    p2.setID(1);
 	    
 	    // enter a maximum move limit for the game to go on for

@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import bwmcts.clustering.UPGMA;
+import bwmcts.mcts.guct.GUCTCD;
 import bwmcts.mcts.iuct.IUCTCD;
 import bwmcts.mcts.uctcd.UCTCD;
 import bwmcts.mcts.uctcd.UCTCDsingle;
@@ -30,6 +32,7 @@ import javabot.JNIBWAPI;
 public class UctcdLogic extends Player implements ICombatLogic {
 
 	private UCTCD uctcd;
+	private GUCTCD guctcd;
 	private IUCTCD iuctcd;
 	private SparcraftUI ui;
 	private HashMap<Integer,UnitAction> actions=new HashMap<Integer,UnitAction>();
@@ -37,6 +40,18 @@ public class UctcdLogic extends Player implements ICombatLogic {
 	public UctcdLogic(JNIBWAPI bwapi, UCTCD uctcd){
 		
 		this.uctcd = uctcd;
+		
+		bwapi.loadTypeData();
+		AnimationFrameData.Init();
+		PlayerProperties.Init();
+		WeaponProperties.Init(bwapi);
+		UnitProperties.Init(bwapi);
+
+	}
+	
+	public UctcdLogic(JNIBWAPI bwapi, GUCTCD uctcd){
+		
+		this.guctcd = uctcd;
 		
 		bwapi.loadTypeData();
 		AnimationFrameData.Init();
@@ -69,6 +84,18 @@ public class UctcdLogic extends Player implements ICombatLogic {
 			if (iuctcd!=null){
 				move = iuctcd.search(state.clone(), time);
 			}
+			if (guctcd!=null){
+				
+				try{
+					UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[0]);
+					UPGMA upgmaPlayerB = new UPGMA(state.getAllUnit()[1]);
+					move = guctcd.search(state, upgmaPlayerA, upgmaPlayerB, time);
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+				
+			}
+			
 			executeActions(bwapi,state,move);
 		} catch(Exception e){
 			//e.printStackTrace();

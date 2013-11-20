@@ -205,6 +205,33 @@ public class IUCTCD {
 		
 		return states;
 	}
+	
+	private List<UnitState> getRandomMove(int playerToMove, HashMap<Integer, List<UnitAction>> map) {
+		
+		ArrayList<UnitState> move = new ArrayList<UnitState>();
+		
+		for(Integer i : map.keySet()){
+			
+			// Skip empty actions
+			List<UnitAction> actions = map.get(i);
+			if (actions.isEmpty())
+				continue;
+			
+			// Random state
+			UnitStateTypes type = UnitStateTypes.ATTACK;
+			if (Math.random() >= 0.5f)
+				type = UnitStateTypes.KITE;
+			
+			UnitState unitState = new UnitState(type, i, playerToMove);
+			
+			// Add random possible action
+			move.add(unitState);
+			
+		}
+		
+		return move;
+		
+	}
 
 	private int getPlayerToMove(IuctNode node, GameState state) {
 		
@@ -285,28 +312,6 @@ public class IUCTCD {
 		return NodeType.DEFAULT;
 	}
 
-	private List<UnitState> getRandomMove(int playerToMove, HashMap<Integer, List<UnitAction>> map) {
-		
-		ArrayList<UnitState> move = new ArrayList<UnitState>();
-		
-		for(Integer i : map.keySet()){
-			
-			// Random state
-			UnitStateTypes type = UnitStateTypes.ATTACK;
-			if (Math.random() >= 0.5f)
-				type = UnitStateTypes.KITE;
-			
-			UnitState unitState = new UnitState(type, i, playerToMove);
-			
-			// Add random possible action
-			move.add(unitState);
-			
-		}
-		
-		return move;
-		
-	}
-
 	private void updateState(IuctNode node, GameState state, boolean leaf) {
 		
 		if (node.getType() != NodeType.FIRST || leaf){
@@ -342,7 +347,7 @@ public class IUCTCD {
 			player = move.get(0).player;
 		
 		Player attack = new Player_NoOverKillAttackValue(player);
-		Player flee = new Player_Kite(player);
+		Player kite = new Player_Kite(player);
 		
 		HashMap<Integer, List<UnitAction>> map = new HashMap<Integer, List<UnitAction>>();
 		
@@ -356,9 +361,9 @@ public class IUCTCD {
 		// Divide units into two groups
 		for(UnitState unitState : move){
 			
-			if (unitState.type == UnitStateTypes.ATTACK)
-				attackingUnits.add(unitState.unit);
-			else if (unitState.type == UnitStateTypes.KITE)
+			//if (unitState.type == UnitStateTypes.ATTACK)
+				//attackingUnits.add(unitState.unit);
+			//else if (unitState.type == UnitStateTypes.KITE)
 				kitingUnits.add(unitState.unit);
 			
 		}
@@ -368,30 +373,23 @@ public class IUCTCD {
 		HashMap<Integer, List<UnitAction>> kitingMap = new HashMap<Integer, List<UnitAction>>();
 		
 		for(Integer i : attackingUnits)
-			attackingMap.put(i, map.get(i));
+			if (map.get(i) != null)
+				attackingMap.put(i, map.get(i));
+			
 		
 		for(Integer i : kitingUnits)
-			kitingMap.put(i, map.get(i));
-		
-		/*
-		for(Integer i : map.keySet()){
-			int unitId = state.getUnit(player, i).getId();
-			if (attackingUnits.contains(unitId))
-				attackingMap.put(i, map.get(i)); 
-			if (kitingUnits.contains(unitId))
+			if (map.get(i) != null)
 				kitingMap.put(i, map.get(i));
-		}
-		*/
 		
 		// Add attack actions
 		List<UnitAction> attackActions = new ArrayList<UnitAction>();
 		attack.getMoves(state, attackingMap, attackActions);
 		allActions.addAll(attackActions);
 		
-		// Add defend actions
-		List<UnitAction> defendActions = new ArrayList<UnitAction>();
-		flee.getMoves(state, kitingMap, defendActions);
-		allActions.addAll(defendActions);
+		// Add kite actions
+		List<UnitAction> kiteActions = new ArrayList<UnitAction>();
+		kite.getMoves(state, kitingMap, kiteActions);
+		allActions.addAll(kiteActions);
 		
 		return allActions;
 	}
