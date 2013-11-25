@@ -8,8 +8,10 @@ import javabot.BWAPIEventListener;
 import javabot.JNIBWAPI;
 import javabot.types.UnitType;
 import javabot.types.UnitType.UnitTypes;
+import bwmcts.combat.GPortfolioGreedyLogic;
 import bwmcts.combat.GuctcdLogic;
 import bwmcts.combat.IuctcdLogic;
+import bwmcts.combat.PortfolioGreedyLogic;
 import bwmcts.combat.UctcdLogic;
 import bwmcts.mcts.guct.GUCTCD;
 import bwmcts.mcts.iuct.IUCTCD;
@@ -236,7 +238,8 @@ public class TutorialCode implements BWAPIEventListener  {
 	    //Player p1 = new IuctcdLogic(bwapi, new IUCTCD(1.6,20,1,0,5000,false));
 	    //p1.setID(0);
 	    
-	    Player p2 = new IuctcdLogic(bwapi, new IUCTCD(1.6,20,0,1,5000,false));
+	    //Player p2 = new IuctcdLogic(bwapi, new IUCTCD(1.6,20,0,1,5000,false));
+	    Player p2 = new GPortfolioGreedyLogic(bwapi,2,2,30,6);
 	    //Player p2 = new GuctcdLogic(bwapi, new GUCTCD(1.6,20,0,1,200,false));
 	    p2.setID(1);
 	    
