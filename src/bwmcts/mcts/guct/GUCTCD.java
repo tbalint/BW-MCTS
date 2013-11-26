@@ -179,9 +179,9 @@ public class GUCTCD {
 			clusters = clustersA;
 		
 		if (node.getChildren().isEmpty())
-			move.addAll(getAllMove(UnitStateTypes.ATTACK, clusters));
-		else if (node.getChildren().size() == 1)
 			move.addAll(getAllMove(UnitStateTypes.KITE, clusters));
+		else if (node.getChildren().size() == 1)
+			move.addAll(getAllMove(UnitStateTypes.ATTACK, clusters));
 		else 
 			move = getRandomMove(playerToMove, clusters); // Possible moves?
 			

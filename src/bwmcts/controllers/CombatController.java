@@ -22,7 +22,7 @@ public class CombatController implements BWAPIEventListener {
 	public CombatController() {
 		bwapi = new JNIBWAPI(this);
 		
-		combatLogic = new NoOverKillAttackValueLogic();
+		//combatLogic = new NoOverKillAttackValueLogic();
 		//combatLogic = new AttackValueLogic();
 		//combatLogic = new NoOverKillAttackValueLogic();
 		//combatLogic = new AttackClosestLogic();
@@ -55,7 +55,7 @@ public class CombatController implements BWAPIEventListener {
 
 		//combatLogic =new GuctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false));
 		//combatLogic
-		//combatLogic =new UctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),200,true));
+		combatLogic =new UctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),200,true));
 		//combatLogic =new UctcdLogic(bwapi,new IUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false));
 		//combatLogic =new GPortfolioGreedyLogic(bwapi,2,2,30,6);
 		//combatLogic = new PortfolioGreedyLogic(bwapi,1,1,20 );
