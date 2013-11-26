@@ -176,17 +176,7 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		    		
 		    	}
 		    	if (firstAttack.get(ourUnit.getId())!=null){continue;}
-		    	/* After assigning the attack for a unit it shouldn't assign any actions to it until the target is dead or we have an attackFrame 
-		    	 * 
-		    	 * 
-		    	 * 
-		    	 * 
-		    	 * */
 		    	
-		    	
-		    	//System.out.println(bwapi.getUnit(ourUnit.getId()).getGroundWeaponCooldown()+" cooldown "+  move.toString());
-	
-		    	//bwapi.drawCircle(bwapi.getUnit(ourUnit.getId()).getX(),bwapi.getUnit(ourUnit.getId()).getY(),ourUnit.range(),179,false,false);
 		    	if (bwapi.getUnit(ourUnit.getId()).isAttackFrame()){continue;}
 		    	
 		    	if (move._moveType == UnitActionTypes.ATTACK && bwapi.getUnit(ourUnit.getId()).getGroundWeaponCooldown()==0)
@@ -195,11 +185,7 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		    		
 		    		bwapi.attack(ourUnit.getId(), enemyUnit.getId());
 		    		firstAttack.put(ourUnit.getId(), move.clone());
-		    		
-		    		//if (!bwapi.getUnit(ourUnit.getId()).isAccelerating() && !bwapi.getUnit(ourUnit.getId()).isStartingAttack()){
-		    		//	System.out.println("CanAttack: "+ourUnit.canAttackTarget(enemyUnit, bwapi.getFrameCount())+", isMoving: "+bwapi.getUnit(ourUnit.getId()).isMoving()+",isAttacking: "+bwapi.getUnit(ourUnit.getId()).isAttacking());	
-		    		//	bwapi.attack(ourUnit.getId(), enemyUnit.getId());
-		    		//}
+
 		    	}
 		    	else if (move._moveType == UnitActionTypes.MOVE)
 		    	{

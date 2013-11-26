@@ -84,7 +84,7 @@ public class SparcraftUI extends JComponent {
 			
 		} 
 		
-		UPGMA clustering=new UPGMA(_state.getAllUnit()[1], 1, 1);
+		/*UPGMA clustering=new UPGMA(_state.getAllUnit()[1], 1, 1);
 	    HashMap<Integer,List<Unit>>clusters=  clustering.getClusters(5);
 	    int clusterId=0;
 	    for (List<Unit> list : clusters.values()){
@@ -92,7 +92,7 @@ public class SparcraftUI extends JComponent {
 	    	for (Unit a:list){
 	    		g.drawOval(a.pos().getX()-10+offSetX, a.pos().getY()-10+offSetY, 20, 20);
 	    	}
-	    }
+	    }*/
 	}
 	
 	private void drawScaleForMap(Graphics g, int pixelWidth, int pixelHeight) {

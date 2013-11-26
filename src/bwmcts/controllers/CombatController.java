@@ -45,7 +45,7 @@ public class CombatController implements BWAPIEventListener {
 		// You can also change the game speed from within the game by "/speed X" command.
 		bwapi.setGameSpeed(30);
 		bwapi.drawTargets(true);
-		bwapi.drawIDs(true);
+		//bwapi.drawIDs(true);
 		bwapi.drawHealth(true);
 		// analyze the map
 		bwapi.loadMapData(true);
@@ -54,6 +54,9 @@ public class CombatController implements BWAPIEventListener {
 		//combatLogic =new GuctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false));
 		//combatLogic
 		combatLogic =new UctcdLogic(bwapi,new IUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,true));
+		//combatLogic =new UctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false));
+		//combatLogic =new GPortfolioGreedyLogic(bwapi,2,2,30,6);
+		//combatLogic = new PortfolioGreedyLogic(bwapi,1,1,20 );
 		//combatLogic =new IuctcdLogic(bwapi,new IUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),5000,false));
 		
 		// ============== YOUR CODE GOES HERE =======================
