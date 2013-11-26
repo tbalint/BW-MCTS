@@ -222,7 +222,7 @@ public class TutorialCode implements BWAPIEventListener  {
 		B.put(UnitTypes.Protoss_Dragoon, 5);
 		*/
 		
-		GameState initialState = AvsBState(20, UnitTypes.Protoss_Zealot, 20, UnitTypes.Terran_Marine);
+		GameState initialState = AvsBState(20, UnitTypes.Terran_Marine, 20, UnitTypes.Terran_Marine);
 		
 	    // get the players
 	    Player p1 = new Player_NoOverKillAttackValue(Players.Player_One.ordinal());
@@ -236,8 +236,8 @@ public class TutorialCode implements BWAPIEventListener  {
 	    //Player p1 = new IuctcdLogic(bwapi, new IUCTCD(1.6,20,1,0,5000,false));
 	    //p1.setID(0);
 	    
-	    Player p2 = new IuctcdLogic(bwapi, new IUCTCD(1.6,20,0,1,5000,false));
-	    //Player p2 = new GuctcdLogic(bwapi, new GUCTCD(1.6,20,0,1,200,false));
+	    //Player p2 = new IuctcdLogic(bwapi, new IUCTCD(1.6,20,0,1,5000,false));
+	    Player p2 = new GuctcdLogic(bwapi, new GUCTCD(1.6,20,0,1,500,false));
 	    p2.setID(1);
 	    
 	    // enter a maximum move limit for the game to go on for

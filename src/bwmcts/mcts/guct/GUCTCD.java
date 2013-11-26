@@ -58,6 +58,8 @@ public class GUCTCD {
 
 	public List<UnitAction> search(GameState state, UPGMA upgmaPlayerA, UPGMA upgmaPlayerB, long timeBudget){
 		
+		System.out.println("Search called");
+		
 		if (maxPlayerIndex == 0 && state.whoCanMove() == Players.Player_Two){
 			return new ArrayList<UnitAction>(); 
 		} else if (maxPlayerIndex == 1 && state.whoCanMove() == Players.Player_One){
@@ -88,8 +90,8 @@ public class GUCTCD {
 		
 		if (debug){
 			System.out.println("Traversals " + (t++));
-			String out = root.print(0);
-			writeToFile(out, "tree.xml");
+			//String out = root.print(0);
+			//writeToFile(out, "tree.xml");
 		}
 		
 		if (best == null){

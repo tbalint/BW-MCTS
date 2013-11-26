@@ -75,7 +75,7 @@ public class Game {
 	    	
 	        if (rounds >= moveLimit)
 	        {
-	        	System.out.println(state._currentTime);
+	        	//System.out.println(state._currentTime);
 	            break;
 	        }
 	    	

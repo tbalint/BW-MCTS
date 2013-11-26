@@ -53,7 +53,7 @@ public class CombatController implements BWAPIEventListener {
 
 		//combatLogic =new GuctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false));
 		//combatLogic
-		combatLogic =new UctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false));
+		combatLogic =new UctcdLogic(bwapi,new IUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,true));
 		//combatLogic =new IuctcdLogic(bwapi,new IUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),5000,false));
 		
 		// ============== YOUR CODE GOES HERE =======================
@@ -71,6 +71,7 @@ public class CombatController implements BWAPIEventListener {
 		// ============== YOUR CODE GOES HERE =======================
 		//System.out.println("Act called");
 		int time = 40;	// 40 ms
+		System.out.println("CC Called at " + bwapi.getFrameCount());
 		combatLogic.act(bwapi, time);
 		//System.out.println("Act done");
 	}

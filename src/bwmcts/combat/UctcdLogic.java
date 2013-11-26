@@ -76,8 +76,9 @@ public class UctcdLogic extends Player implements ICombatLogic {
 
 	@Override	
 	public void act(JNIBWAPI bwapi, int time) {
-		GameState state = new GameState(bwapi);
+		
 		try{
+			GameState state = new GameState(bwapi);
 			//state.print();
 			List<UnitAction> move=new ArrayList<UnitAction>();
 			if (uctcd!=null)
@@ -105,7 +106,7 @@ public class UctcdLogic extends Player implements ICombatLogic {
 			
 			executeActions(bwapi,state,move);
 		} catch(Exception e){
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 	
@@ -163,7 +164,7 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		    	int player		= ourUnit.player();
 		    	int enemyPlayer  = state.getEnemy(player);
 		    	if (firstAttack.get(ourUnit.getId())!=null){
-		    		if (!bwapi.getUnit(firstAttack.get(ourUnit.getId())._moveIndex).isExists()){
+		    		if (bwapi.getUnit(firstAttack.get(ourUnit.getId())._moveIndex) == null){
 		    			firstAttack.remove(ourUnit.getId());
 		    		}
 		    		if (bwapi.getUnit(ourUnit.getId()).isAttackFrame()){
@@ -231,16 +232,16 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		int time = 40;
 		List<UnitAction> move=new ArrayList<UnitAction>();
 		if (uctcd!=null)
-			move = uctcd.search(state.clone(), time);
+			move = uctcd.search(state.clone(), time-5);
 		if (iuctcd!=null){
-			move = iuctcd.search(state.clone(), time);
+			move = iuctcd.search(state.clone(), time-5);
 		}
 		if (guctcd!=null){
 			
 			try{
 				UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[ID()], 1, 1);
 				UPGMA upgmaPlayerB = new UPGMA(state.getAllUnit()[state.getEnemy(ID())], 1, 1);
-				move = guctcd.search(state, upgmaPlayerA, upgmaPlayerB, time);
+				move = guctcd.search(state, upgmaPlayerA, upgmaPlayerB, time-5);
 			} catch (Exception e){
 				
 			}

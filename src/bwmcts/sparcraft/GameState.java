@@ -149,8 +149,11 @@ public class GameState {
 			}
 		 _neutralUnits=new ArrayList<Unit>();
 
-		 _numUnits=new int[]{bwapi.getMyUnits().size(),bwapi.getEnemyUnits().size()};
-		 _prevNumUnits=new int[]{bwapi.getMyUnits().size(),bwapi.getEnemyUnits().size()};
+		 _numUnits=new int[2];
+		 _numUnits[bwapi.getEnemies().get(0).getID()] = bwapi.getEnemyUnits().size();
+		 _numUnits[bwapi.getSelf().getID()] = bwapi.getMyUnits().size();
+		 //_numUnits=new int[]{bwapi.getMyUnits().size(),bwapi.getEnemyUnits().size()};
+		 _prevNumUnits=new int[]{_numMovements[0],_numMovements[1]};
 
 		 _totalLTD=new float[Constants.Num_Players];
 		 _totalSumSQRT=new float[Constants.Num_Players];
@@ -607,6 +610,12 @@ public class GameState {
 
 			for (int u=0; u<_numUnits[p]; u++)
 			{
+				/*
+				if (getUnit(p, u) == null){
+					System.out.println("p="+p+" u="+u);
+					continue;
+				}
+				*/
 				totalHP += getUnit(p, u).maxHP() * getUnit(p, u).dpf();
 				totalSQRT += Math.sqrt(getUnit(p,u).maxHP()) * getUnit(p, u).dpf();;
 			}
