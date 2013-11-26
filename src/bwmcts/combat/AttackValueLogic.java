@@ -19,7 +19,7 @@ public class AttackValueLogic implements ICombatLogic {
 	@Override
 	public void act(JNIBWAPI bwapi, int time) {
 		
-		System.out.println("--------------- " + bwapi.getMyUnits().size() + " units.");
+		//System.out.println("--------------- " + bwapi.getMyUnits().size() + " units.");
 	
 		List<Unit> myUnits = bwapi.getMyUnits();
 		
@@ -31,7 +31,7 @@ public class AttackValueLogic implements ICombatLogic {
 	}
 
 	private void actUnit(JNIBWAPI bwapi, Unit unit) {
-		System.out.println(bwapi.getUnitType(unit.getTypeID()).getName());
+		//System.out.println(bwapi.getUnitType(unit.getTypeID()).getName());
 		
 		List<Unit> enemyUnits = bwapi.getEnemyUnits();
 		
@@ -54,8 +54,8 @@ public class AttackValueLogic implements ICombatLogic {
 			airRange += 32;
 		}
 		
-		System.out.println("Ground range = " + groundRange);
-		System.out.println("Air range = " + airRange);
+		//System.out.println("Ground range = " + groundRange);
+		//System.out.println("Air range = " + airRange);
 		
 		float highestValue = Float.MIN_VALUE;
 		Unit bestEnemy = null;
@@ -64,13 +64,13 @@ public class AttackValueLogic implements ICombatLogic {
 			Position enemyPosition = new Position(enemy.getX(), enemy.getY());
 			
 			int distance = Util.distance(position, enemyPosition);
-			System.out.println("d = " + distance);
-			System.out.println("enemy = " + bwapi.getUnitType(enemy.getTypeID()).getName());
+			//System.out.println("d = " + distance);
+			//System.out.println("enemy = " + bwapi.getUnitType(enemy.getTypeID()).getName());
 
 			if (inRange(bwapi, enemy, distance, groundRange, airRange)){
 
 				float damagePerFrame = mostDamageCooldown(bwapi, enemy);
-				System.out.println("Damage per frame = " + damagePerFrame);
+				//System.out.println("Damage per frame = " + damagePerFrame);
 				
 				if ( damagePerFrame / enemy.getHitPoints() > highestValue){
 					highestValue = damagePerFrame / enemy.getHitPoints();
@@ -83,7 +83,7 @@ public class AttackValueLogic implements ICombatLogic {
 		
 		boolean outOfRange = false;
 		if (bestEnemy == null){
-			System.out.println("No enemy in range found");
+			//System.out.println("No enemy in range found");
 			closestLogic.actUnit(bwapi, unit);
 			return;
 		}
@@ -99,6 +99,7 @@ public class AttackValueLogic implements ICombatLogic {
 			attackingUnits.put(unit.getID(), bestEnemy.getID());
 		}
 		
+		/*
 		if (attackingUnits.containsKey(unit.getID())){
 			Unit newTarget = bwapi.getUnit(attackingUnits.get(unit.getID()));
 			if (outOfRange)
@@ -106,6 +107,7 @@ public class AttackValueLogic implements ICombatLogic {
 			else
 				bwapi.drawLine(unit.getX(), unit.getY(), newTarget.getX(), newTarget.getY(), BWColor.RED, false);
 		}
+		*/
 	}
 
 	private float mostDamageCooldown(JNIBWAPI bwapi, Unit unit) {

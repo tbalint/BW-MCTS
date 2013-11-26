@@ -22,7 +22,7 @@ public class CombatController implements BWAPIEventListener {
 	public CombatController() {
 		bwapi = new JNIBWAPI(this);
 		
-		//combatLogic = new NoOverKillAttackValueLogic();
+		combatLogic = new NoOverKillAttackValueLogic();
 		//combatLogic = new AttackValueLogic();
 		//combatLogic = new NoOverKillAttackValueLogic();
 		//combatLogic = new AttackClosestLogic();
@@ -44,17 +44,17 @@ public class CombatController implements BWAPIEventListener {
 		// set game speed to 30 (0 is the fastest. Tournament speed is 20)
 		// You can also change the game speed from within the game by "/speed X" command.
 		bwapi.setGameSpeed(30);
-		bwapi.drawTargets(true);
+		//bwapi.drawTargets(true);
 		//bwapi.drawIDs(true);
-		bwapi.drawHealth(true);
+		//bwapi.drawHealth(true);
 		// analyze the map
 		bwapi.loadMapData(true);
 		bwapi.enablePerfectInformation();
 
 		//combatLogic =new GuctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false));
 		//combatLogic
-		combatLogic =new UctcdLogic(bwapi,new IUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,true));
-		//combatLogic =new UctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false));
+		//combatLogic =new UctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),200,true));
+		//combatLogic =new UctcdLogic(bwapi,new IUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false));
 		//combatLogic =new GPortfolioGreedyLogic(bwapi,2,2,30,6);
 		//combatLogic = new PortfolioGreedyLogic(bwapi,1,1,20 );
 		//combatLogic =new IuctcdLogic(bwapi,new IUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),5000,false));

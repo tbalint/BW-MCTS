@@ -18,7 +18,7 @@ public class AttackClosestLogic implements ICombatLogic {
 	@Override
 	public void act(JNIBWAPI bwapi, int time) {
 		
-		System.out.println("--------------- " + bwapi.getMyUnits().size() + " units.");
+		//System.out.println("--------------- " + bwapi.getMyUnits().size() + " units.");
 	
 		List<Unit> myUnits = bwapi.getMyUnits();
 		
@@ -30,11 +30,11 @@ public class AttackClosestLogic implements ICombatLogic {
 	}
 
 	public void actUnit(JNIBWAPI bwapi, Unit unit) {
-		System.out.println(bwapi.getUnitType(unit.getTypeID()).getName());
+		//System.out.println(bwapi.getUnitType(unit.getTypeID()).getName());
 		
 		List<Unit> enemyUnits = bwapi.getEnemyUnits();
 		
-		bwapi.drawCircle(unit.getX(), unit.getY(), 6, BWColor.YELLOW, false, false);
+		//bwapi.drawCircle(unit.getX(), unit.getY(), 6, BWColor.YELLOW, false, false);
 		
 		Position position = new Position(unit.getX(), unit.getY());
 		
@@ -46,7 +46,7 @@ public class AttackClosestLogic implements ICombatLogic {
 			Position enemyPosition = new Position(enemy.getX(), enemy.getY());
 			
 			int distance = Util.distance(position, enemyPosition);
-			System.out.println("d = " + distance);
+			//System.out.println("d = " + distance);
 			
 			if (distance < closestDistance){
 				closestEnemy = enemy;
@@ -56,7 +56,7 @@ public class AttackClosestLogic implements ICombatLogic {
 		}
 		
 		if (closestEnemy == null){
-			System.out.println("No enemy found");
+			//System.out.println("No enemy found");
 			return;
 		}
 		
@@ -70,6 +70,6 @@ public class AttackClosestLogic implements ICombatLogic {
 		}
 		
 		Unit newTarget = bwapi.getUnit(attackingUnits.get(unit.getID()));
-		bwapi.drawLine(unit.getX(), unit.getY(), newTarget.getX(), newTarget.getY(), BWColor.RED, false);
+		//bwapi.drawLine(unit.getX(), unit.getY(), newTarget.getX(), newTarget.getY(), BWColor.RED, false);
 	}
 }

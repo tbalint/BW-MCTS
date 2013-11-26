@@ -25,7 +25,7 @@ public class NoOverKillAttackValueLogic implements ICombatLogic {
 	@Override
 	public void act(JNIBWAPI bwapi, int time) {
 		
-		System.out.println("--------------- " + bwapi.getMyUnits().size() + " units.");
+		//System.out.println("--------------- " + bwapi.getMyUnits().size() + " units.");
 	
 		dyingUnits.clear();
 		attackedUnits.clear();
@@ -40,11 +40,11 @@ public class NoOverKillAttackValueLogic implements ICombatLogic {
 	}
 
 	private void actUnit(JNIBWAPI bwapi, Unit unit) {
-		System.out.println(bwapi.getUnitType(unit.getTypeID()).getName());
+		//System.out.println(bwapi.getUnitType(unit.getTypeID()).getName());
 		
 		List<Unit> enemyUnits = bwapi.getEnemyUnits();
 		
-		bwapi.drawCircle(unit.getX(), unit.getY(), 6, BWColor.YELLOW, false, false);
+		//bwapi.drawCircle(unit.getX(), unit.getY(), 6, BWColor.YELLOW, false, false);
 		
 		Position position = new Position(unit.getX(), unit.getY());
 		
@@ -63,8 +63,8 @@ public class NoOverKillAttackValueLogic implements ICombatLogic {
 			airRange += 32;
 		}
 		
-		System.out.println("Ground range = " + groundRange);
-		System.out.println("Air range = " + airRange);
+		//System.out.println("Ground range = " + groundRange);
+		//System.out.println("Air range = " + airRange);
 		
 		float highestValue = Float.MIN_VALUE;
 		Unit bestEnemy = null;
@@ -73,13 +73,13 @@ public class NoOverKillAttackValueLogic implements ICombatLogic {
 			Position enemyPosition = new Position(enemy.getX(), enemy.getY());
 			
 			int distance = Util.distance(position, enemyPosition);
-			System.out.println("d = " + distance);
-			System.out.println("enemy = " + bwapi.getUnitType(enemy.getTypeID()).getName());
+			//System.out.println("d = " + distance);
+			//System.out.println("enemy = " + bwapi.getUnitType(enemy.getTypeID()).getName());
 
 			if (inRange(bwapi, enemy, distance, groundRange, airRange)){
 
 				float damagePerFrame = mostDamageCooldown(bwapi, enemy);
-				System.out.println("Damage per frame = " + damagePerFrame);
+				//System.out.println("Damage per frame = " + damagePerFrame);
 				
 				if ( damagePerFrame / enemy.getHitPoints() > highestValue){
 					if (attackedUnits.containsKey(enemy.getID()) && 
@@ -99,12 +99,12 @@ public class NoOverKillAttackValueLogic implements ICombatLogic {
 		
 		boolean outOfRange = false;
 		if (bestEnemy == null){
-			System.out.println("No enemy in range found");
+			//System.out.println("No enemy in range found");
 			closestLogic.actUnit(bwapi, unit);
 			return;
 		}
 		
-		System.out.println("Best enemy found");
+		//System.out.println("Best enemy found");
 		float damage = getWeaponDamage(bwapi, unit, bestEnemy);
 		
 		Unit lastTarget = null;
@@ -119,12 +119,13 @@ public class NoOverKillAttackValueLogic implements ICombatLogic {
 		if (attackingUnits.containsKey(unit.getID())){
 			Unit newTarget = bwapi.getUnit(attackingUnits.get(unit.getID()));
 			if (outOfRange){
-				bwapi.drawLine(unit.getX(), unit.getY(), newTarget.getX(), newTarget.getY(), BWColor.GREEN, false);
+				//bwapi.drawLine(unit.getX(), unit.getY(), newTarget.getX(), newTarget.getY(), BWColor.GREEN, false);
 			}else{
-				bwapi.drawLine(unit.getX(), unit.getY(), newTarget.getX(), newTarget.getY(), BWColor.RED, false);
+				//bwapi.drawLine(unit.getX(), unit.getY(), newTarget.getX(), newTarget.getY(), BWColor.RED, false);
 				attackedUnits.put(newTarget.getID(), damage);
 			}
 		}
+		
 	}
 
 	private float getWeaponDamage(JNIBWAPI bwapi, Unit unit, Unit enemy) {
