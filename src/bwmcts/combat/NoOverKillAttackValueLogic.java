@@ -88,8 +88,6 @@ public class NoOverKillAttackValueLogic implements ICombatLogic {
 					} else {
 						highestValue = damagePerFrame / enemy.getHitPoints();
 						bestEnemy = enemy;
-						
-						
 					}
 				}
 				

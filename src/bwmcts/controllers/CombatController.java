@@ -38,6 +38,8 @@ public class CombatController implements BWAPIEventListener {
 	public void gameStarted() {		
 		System.out.println("Game Started!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
+		bwapi.printText(bwapi.getMyUnits().size() + " units.");
+		
 		// allow me to manually control units during the game
 		bwapi.enableUserInput();
 		
