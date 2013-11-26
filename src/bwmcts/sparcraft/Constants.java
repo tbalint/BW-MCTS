@@ -7,7 +7,7 @@ public class Constants {
 		static int Num_Players				= 2;
 		static int  TILE_SIZE  =32;
 		// maximum number of units a player can have
-		public static int Max_Units					= 50;
+		public static int Max_Units					= 128;
 
 		// max depth the search can ever handle
 		static int Max_Search_Depth			= 50;
