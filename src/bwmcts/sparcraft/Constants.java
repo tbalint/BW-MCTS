@@ -13,7 +13,7 @@ public class Constants {
 		static int Max_Search_Depth			= 50;
 
 		// number of directions that units can move
-		static int Num_Directions				= 4;
+		public static int Num_Directions				= 4;
 
 		// max number of ordered moves in a search depth
 		static int Max_Ordered_Moves			= 10;
@@ -28,7 +28,7 @@ public class Constants {
 		static int Range_Addition       = 32;
 
 		// maximum number of moves possible for any unit
-		static int Max_Moves					= Max_Units + Num_Directions + 1;
+		public static int Max_Moves					= Max_Units + Num_Directions + 1;
 		static boolean   Use_Unit_Bounding			= false;
 		static int Pass_Move_Duration			= 20;
 		static float  Min_Unit_DPF				= 0.1f;

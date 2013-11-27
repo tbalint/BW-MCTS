@@ -8,6 +8,8 @@ import javabot.BWAPIEventListener;
 import javabot.JNIBWAPI;
 import javabot.types.UnitType;
 import javabot.types.UnitType.UnitTypes;
+import bwmcts.Util;
+import bwmcts.clustering.UPGMA;
 import bwmcts.combat.GPortfolioGreedyLogic;
 import bwmcts.combat.GuctcdLogic;
 import bwmcts.combat.IuctcdLogic;
@@ -22,13 +24,13 @@ import bwmcts.sparcraft.players.Player_Defense;
 import bwmcts.sparcraft.players.Player_Kite;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
-public class AiVsAiTest implements BWAPIEventListener  {
+public class Test implements BWAPIEventListener  {
 	
-	JNIBWAPI bwapi;
+JNIBWAPI bwapi;
 	
 	public static void main(String[] args) throws Exception{
 		System.out.println("Create TC instance");
-		AiVsAiTest tc=new AiVsAiTest();
+		Test tc=new Test();
 		tc.bwapi=new JNIBWAPI(tc);
 		tc.bwapi.start();
 		
@@ -50,7 +52,8 @@ public class AiVsAiTest implements BWAPIEventListener  {
 		
 		//Player p2 = new Player_Kite(1);
 		
-		Player p1 = new UctcdLogic(bwapi, new GUCTCD(1.6, 20, 1, 0, 500, false));
+		//Player p1 = new UctcdLogic(bwapi, new GUCTCD(1.6, 20, 1, 0, 500, false));
+		Player p1 = new Player_NoOverKillAttackValue(0);		
 		Player p2 = new Player_NoOverKillAttackValue(1);
 		//Player p2 = new UctcdLogic(bwapi, new GUCTCD(1.6, 2, 0, 1, 20, false));*´
 		
@@ -58,17 +61,125 @@ public class AiVsAiTest implements BWAPIEventListener  {
 		
 		realisticTest(p1, p2);
 		
+		//upgmaTest(p1, p2, 6);
+		
+		//simulatorTest(p1, p2, 0, 500, 50);
+		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	/************************
+	 * *** SIMULATOR TEST ***
+	 * **********************
+	 * @param p1
+	 * @param p2
+	 * @throws Exception 
+	 */
+	private void simulatorTest(Player p1, Player p2, int min, int max, int step) throws Exception {
+		for(int i = 1; i < 20; i+=Math.max(1, i/4)){
+			
+			for(int l = min; l < max; l += step){
+				runSimulator(p1, p2, i, l);
+			}
+		}
+		
+	}
+
+	private void runSimulator(Player p1, Player p2, int i, int moveLimit) throws Exception {
+		
+		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
+		unitsA.put(UnitTypes.Terran_Siege_Tank_Tank_Mode, i);
+		unitsA.put(UnitTypes.Terran_Marine, i*4);
+		unitsA.put(UnitTypes.Terran_Firebat, i*2);
+		
+		HashMap<UnitTypes, Integer> unitsB = new HashMap<UnitType.UnitTypes, Integer>();
+		unitsB.put(UnitTypes.Terran_Siege_Tank_Tank_Mode, i);
+		unitsB.put(UnitTypes.Terran_Marine, i*4);
+		unitsB.put(UnitTypes.Terran_Firebat, i*2);
+		
+		Constants.Max_Units = i*8*2;
+		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
+		
+		GameState state = gameState(unitsA, unitsB);
+		
+		long a = System.nanoTime();
+		
+		// contruct the game
+	    Game g=new Game(state, p1, p2, moveLimit, true);
+
+	    // play the game
+	    g.play();
+
+		long b = System.nanoTime();
+	    double time = (double)(b - a) / 1000000;
+	    
+	    System.out.println("Units: " + i*7*2 + "\tMoveLimit: " + moveLimit + "\tTime: " + time + " ms.");
+
+		
+	}
+
+	/********************
+	 * *** UPGMA TEST ***
+	 * ******************
+	 * @param p1
+	 * @param p2
+	 * @throws Exception 
+	 */
+	private void upgmaTest(Player p1, Player p2, int numClusters) throws Exception {
+		
+		p1.setID(0);
+		p2.setID(1);
+		
+		for(int i = 1; i < 20000; i+=Math.max(1, i/4)){
+			HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
+			unitsA.put(UnitTypes.Terran_Siege_Tank_Tank_Mode, i);
+			unitsA.put(UnitTypes.Terran_Marine, i*4);
+			unitsA.put(UnitTypes.Terran_Firebat, i*2);
+			
+			HashMap<UnitTypes, Integer> unitsB = new HashMap<UnitType.UnitTypes, Integer>();
+
+			Constants.Max_Units = i*8;
+			Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
+			
+			GameState state = gameState(unitsA, unitsB);
+		
+			long a = System.nanoTime();
+			UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[0], 1, 1);
+			HashMap<Integer, List<Unit>> clusters = upgmaPlayerA.getClusters(numClusters);
+			long b = System.nanoTime();
+		    double time = (double)(b - a) / 1000000;
+		    System.out.println("\nMarines: " + (i*4) + "\tFirebats: " + (i*2) + "\tTanks: " + i + "\tTime: " + time + " ms.");
+		    
+		    for(Integer c : clusters.keySet()){
+				
+		    	float distance = Util.avgDistance(clusters.get(c));
+				
+				System.out.print("Cluster " + c + ": {" + distance + "}[");
+				
+				int n = 0;
+				for(Unit u : clusters.get(c)){
+					if (n != 0)
+						System.out.print(", ");
+					System.out.print("(" + u.type().getName() + ")");
+					n++;
+				}
+				
+				System.out.println("] ");
+				
+			}
+		}
+		
+	}
+
 	/***********************
-	 ***  REALISTIC TEST 
+	 ***  REALISTIC TEST ***
+	 ***********************
 	 * @param p2 
-	 * @param p1 ***
-	 ***********************/
+	 * @param p1 
+	 */
 	private void realisticTest(Player p1, Player p2) {
 		try {
 			float result = testRealisticGames(p1, p2, 64, 32, 16, 1);
@@ -206,7 +317,7 @@ public class AiVsAiTest implements BWAPIEventListener  {
  	    		try {
  	    			state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_One.ordinal(), new Position(x, y));
  	    		} catch (Exception e){
- 		 	    	e.printStackTrace();
+ 		 	    	//e.printStackTrace();
  		 	    }
  	    	}
 	 	    
@@ -226,7 +337,7 @@ public class AiVsAiTest implements BWAPIEventListener  {
  	    		try {
  	    			state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_Two.ordinal(), new Position(x, y));
 	 	    	} catch (Exception e){
-		 	    	e.printStackTrace();
+		 	    	//e.printStackTrace();
 		 	    }
  	    	}
 	 	    
