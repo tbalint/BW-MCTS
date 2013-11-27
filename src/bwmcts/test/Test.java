@@ -26,7 +26,8 @@ import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
 public class Test implements BWAPIEventListener  {
 	
-JNIBWAPI bwapi;
+	private static boolean graphics = false;
+	JNIBWAPI bwapi;
 	
 	public static void main(String[] args) throws Exception{
 		System.out.println("Create TC instance");
@@ -50,23 +51,25 @@ JNIBWAPI bwapi;
 		
 		System.out.println("BWAPI created"+ bwapi.getUnitType(3).getName());
 		
+		graphics = true;
+		
 		//Player p2 = new Player_Kite(1);
 		
-		//Player p1 = new UctcdLogic(bwapi, new GUCTCD(1.6, 20, 1, 0, 500, false));
-		Player p1 = new Player_NoOverKillAttackValue(0);		
+		Player p1 = new UctcdLogic(bwapi, new GUCTCD(1.6, 20, 1, 0, 500, false));
+		//Player p1 = new Player_NoOverKillAttackValue(0);		
 		Player p2 = new Player_NoOverKillAttackValue(1);
 		//Player p2 = new UctcdLogic(bwapi, new GUCTCD(1.6, 2, 0, 1, 20, false));
 		//Player p2 = new GPortfolioGreedyLogic(bwapi, 2, 2, 30, 6);
 		
-		//marineTest(p1, p2);
+		oneTypeTest(p1, p2, UnitTypes.Zerg_Zergling, 10);
 		
-		//zerglingTest(p1, p2);
+		//TODO: Write to file
 		
-		//realisticTest(p1, p2);
+		//realisticTest(p1, p2, 20);
 		
 		//upgmaTest(p1, p2, 10, 6);
 		
-		simulatorTest(p1, p2, 1, 250, 10, 10);
+		//simulatorTest(p1, p2, 1, 250, 10, 10);
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -109,7 +112,7 @@ JNIBWAPI bwapi;
 		}
 		
 	}
-
+	
 	private double runSimulator(Player p1, Player p2, int i, int moveLimit) throws Exception {
 		
 		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
@@ -175,24 +178,7 @@ JNIBWAPI bwapi;
 		}
 		
 	}
-
-	private double deviation(List<Double> times) {
-		double average = average(times);
-		double sum = 0;
-		for(Double d : times){
-			sum += (d - average) * (d - average);
-		}
-		return Math.sqrt(sum/times.size());
-	}
-
-	private double average(List<Double> times) {
-		double sum = 0;
-		for(Double d : times){
-			sum+=d;
-		}
-		return sum/((double)times.size());
-	}
-
+	
 	private double runUpgma(Player p1, Player p2, int i, int numClusters) throws Exception {
 		
 		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
@@ -242,67 +228,21 @@ JNIBWAPI bwapi;
 	 * @param p2 
 	 * @param p1 
 	 */
-	private void realisticTest(Player p1, Player p2) {
-		try {
-			float result = testRealisticGames(p1, p2, 64, 32, 16, 1);
-			System.out.println("REALISTIC TEST RESULT: " + result);
-			// TODO:
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/********************
-	 ***  MARINE TEST ***
-	 ********************/
-	private void marineTest(Player p1, Player p2) {
+	private void realisticTest(Player p1, Player p2, int runs) {
 		
-		try {
-			float result = testMarineGames(p1, p2, 128, 1);
-			System.out.println("MARINE TEST RESULT: " + result);
-		} catch (Exception e) {
-			e.printStackTrace();
+		// Combat size
+		for(int i = 1; i < 16; i++){
+			try {
+				float result = testRealisticGames(p1, p2, i*4, i*2, i, runs);
+				System.out.println("REALISTIC TEST RESULT: " + result);
+				// TODO:
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
 	
-	/**
-	 * Returns the average score of the games.
-	 * @param p1
-	 * @param p2
-	 * @param marines
-	 * @param games
-	 * @return
-	 * @throws Exception
-	 */
-	float testMarineGames(Player p1, Player p2, int marines, int games) throws Exception{
-		
-		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
-		unitsA.put(UnitTypes.Terran_Marine, marines);
-		HashMap<UnitTypes, Integer> unitsB = new HashMap<UnitType.UnitTypes, Integer>();
-		unitsB.put(UnitTypes.Terran_Marine, marines);
-		
-		float score = 0;
-		
-		for(int i = 0; i < games; i++){
-			float result = testGame(p1, p2, unitsA, unitsB);
-			System.out.println("Result of game " + i + ": " + result);
-			score += result;
-		}
-		
-		return score / games;
-		
-	}
-	
-	/**
-	 * Returns the average score of the games.
-	 * @param p1
-	 * @param p2
-	 * @param marines
-	 * @param games
-	 * @return
-	 * @throws Exception
-	 */
 	float testRealisticGames(Player p1, Player p2, int marines, int firebats, int tanks, int games) throws Exception{
 		
 		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
@@ -315,19 +255,79 @@ JNIBWAPI bwapi;
 		unitsB.put(UnitTypes.Terran_Marine, marines);
 		unitsB.put(UnitTypes.Terran_Firebat, firebats);
 		
-		float score = 0;
+		System.out.println("Marines: " + marines + "\tfirebats: " + firebats + "\tTanks: " + tanks + " on each side");
 		
+		float score = 0;
+		List<Double> results = new ArrayList<Double>();
+		int wins = 0;
 		for(int i = 0; i < games; i++){
-			float result = testGame(p1, p2, unitsA, unitsB);
+			double result = testGame(p1, p2, unitsA, unitsB);
+			results.add(result);
+			if (result>0)
+				wins++;
+			else if (result <0)
+				wins--;
+			
 			System.out.println("Result of game " + i + ": " + result);
 			score += result;
 		}
+		
+		// Calc deviation and average
+		System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
+		System.out.println("Win average: " + ((double)wins)/((double)games));
+		
+		return score / games;
+		
+	}
+
+	/**********************
+	 ***  ONE TYPE TEST ***
+	 **********************/
+	private void oneTypeTest(Player p1, Player p2, UnitTypes type, int runs) {
+		
+		for(int i = 1; i < 16; i++){
+			try {
+				float result = oneTypeGames(p1, p2, i*8, type, runs);
+				//System.out.println("MARINE TEST RESULT: " + result);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	float oneTypeGames(Player p1, Player p2, int units, UnitTypes type, int games) throws Exception{
+		
+		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
+		unitsA.put(type, units);
+		HashMap<UnitTypes, Integer> unitsB = new HashMap<UnitType.UnitTypes, Integer>();
+		unitsB.put(type, units);
+		
+		System.out.println("Units: " + units + " of type: " + type + " on each side.");
+		
+		float score = 0;
+		List<Double> results = new ArrayList<Double>();
+		int wins = 0;
+		for(int i = 0; i < games; i++){
+			double result = testGame(p1, p2, unitsA, unitsB);
+			results.add(result);
+			if (result>0)
+				wins++;
+			else if (result <0)
+				wins--;
+			
+			System.out.println("Result of game " + i + ": " + result);
+			score += result;
+		}
+		
+		// Calc deviation and average
+		System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
+		System.out.println("Win average: " + ((double)wins)/((double)games));
 		
 		return score / games;
 		
 	}
 	
-
 	int testGame(Player p1, Player p2, HashMap<UnitTypes, Integer> unitsA, HashMap<UnitTypes, Integer> unitsB) throws Exception
 	{
 
@@ -340,7 +340,7 @@ JNIBWAPI bwapi;
 	    int moveLimit = 2000;
 
 	    // contruct the game
-	    Game g=new Game(initialState, p1, p2, moveLimit,true);
+	    Game g=new Game(initialState, p1, p2, moveLimit, graphics);
 
 	    // play the game
 	    g.play();
@@ -411,7 +411,22 @@ JNIBWAPI bwapi;
 	    return state;
 	}
 
-	
+	private double deviation(List<Double> times) {
+		double average = average(times);
+		double sum = 0;
+		for(Double d : times){
+			sum += (d - average) * (d - average);
+		}
+		return Math.sqrt(sum/times.size());
+	}
+
+	private double average(List<Double> times) {
+		double sum = 0;
+		for(Double d : times){
+			sum+=d;
+		}
+		return sum/((double)times.size());
+	}
 
 	@Override
 	public void gameStarted() {

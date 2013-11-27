@@ -58,7 +58,7 @@ public class GUCTCD {
 
 	public List<UnitAction> search(GameState state, UPGMA upgmaPlayerA, UPGMA upgmaPlayerB, long timeBudget){
 		
-		System.out.println("Search called");
+		//System.out.println("Search called");
 		
 		if (maxPlayerIndex == 0 && state.whoCanMove() == Players.Player_Two){
 			return new ArrayList<UnitAction>(); 
