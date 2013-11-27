@@ -55,15 +55,18 @@ JNIBWAPI bwapi;
 		//Player p1 = new UctcdLogic(bwapi, new GUCTCD(1.6, 20, 1, 0, 500, false));
 		Player p1 = new Player_NoOverKillAttackValue(0);		
 		Player p2 = new Player_NoOverKillAttackValue(1);
-		//Player p2 = new UctcdLogic(bwapi, new GUCTCD(1.6, 2, 0, 1, 20, false));*´
+		//Player p2 = new UctcdLogic(bwapi, new GUCTCD(1.6, 2, 0, 1, 20, false));
+		//Player p2 = new GPortfolioGreedyLogic(bwapi, 2, 2, 30, 6);
 		
 		//marineTest(p1, p2);
 		
-		realisticTest(p1, p2);
+		//zerglingTest(p1, p2);
 		
-		//upgmaTest(p1, p2, 6);
+		//realisticTest(p1, p2);
 		
-		//simulatorTest(p1, p2, 0, 500, 50);
+		//upgmaTest(p1, p2, 10, 6);
+		
+		simulatorTest(p1, p2, 1, 250, 10, 10);
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -78,17 +81,36 @@ JNIBWAPI bwapi;
 	 * @param p2
 	 * @throws Exception 
 	 */
-	private void simulatorTest(Player p1, Player p2, int min, int max, int step) throws Exception {
+	private void simulatorTest(Player p1, Player p2, int min, int max, int steps, int runs) throws Exception {
+		
+		// Combat size
 		for(int i = 1; i < 20; i+=Math.max(1, i/4)){
 			
-			for(int l = min; l < max; l += step){
-				runSimulator(p1, p2, i, l);
+			// Step limit
+			for(int s = 0; s < steps; s ++){
+				
+				List<Double> times = new ArrayList<Double>();
+				// Runs
+				for(int r = 0; r < runs; r++){
+					int limit = (int)(min + (float)(max-min)*(float)((float)s/(float)steps));
+					double time = runSimulator(p1, p2, i, limit);
+					
+					if (time == -1)
+						break;
+					
+					times.add(time);
+				}
+				
+				// Calc deviation and average
+				System.out.println("Average: " + average(times) + "\tDeviation: " + deviation(times));
+				
 			}
+			
 		}
 		
 	}
 
-	private void runSimulator(Player p1, Player p2, int i, int moveLimit) throws Exception {
+	private double runSimulator(Player p1, Player p2, int i, int moveLimit) throws Exception {
 		
 		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
 		unitsA.put(UnitTypes.Terran_Siege_Tank_Tank_Mode, i);
@@ -108,7 +130,7 @@ JNIBWAPI bwapi;
 		long a = System.nanoTime();
 		
 		// contruct the game
-	    Game g=new Game(state, p1, p2, moveLimit, true);
+	    Game g=new Game(state, p1, p2, moveLimit, false);
 
 	    // play the game
 	    g.play();
@@ -116,8 +138,14 @@ JNIBWAPI bwapi;
 		long b = System.nanoTime();
 	    double time = (double)(b - a) / 1000000;
 	    
+	    //int limit = Math.min(g.getRounds(), moveLimit);
+	    
+	    if (moveLimit < g.getRounds())
+	    	return -1;
+	    	
 	    System.out.println("Units: " + i*7*2 + "\tMoveLimit: " + moveLimit + "\tTime: " + time + " ms.");
 
+	    return time;
 		
 	}
 
@@ -128,49 +156,83 @@ JNIBWAPI bwapi;
 	 * @param p2
 	 * @throws Exception 
 	 */
-	private void upgmaTest(Player p1, Player p2, int numClusters) throws Exception {
+	private void upgmaTest(Player p1, Player p2, int runs, int numClusters) throws Exception {
 		
 		p1.setID(0);
 		p2.setID(1);
 		
-		for(int i = 1; i < 20000; i+=Math.max(1, i/4)){
-			HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
-			unitsA.put(UnitTypes.Terran_Siege_Tank_Tank_Mode, i);
-			unitsA.put(UnitTypes.Terran_Marine, i*4);
-			unitsA.put(UnitTypes.Terran_Firebat, i*2);
+		for(int i = 1; i < 20; i+=Math.max(1, i/4)){
 			
-			HashMap<UnitTypes, Integer> unitsB = new HashMap<UnitType.UnitTypes, Integer>();
-
-			Constants.Max_Units = i*8;
-			Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
-			
-			GameState state = gameState(unitsA, unitsB);
-		
-			long a = System.nanoTime();
-			UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[0], 1, 1);
-			HashMap<Integer, List<Unit>> clusters = upgmaPlayerA.getClusters(numClusters);
-			long b = System.nanoTime();
-		    double time = (double)(b - a) / 1000000;
-		    System.out.println("\nMarines: " + (i*4) + "\tFirebats: " + (i*2) + "\tTanks: " + i + "\tTime: " + time + " ms.");
-		    
-		    for(Integer c : clusters.keySet()){
-				
-		    	float distance = Util.avgDistance(clusters.get(c));
-				
-				System.out.print("Cluster " + c + ": {" + distance + "}[");
-				
-				int n = 0;
-				for(Unit u : clusters.get(c)){
-					if (n != 0)
-						System.out.print(", ");
-					System.out.print("(" + u.type().getName() + ")");
-					n++;
-				}
-				
-				System.out.println("] ");
-				
+			List<Double> times = new ArrayList<Double>();
+			for (int r = 0; r < runs; r++){
+				double time = runUpgma(p1, p2, i, numClusters);
+				times.add(time);
 			}
+			
+			// Calc deviation and average
+			System.out.println("Average: " + average(times) + "\tDeviation: " + deviation(times));
+			
 		}
+		
+	}
+
+	private double deviation(List<Double> times) {
+		double average = average(times);
+		double sum = 0;
+		for(Double d : times){
+			sum += (d - average) * (d - average);
+		}
+		return Math.sqrt(sum/times.size());
+	}
+
+	private double average(List<Double> times) {
+		double sum = 0;
+		for(Double d : times){
+			sum+=d;
+		}
+		return sum/((double)times.size());
+	}
+
+	private double runUpgma(Player p1, Player p2, int i, int numClusters) throws Exception {
+		
+		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
+		unitsA.put(UnitTypes.Terran_Siege_Tank_Tank_Mode, i);
+		unitsA.put(UnitTypes.Terran_Marine, i*4);
+		unitsA.put(UnitTypes.Terran_Firebat, i*2);
+		
+		HashMap<UnitTypes, Integer> unitsB = new HashMap<UnitType.UnitTypes, Integer>();
+
+		Constants.Max_Units = i*8;
+		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
+		
+		GameState state = gameState(unitsA, unitsB);
+	
+		long a = System.nanoTime();
+		UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[0], 1, 1);
+		HashMap<Integer, List<Unit>> clusters = upgmaPlayerA.getClusters(numClusters);
+		long b = System.nanoTime();
+	    double time = (double)(b - a) / 1000000;
+	    System.out.println("\nMarines: " + (i*4) + "\tFirebats: " + (i*2) + "\tTanks: " + i + "\tTime: " + time + " ms.");
+	    
+	    for(Integer c : clusters.keySet()){
+			
+	    	float distance = Util.avgDistance(clusters.get(c));
+			
+			System.out.print("Cluster " + c + ": {" + distance + "}[");
+			
+			int n = 0;
+			for(Unit u : clusters.get(c)){
+				if (n != 0)
+					System.out.print(", ");
+				System.out.print("(" + u.type().getName() + ")");
+				n++;
+			}
+			
+			System.out.println("] ");
+			
+		}
+	    
+	    return time;
 		
 	}
 
