@@ -37,7 +37,7 @@ public class Player_Kite extends Player {
 			long closestMoveDist		  			= Long.MAX_VALUE;
 
 			Unit ourUnit							= (state.getUnit(_id, u));
-			Unit closestUnit						= (ourUnit.canHeal() ? state.getClosestOurUnit(_id, u) : state.getClosestEnemyUnit(_id, u));
+			Unit closestUnit						= (ourUnit.canHeal() ? state.getClosestOurUnit(_id, u) : state.getClosestEnemyUnit(_id,u));
 
 			for (int m = 0; m < moves.get(u).size(); ++m)
 			{

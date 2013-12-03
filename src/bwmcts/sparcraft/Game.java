@@ -7,7 +7,9 @@ import java.util.List;
 import javax.swing.JFrame;
 
 
+
 import bwmcts.sparcraft.players.Player;
+import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
 public class Game {
 
@@ -20,8 +22,6 @@ public class Game {
 	private Player[]	_players=new Player[2];
 	int	_playerToMoveMethod;
 	private int				rounds;
-	private Timer				t=new Timer();
-	private double				gameTimeMS;
 	public int				moveLimit;
 	
 	private boolean display=false;
@@ -67,71 +67,58 @@ public class Game {
 
 		ArrayList<UnitAction>scriptMoves_A = new ArrayList<UnitAction>();
 		ArrayList<UnitAction>scriptMoves_B = new ArrayList<UnitAction>();
-
-	    t.start();
-	    
+		Player toMove;
+		Player enemy;
 	    // play until there is no winner
+		long generatemoves=0;
+		long getmoves=0;
+		long makemoves=0;
+		((Player_NoOverKillAttackValue)_players[0]).timeOnHpCopying=0;
+		((Player_NoOverKillAttackValue)_players[1]).timeOnHpCopying=0;
 	    while (!this.gameOver()){
 	    	
 	        if (rounds >= moveLimit)
 	        {
-	        	//System.out.println(state._currentTime);
 	            break;
 	        }
 	    	
-	        Timer frameTimer=new Timer();
-	        frameTimer.start();
-	
 	        scriptMoves_A.clear();
 	        scriptMoves_B.clear();
 	
 	        // the player that will move next
 	        int playerToMove=getPlayerToMove();
-	        Player toMove = _players[playerToMove];
-	        Player enemy = _players[state.getEnemy(playerToMove)];
+	        toMove = _players[playerToMove];
+	        enemy = _players[GameState.getEnemy(playerToMove)];
 
 	        // generate the moves possible from this state
 	        HashMap<Integer,List<UnitAction>> moves_A=new HashMap<Integer,List<UnitAction>>();
 	        HashMap<Integer,List<UnitAction>> moves_B=new HashMap<Integer,List<UnitAction>>();
-	        try {
-				state.generateMoves(moves_A, toMove.ID());
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+	        long g=System.nanoTime();
+			state.generateMoves(moves_A, toMove.ID());
+			generatemoves+=System.nanoTime()-g;
 	        
 	        // if both players can move, generate the other player's moves
 	        if (state.bothCanMove())
 	        {
-	            try {
-					state.generateMoves(moves_B, enemy.ID());
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-	            
-	            enemy.getMoves(state, moves_B, scriptMoves_B);
-	
-	            try {
-					state.makeMoves(scriptMoves_B);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	            
+	        	g=System.nanoTime();
+	        	state.generateMoves(moves_B, enemy.ID());
+	        	generatemoves+=System.nanoTime()-g;
+	        	g=System.nanoTime();
+				enemy.getMoves(state, moves_B, scriptMoves_B);
+				getmoves+=System.nanoTime()-g;
+				g=System.nanoTime();
+	            state.makeMoves(scriptMoves_B);
+	            makemoves+=System.nanoTime()-g;
 	        }
 	        
 	        // the tuple of moves he wishes to make
+	        g=System.nanoTime();
 	        toMove.getMoves(state, moves_A, scriptMoves_A);
-	
+	        getmoves+=System.nanoTime()-g;
 	        // make the moves
-	        try {
-				state.makeMoves(scriptMoves_A);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	        
+	        g=System.nanoTime();
+			state.makeMoves(scriptMoves_A);
+			makemoves+=System.nanoTime()-g;
 	        if (display)
 	        {
 		        state.print();
@@ -140,7 +127,6 @@ public class Game {
 	        	try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 	        }
@@ -150,10 +136,11 @@ public class Game {
 	        rounds++;
 	        
 	    }
-	    
-	    gameTimeMS = t.getElapsedTimeInMilliSec();
-	    
-	    //System.out.println("Game rounds: " + rounds);
+	    System.out.println("time spent on sorting "+(double)state.timeSpentOnSorting/1000000);
+	    System.out.println("time spent on generatemoves "+(double)generatemoves/1000000);
+	    System.out.println("time spent on getmoves "+(double)getmoves/1000000);
+	    System.out.println("time spent on makemoves "+(double)makemoves/1000000);
+	    System.out.println("time spent on timeonHP "+(double)(((Player_NoOverKillAttackValue)_players[0]).timeOnHpCopying+((Player_NoOverKillAttackValue)_players[1]).timeOnHpCopying)/1000000);
 	}
 
 
@@ -161,10 +148,6 @@ public class Game {
 	    return this.rounds;
 	 }
 	
-	public double getTime()
-	{
-	    return gameTimeMS;
-	}
 
 // returns whether or not the game is over
 	public boolean gameOver()

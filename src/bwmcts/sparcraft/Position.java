@@ -53,6 +53,7 @@ public class Position {
 	}
 
 	public int getDistanceSq(Position p) {
+
 		return (x-p.getX())*(x-p.getX()) + (y-p.getY())*(y-p.getY());
 	}
 
@@ -76,6 +77,10 @@ public class Position {
 		x=pos.getX();
 		y=pos.getY();
 		
+	}
+	
+	public int getManhattanDistance(Position p){
+		return Math.abs(x-p.getX() + y-p.getY());	 
 	}
 
 	public int getDistance(Position pos) {

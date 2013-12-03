@@ -129,13 +129,13 @@ public class Unit implements Comparable<Unit> {
 		 _previousPosition = pos();
 
 		    // get the distance to the move action destination
-		    int dist = move.pos().getDistance(pos());
+		   // int dist = move.pos().getDistance(pos());
 		    
 		    // how long will this move take?
-		    int moveDuration = (int)((double)dist / speed());
+		    //int moveDuration = (int)((double)move.pos().getDistance(pos()) / speed());
 
 		    // update the next time we can move, make sure a move always takes 1 time step
-		    updateMoveActionTime(gameTime + Math.max(moveDuration, 1));
+		    updateMoveActionTime(gameTime + Math.max( (int)((double)move.pos().getDistance(pos()) / speed()), 1));
 
 		    // assume we need 4 frames to turn around after moving
 		    updateAttackActionTime(Math.max(nextAttackActionTime(), nextMoveActionTime()));
@@ -157,7 +157,7 @@ public class Unit implements Comparable<Unit> {
 	}
 	public void takeAttack(Unit attacker){
 		PlayerWeapon weapon=attacker.getWeapon(this);
-	    int      damage=weapon.GetDamageBase();
+	    int      damage=attacker.getWeapon(this).GetDamageBase();
 
 	    damage =Math.max((int)((damage-getArmor()) * weapon.GetDamageMultiplier(getSize())), 2);
 	    
@@ -197,18 +197,18 @@ public class Unit implements Comparable<Unit> {
 	public boolean equalsID(Unit rhs) {return true;}
 	public boolean canAttackTarget(Unit unit,int gameTime){
 
-		WeaponType weapon =WeaponProperties.props[ unit.type().isFlyer() ? type().getAirWeaponID() : type().getGroundWeaponID()].type;
+		//WeaponType weapon =WeaponProperties.props[ unit.type().isFlyer() ? type().getAirWeaponID() : type().getGroundWeaponID()].type;
 
-	    if (weapon.getDamageAmount() == 0)
+	    if (WeaponProperties.props[ unit.type().isFlyer() ? type().getAirWeaponID() : type().getGroundWeaponID()].type.getDamageAmount() == 0)
 	    {
 	        return false;
 	    }
 
 	    // range of this unit attacking
-	    int r = range();
+	    //int r = range();
 
 	    // return whether the target unit is in range
-	    return (r * r) >= getDistanceSqToUnit(unit, gameTime);
+	    return (range())* range() >= getDistanceSqToUnit(unit, gameTime);
     }
 	public boolean canHealTarget(Unit unit, int gameTime) { 
 		if (!canHeal() || !unit.isOrganic() || !(unit.player() == player()) || (unit.currentHP() == unit.maxHP()))
@@ -280,14 +280,14 @@ public class Unit implements Comparable<Unit> {
             }
             else
             {
-                int moveDuration = _timeCanMove - _previousActionTime;
-                float moveTimeRatio = (float)(gameTime - _previousActionTime) / moveDuration;
+                //int moveDuration = _timeCanMove - _previousActionTime;
+                //float moveTimeRatio = (float)(gameTime - _previousActionTime) / (_timeCanMove - _previousActionTime);
                 _prevCurrentPosTime = gameTime;
 
                 // calculate the new current position
                 _prevCurrentPos = new Position(_position.getX(),_position.getY());
                 _prevCurrentPos.subtractPosition(_previousPosition);
-                _prevCurrentPos.scalePosition(moveTimeRatio);
+                _prevCurrentPos.scalePosition((float)(gameTime - _previousActionTime) / (_timeCanMove - _previousActionTime));
                 _prevCurrentPos.addPosition(_previousPosition);
                
                 //_prevCurrentPos = _previousPosition + (_position - _previousPosition).scale(moveTimeRatio);
@@ -421,6 +421,10 @@ public class Unit implements Comparable<Unit> {
 	
 	public int compareTo(Unit u) {
 		// TODO Auto-generated method stub
+		if (!isAlive() && !u.isAlive()){
+			return 0;
+		}
+		
 		if (!isAlive())
 	    {
 			return 1;

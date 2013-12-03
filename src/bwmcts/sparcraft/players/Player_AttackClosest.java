@@ -32,7 +32,7 @@ public class Player_AttackClosest extends Player {
 
 			Unit ourUnit = state.getUnit(ID(), u);
 			
-			Unit closestUnit			=ourUnit.canHeal() ? state.getClosestOurUnit(ID(), u) : state.getClosestEnemyUnit(ID(), u);
+			Unit closestUnit			=ourUnit.canHeal() ? state.getClosestOurUnit(ID(), u) : state.getClosestEnemyUnit(_id,u);
 			for (int m=0; m<moves.get(u).size(); m++)
 			{
 				UnitAction move	=moves.get(u).get(m);

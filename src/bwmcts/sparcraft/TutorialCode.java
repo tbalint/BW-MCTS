@@ -52,7 +52,8 @@ public class TutorialCode implements BWAPIEventListener  {
 	{
 	    // GameState only has a default constructor, you must add units to it manually
 	    GameState state=new GameState();
-	    state._maxUnits=50;
+	    //state._maxUnits=50;
+	    Constants.Max_Moves=50;
 	    state.setMap(new Map(40, 40));
 	    int startY = 5;
 	    int space = 10;
@@ -92,7 +93,8 @@ public class TutorialCode implements BWAPIEventListener  {
 		
 		// GameState only has a default constructor, you must add units to it manually
 	    GameState state=new GameState();
-	    state._maxUnits=50;
+	    //state._maxUnits=50;
+	    Constants.Max_Moves=50;
 	    state.setMap(new Map(40, 40));
 	    int startY = 5;
 	    int space = 10;
