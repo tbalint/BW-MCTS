@@ -31,7 +31,7 @@ public class Player_Defense extends Player {
 			int furthestMoveIndex					= 0;
 			int furthestMoveDist					= 0;
 			Unit ourUnit							= (state.getUnit(_id, u));
-			Unit closestUnit						= (ourUnit.canHeal() ? state.getClosestOurUnit(_id, u) : state.getClosestEnemyUnit(_id, u));
+			Unit closestUnit						= (ourUnit.canHeal() ? state.getClosestOurUnit(_id, u) : state.getClosestEnemyUnit(_id,u));
 
 			for (int m = 0; m < moves.get(u).size(); ++m)
 			{

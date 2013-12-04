@@ -105,16 +105,15 @@ public class Map {
 
 	public boolean isWalkable(Position pixelPosition)
 	{
-		Position wp=getWalkPosition(pixelPosition);
+		//Position wp=getWalkPosition(pixelPosition);
 
-		return	isWalkable(wp.getX(), wp.getY());
+		return	isWalkable(pixelPosition.x/8, pixelPosition.y/8);
 	}
     
     public boolean isFlyable(Position pixelPosition)
 	{
-		Position wp=getWalkPosition(pixelPosition);
-
-		return isFlyable(wp.getX(), wp.getY());
+		//Position wp=getWalkPosition(pixelPosition);
+    	return	isWalkable(pixelPosition.x/8, pixelPosition.y/8);
 	}
 
 	public boolean isWalkable(int walkTileX, int walkTileY) {
