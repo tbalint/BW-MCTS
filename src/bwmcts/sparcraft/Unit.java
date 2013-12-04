@@ -87,7 +87,7 @@ public class Unit implements Comparable<Unit> {
 	public void updateMoveActionTime(int newTime){
 		 _timeCanMove = newTime;
 	}
-	public void attack(UnitAction move, Unit target, int gameTime){
+	public void attack(UnitAction move, int gameTime){
 		if (_previousAction.type() == UnitActionTypes.ATTACK || _previousAction.type() == UnitActionTypes.RELOAD)
 	    {
 	        // add the repeat attack animation duration
@@ -156,14 +156,15 @@ public class Unit implements Comparable<Unit> {
 	    setPreviousAction(move, gameTime);
 	}
 	public void takeAttack(Unit attacker){
-		PlayerWeapon weapon=attacker.getWeapon(this);
-	    int      damage=attacker.getWeapon(this).GetDamageBase();
+		//PlayerWeapon weapon=attacker.getWeapon(this);
+	    //int      damage=attacker.getWeapon(this).GetDamageBase();
 
-	    damage =Math.max((int)((damage-getArmor()) * weapon.GetDamageMultiplier(getSize())), 2);
+	    //damage =Math.max((int)((attacker.getWeapon(this).GetDamageBase()-getArmor()) * attacker.getWeapon(this).GetDamageMultiplier(getSize())), 2);
 	    
 	    //std::cout << (int)attacker.player() << " " << damage << "\n";
 
-	    updateCurrentHP(_currentHP - damage);
+	   // updateCurrentHP(_currentHP - Math.max((int)((attacker.getWeapon(this).GetDamageBase()-getArmor()) * attacker.getWeapon(this).GetDamageMultiplier(getSize())), 2));
+		_currentHP -= Math.max((int)((attacker.getWeapon(this).GetDamageBase()-getArmor()) * attacker.getWeapon(this).GetDamageMultiplier(getSize())), 2);
 	}
 	public void takeHeal(Unit healer){
 		updateCurrentHP(_currentHP + healer.healAmount());
@@ -208,7 +209,7 @@ public class Unit implements Comparable<Unit> {
 	    //int r = range();
 
 	    // return whether the target unit is in range
-	    return (range())* range() >= getDistanceSqToUnit(unit, gameTime);
+	    return (range()* range()) >= getDistanceSqToPosition(unit.currentPosition(gameTime), gameTime);
     }
 	public boolean canHealTarget(Unit unit, int gameTime) { 
 		if (!canHeal() || !unit.isOrganic() || !(unit.player() == player()) || (unit.currentHP() == unit.maxHP()))
@@ -260,6 +261,10 @@ public class Unit implements Comparable<Unit> {
 	public int getDistanceSqToPosition(Position p, int gameTime) {
 		return currentPosition(gameTime).getDistanceSq(p);
 	}
+	
+	public int getDistanceSqToPosition(int x, int y, int gameTime) {
+		return currentPosition(gameTime).getDistanceSq(x,y);
+	}
     public Position currentPosition(int gameTime)  {
     	if (_previousAction.type() == UnitActionTypes.MOVE)
         {
@@ -285,11 +290,17 @@ public class Unit implements Comparable<Unit> {
                 _prevCurrentPosTime = gameTime;
 
                 // calculate the new current position
-                _prevCurrentPos = new Position(_position.getX(),_position.getY());
-                _prevCurrentPos.subtractPosition(_previousPosition);
+                
+                
+                //_prevCurrentPos.moveTo(_position);
+                //_prevCurrentPos.subtractPosition(_previousPosition);
+                _prevCurrentPos.moveTo(_position.x-_previousPosition.x,_position.y-_previousPosition.y);
                 _prevCurrentPos.scalePosition((float)(gameTime - _previousActionTime) / (_timeCanMove - _previousActionTime));
                 _prevCurrentPos.addPosition(_previousPosition);
-               
+
+                
+                
+                
                 //_prevCurrentPos = _previousPosition + (_position - _previousPosition).scale(moveTimeRatio);
                 return _prevCurrentPos;
             }
@@ -301,8 +312,7 @@ public class Unit implements Comparable<Unit> {
         }
     }
     public void setPreviousPosition(int gameTime){
-    	int moveDuration = _timeCanMove - _previousActionTime;
-        float moveTimeRatio = (float)(gameTime - _previousActionTime) / moveDuration;
+        float moveTimeRatio = (float)(gameTime - _previousActionTime) / (_timeCanMove - _previousActionTime);
         _prevCurrentPosTime = gameTime;
         Position temp=_previousPosition;
         Position temp2=_position;
@@ -315,14 +325,14 @@ public class Unit implements Comparable<Unit> {
     // health and damage related functions
 	public int damage()  {
 		 return _unitType.getID() == UnitTypes.Protoss_Zealot.ordinal() ? 
-			        2 * (int)WeaponProperties.Get(_unitType.getGroundWeaponID()).type.getDamageAmount() : 
-			    (int)WeaponProperties.Get(_unitType.getGroundWeaponID()).type.getDamageAmount(); 
+			        2 * WeaponProperties.Get(_unitType.getGroundWeaponID()).type.getDamageAmount() : 
+			    WeaponProperties.Get(_unitType.getGroundWeaponID()).type.getDamageAmount(); 
 	}
 	
 	public int damageGround()  {
 		 return _unitType.getID() == UnitTypes.Protoss_Zealot.ordinal() ? 
-			        2 * (int)WeaponProperties.Get(_unitType.getGroundWeaponID()).type.getDamageAmount() : 
-			    (int)WeaponProperties.Get(_unitType.getGroundWeaponID()).type.getDamageAmount(); 
+			        2 * WeaponProperties.Get(_unitType.getGroundWeaponID()).type.getDamageAmount() : 
+			    WeaponProperties.Get(_unitType.getGroundWeaponID()).type.getDamageAmount(); 
 	}
 	
 	public int damageAir(){
@@ -352,7 +362,7 @@ public class Unit implements Comparable<Unit> {
 	}
 	
 	public float dpf()  {
-		return (float)Math.max(Constants.Min_Unit_DPF, (float)damage() / ((float)attackCooldown() + 1)); 
+		return Math.max(Constants.Min_Unit_DPF, (float)damage() / (attackCooldown() + 1)); 
 	}
 	public void updateCurrentHP(int newHP){
 		 _currentHP =Math.min(maxHP(), newHP); 
@@ -369,7 +379,7 @@ public class Unit implements Comparable<Unit> {
 
     // time and cooldown related functions
 	public int moveCooldown() {
-		return (int)((double)Constants.Move_Distance / _unitType.getTopSpeed()); 
+		return (int)((float)Constants.Move_Distance / _unitType.getTopSpeed()); 
 	}
 	public int attackCooldown()  {
 		return WeaponProperties.Get(_unitType.getGroundWeaponID()).GetCooldown(PlayerProperties.Get(_playerID)); 

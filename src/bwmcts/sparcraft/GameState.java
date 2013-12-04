@@ -27,7 +27,7 @@ public class GameState {
 	 float[]  _totalLTD=new float[Constants.Num_Players];
 	 float[] _totalSumSQRT=new float[Constants.Num_Players];
 
-	 int[] _numMovements=new int[Constants.Num_Players];
+	 //int[] _numMovements=new int[Constants.Num_Players];
 	 //int[] _prevHPSum=new int[Constants.Num_Players];
 	long timeSpentOnSorting=0;
 	int[][] _closestMoveIndex=new int[Constants.Num_Players][Constants.Max_Moves];
@@ -41,16 +41,17 @@ public class GameState {
 
 	    private void  performUnitAction(UnitAction move){
 	    	Unit ourUnit		= getUnit(move._player, move._unit);
-	    	int player		= ourUnit.player();
-	    	int enemyPlayer  = getEnemy(player);
+	    	//int player		= ourUnit.player();
+	    	
 
 	    	if (move._moveType == UnitActionTypes.ATTACK)
 	    	{
-	    		Unit enemyUnit=getUnit(enemyPlayer,move._moveIndex);
+	    		//int enemyPlayer  =;
+	    		Unit enemyUnit=getUnit( getEnemy(move._player),move._moveIndex);
 	            //Unit & enemyUnit(getUnitByID(enemyPlayer ,move._moveIndex));
 	    			
 	    		// attack the unit
-	    		ourUnit.attack(move, enemyUnit, _currentTime);
+	    		ourUnit.attack(move, _currentTime);
 	    			
 	    		// enemy unit takes damage if it is alive
 	    		if (enemyUnit.isAlive())
@@ -61,19 +62,19 @@ public class GameState {
 	    			if (!enemyUnit.isAlive())
 	    			{
 	    				// if it died, remove it
-	    				_numUnits[enemyPlayer]--;
+	    				_numUnits[enemyUnit.player()]--;
 	    			}
 	    		}			
 	    	}
 	    	else if (move._moveType == UnitActionTypes.MOVE)
 	    	{
-	    		_numMovements[player]++;
+	    		//_numMovements[move._player]++;
 
 	    		ourUnit.move(move, _currentTime);
 	    	}
 	    	else if (move._moveType == UnitActionTypes.HEAL)
 	    	{
-	    		Unit ourOtherUnit=getUnit(player,move._moveIndex);
+	    		Unit ourOtherUnit=getUnit(move._player,move._moveIndex);
 	    			
 	    		// attack the unit
 	    		ourUnit.heal(move, ourOtherUnit, _currentTime);
@@ -161,7 +162,7 @@ public class GameState {
 		 _totalLTD=new float[Constants.Num_Players];
 		 _totalSumSQRT=new float[Constants.Num_Players];
 
-		 _numMovements=new int[]{0,0};
+		 //_numMovements=new int[]{0,0};
 		 //_prevHPSum=new int[]{0,0};//TODO
 			
 	    _currentTime=bwapi.getFrameCount();
@@ -178,10 +179,10 @@ public class GameState {
 	// misc functions
 	public void finishedMoving(){
 		sortUnits();
-		generateClosestUnits();
+		//generateClosestUnits();
 		// update the current time of the state
-		updateGameTime();
-		
+		//updateGameTime();
+		_currentTime=Math.min(getUnit(0,0).firstTimeFree(), getUnit(1,0).firstTimeFree());
 
 	    // calculate the hp sum of each player
 	    /*int[] hpSum=new int[2];
@@ -468,19 +469,51 @@ public class GameState {
 
 	public Unit getClosestEnemyUnit(int player, int unitIndex){
 		int enemyPlayer=getEnemy(player);
-		Unit myUnit=getUnit(player,unitIndex);
+		Position myUnitPosition=getUnit(player,unitIndex).currentPosition(_currentTime);
 
 		int minDist=Integer.MAX_VALUE;
 		int minUnitInd=0;
 	    //int minUnitID=255;
 
 		//Position currentPos = myUnit.currentPosition(_currentTime);
-
+		int distSq=0;
 		for (int u=0; u<_numUnits[enemyPlayer]; u++)
 		{
 	        //Unit enemyUnit=getUnit(enemyPlayer, u);
 	        //int distSq = myUnit.currentPosition(_currentTime).getManhattanDistance(getUnit(enemyPlayer, u).currentPosition(_currentTime));
-			int distSq = myUnit.currentPosition(_currentTime).getDistanceSq(getUnit(enemyPlayer, u).currentPosition(_currentTime));
+			distSq = myUnitPosition.getDistanceSq(getUnit(enemyPlayer, u).currentPosition(_currentTime));
+			if ((distSq < minDist))// || ((distSq == minDist) && (enemyUnit.ID() < minUnitID)))
+			{
+				minDist = distSq;
+				minUnitInd = u;
+	           // minUnitID = enemyUnit.getId();
+			}
+	        /*else if ((distSq == minDist) && (enemyUnit.getId() < minUnitID))
+	        {
+	            minDist = distSq;
+				minUnitInd = u;
+	            minUnitID = enemyUnit.getId();
+	        }*/
+		}
+
+		return getUnit(enemyPlayer, minUnitInd);
+		//return getUnit(getEnemy(player),_closestMoveIndex[player][unitIndex]);
+	}
+	public Unit getClosestEnemyUnit(Position myUnitPosition,int enemyPlayer,int minDist,int minUnitInd,int distSq){
+
+		//int minDist=Integer.MAX_VALUE;
+		//int minUnitInd=0;
+	    //int minUnitID=255;
+
+		//Position currentPos = myUnit.currentPosition(_currentTime);
+		//int distSq=0;
+		for (int u=0; u<_numUnits[enemyPlayer]; u++)
+		{
+	        //Unit enemyUnit=getUnit(enemyPlayer, u);
+	        //int distSq = myUnit.currentPosition(_currentTime).getManhattanDistance(getUnit(enemyPlayer, u).currentPosition(_currentTime));
+			//long t=System.nanoTime();
+			distSq = myUnitPosition.getDistanceSq(getUnit(enemyPlayer, u).currentPosition(_currentTime));
+            //Constants.timespentonPosition+=System.nanoTime()-t;
 			if ((distSq < minDist))// || ((distSq == minDist) && (enemyUnit.ID() < minUnitID)))
 			{
 				minDist = distSq;
@@ -689,6 +722,9 @@ public class GameState {
 		// so return all units which can move at the same time as the first
 		int firstUnitMoveTime = getUnit(playerIndex, 0).firstTimeFree();
 		Unit unit;	
+		
+		int moveDistance=0;
+		double timeUntilAttack=0;
 		for (int unitIndex=0; unitIndex < _numUnits[playerIndex]; unitIndex++)
 		{
 			// unit reference
@@ -764,8 +800,8 @@ public class GameState {
 	            // In order to not move when we could be shooting, we want to move for the minimum of:
 	            // 1) default move distance move time
 	            // 2) time until unit can attack, or if it can attack, the next cooldown
-	            double timeUntilAttack          = unit.nextAttackActionTime() - getTime();
-	            timeUntilAttack                 = timeUntilAttack == 0 ? unit.attackCooldown() : timeUntilAttack;
+	            timeUntilAttack         = unit.nextAttackActionTime() - getTime();
+	           // timeUntilAttack                 = ;
 
 	            // the default move duration
 	           // double defaultMoveDuration      = (double)Constants.Move_Distance / unit.speed();
@@ -774,7 +810,7 @@ public class GameState {
 	            //double chosenTime  = Math.min(timeUntilAttack, defaultMoveDuration);
 
 	            // the chosen movement distance
-	            int moveDistance       = (int) (Math.min(timeUntilAttack, (double)Constants.Move_Distance / unit.speed()) * unit.speed());
+	             moveDistance      = (int) (Math.min(timeUntilAttack == 0 ? unit.attackCooldown() : timeUntilAttack, (double)Constants.Move_Distance / unit.speed()) * unit.speed());
 
 	            // DEBUG: If chosen move distance is ever 0, something is wrong
 	            if (moveDistance == 0)
@@ -795,7 +831,7 @@ public class GameState {
 	                }*/
 
 	                // the final destination position of the unit
-	                Position dest = new Position(unit.pos().getX()+moveDistance*Constants.Move_Dir[d][0],unit.pos().getY()+ moveDistance*Constants.Move_Dir[d][1]);
+	                Position dest = new Position(unit.pos().x+moveDistance*Constants.Move_DirX[d],unit.pos().y+ moveDistance*Constants.Move_DirY[d]);
 	               
 	                // if that poisition on the map is walkable
 	                if (isWalkable(dest) || (unit.type().isFlyer() && isFlyable(dest)))
@@ -831,9 +867,9 @@ public class GameState {
 	        performUnitAction(moves.get(m));
 	    }
 	}
-	public int getNumMovements(int player){
+	/*public int getNumMovements(int player){
 		return _numMovements[player];
-	}
+	}*/
 	public Players whoCanMove(){
 		if(getUnit(0,0)==null || getUnit(1,0) == null)
 			return Players.Player_None;
@@ -947,7 +983,7 @@ public class GameState {
 		 s._totalLTD=new float[Constants.Num_Players];
 		 s._totalSumSQRT=new float[Constants.Num_Players];
 
-		 s._numMovements=new int[Constants.Num_Players];
+		// s._numMovements=new int[Constants.Num_Players];
 		 //s._prevHPSum=new int[Constants.Num_Players];
 			
 		 s._currentTime=this._currentTime;
@@ -964,7 +1000,7 @@ public class GameState {
 			s._prevNumUnits[i]=this._prevNumUnits[i];
 			s._totalLTD[i]=this._totalLTD[i];
 			s._totalSumSQRT[i]=this._totalSumSQRT[i];
-			s._numMovements[i]=this._numMovements[i];
+			//s._numMovements[i]=this._numMovements[i];
 			//s._prevHPSum[i]=this._prevHPSum[i];
 			
 		}

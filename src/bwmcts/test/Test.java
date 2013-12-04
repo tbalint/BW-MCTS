@@ -55,13 +55,13 @@ public class Test implements BWAPIEventListener  {
 		
 		//Player p2 = new Player_Kite(1);
 		
-		Player p1 = new UctcdLogic(bwapi, new GUCTCD(1.6, 20, 1, 0, 500, false));
-		//Player p1 = new Player_NoOverKillAttackValue(0);		
+		//Player p1 = new UctcdLogic(bwapi, new GUCTCD(1.6, 20, 1, 0, 500, false));
+		Player p1 = new Player_NoOverKillAttackValue(0);		
 		Player p2 = new Player_NoOverKillAttackValue(1);
 		//Player p2 = new UctcdLogic(bwapi, new GUCTCD(1.6, 2, 0, 1, 20, false));
 		//Player p2 = new GPortfolioGreedyLogic(bwapi, 2, 2, 30, 6);
 		
-		oneTypeTest(p1, p2, UnitTypes.Zerg_Zergling, 10);
+		//oneTypeTest(p1, p2, UnitTypes.Zerg_Zergling, 10);
 		
 		//TODO: Write to file
 		
@@ -69,7 +69,7 @@ public class Test implements BWAPIEventListener  {
 		
 		//upgmaTest(p1, p2, 10, 6);
 		
-		//simulatorTest(p1, p2, 1, 250, 10, 10);
+		simulatorTest(p1, p2, 1, 250, 10, 10);
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

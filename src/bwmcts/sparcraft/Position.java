@@ -6,7 +6,6 @@ public class Position {
 	int y;
 	
 	public Position(int x, int y) {
-		super();
 		this.x = x;
 		this.y = y;
 	}
@@ -54,12 +53,17 @@ public class Position {
 
 	public int getDistanceSq(Position p) {
 
-		return (x-p.getX())*(x-p.getX()) + (y-p.getY())*(y-p.getY());
+		return (x-p.x)*(x-p.x) + (y-p.y)*(y-p.y);
 	}
 
+	public int getDistanceSq(int x1, int y1) {
+
+		return (x-x1)*(x-x1) + (y-y1)*(y-y1);
+	}
+	
 	public void subtractPosition(Position pos) {
-		x -= pos.getX();
-		y -= pos.getY();
+		x -= pos.x;
+		y -= pos.y;
 	}
 
 	public void scalePosition(float f) {
@@ -69,23 +73,29 @@ public class Position {
 	}
 
 	public void addPosition(Position pos) {
-		x += pos.getX();
-		y += pos.getY();
+		x += pos.x;
+		y += pos.y;
 	}
 
 	public void moveTo(Position pos) {
-		x=pos.getX();
-		y=pos.getY();
+		x=pos.x;
+		y=pos.y;
+		
+	}
+	
+	public void moveTo(int i, int j) {
+		x=i;
+		y=j;
 		
 	}
 	
 	public int getManhattanDistance(Position p){
-		return Math.abs(x-p.getX() + y-p.getY());	 
+		return Math.abs(x-p.getX()) + Math.abs(y-p.getY());	 
 	}
 
 	public int getDistance(Position pos) {
-		int dX = x - pos.getX();
-        int dY = y - pos.getY();
+		int dX = x - pos.x;
+        int dY = y - pos.y;
 
         if (dX == 0)
         {
@@ -97,7 +107,7 @@ public class Position {
         }
         else
         {
-            return (int)Math.sqrt((double)(dX*dX - dY*dY));
+            return (int)Math.sqrt((dX*dX - dY*dY));
         }
 	}
 	

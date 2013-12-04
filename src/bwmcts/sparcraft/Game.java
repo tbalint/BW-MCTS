@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 
 
 
+
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
@@ -69,6 +70,8 @@ public class Game {
 		ArrayList<UnitAction>scriptMoves_B = new ArrayList<UnitAction>();
 		Player toMove;
 		Player enemy;
+		HashMap<Integer,List<UnitAction>> moves_A=new HashMap<Integer,List<UnitAction>>();
+        HashMap<Integer,List<UnitAction>> moves_B=new HashMap<Integer,List<UnitAction>>();
 	    // play until there is no winner
 		long generatemoves=0;
 		long getmoves=0;
@@ -91,8 +94,8 @@ public class Game {
 	        enemy = _players[GameState.getEnemy(playerToMove)];
 
 	        // generate the moves possible from this state
-	        HashMap<Integer,List<UnitAction>> moves_A=new HashMap<Integer,List<UnitAction>>();
-	        HashMap<Integer,List<UnitAction>> moves_B=new HashMap<Integer,List<UnitAction>>();
+	        moves_A.clear();
+	        moves_B.clear();
 	        long g=System.nanoTime();
 			state.generateMoves(moves_A, toMove.ID());
 			generatemoves+=System.nanoTime()-g;
