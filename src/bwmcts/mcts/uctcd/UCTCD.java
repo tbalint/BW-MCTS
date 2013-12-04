@@ -62,7 +62,7 @@ public class UCTCD {
 		Date start = new Date();
 		
 		UctNode root = new UctNode(null, NodeType.ROOT, new ArrayList<UnitAction>(), maxPlayerIndex);
-		//root.setVisits(1);
+		root.setVisits(1);
 		
 		int t = 0;
 		while(new Date().getTime() <= start.getTime() + timeBudget){
@@ -77,8 +77,8 @@ public class UCTCD {
 		if (debug){
 			System.out.println("Traversals " + (t++));
 			
-			//String out = root.print(0);
-			//writeToFile(out, "tree.xml");
+			String out = root.print(0);
+			writeToFile(out, "tree.xml");
 		}
 		
 		if (best == null){

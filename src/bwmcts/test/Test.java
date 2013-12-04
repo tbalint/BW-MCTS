@@ -17,11 +17,13 @@ import bwmcts.combat.PortfolioGreedyLogic;
 import bwmcts.combat.UctcdLogic;
 import bwmcts.mcts.guct.GUCTCD;
 import bwmcts.mcts.iuct.IUCTCD;
+import bwmcts.mcts.uctcd.UCTCD;
 import bwmcts.sparcraft.*;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_AttackClosest;
 import bwmcts.sparcraft.players.Player_Defense;
 import bwmcts.sparcraft.players.Player_Kite;
+import bwmcts.sparcraft.players.Player_KiteDPS;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
 public class Test implements BWAPIEventListener  {
@@ -51,25 +53,32 @@ public class Test implements BWAPIEventListener  {
 		
 		System.out.println("BWAPI created"+ bwapi.getUnitType(3).getName());
 		
-		graphics = true;
+		graphics = false;
 		
-		//Player p2 = new Player_Kite(1);
+		//Player p1 = new Player_Kite(0);
 		
-		Player p1 = new UctcdLogic(bwapi, new GUCTCD(1.6, 20, 1, 0, 500, false));
-		//Player p1 = new Player_NoOverKillAttackValue(0);		
+		//Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 500, false), 200);
+		GUCTCD guctcd = new GUCTCD(1.6, 20, 1, 0, 500, false);
+		guctcd.setHpMulitplier(1);
+		guctcd.setClusters(6);
+		//Player p1 = new UctcdLogic(bwapi, guctcd, 400);
+		Player p1 = new Player_NoOverKillAttackValue(0);		
+		//Player p1 = new Player_KiteDPS(0);		
+		//Player p2 = new Player_KiteDPS(1);		
 		Player p2 = new Player_NoOverKillAttackValue(1);
-		//Player p2 = new UctcdLogic(bwapi, new GUCTCD(1.6, 2, 0, 1, 20, false));
+		
+		//Player p2 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 0, 1, 500, false), 400);
 		//Player p2 = new GPortfolioGreedyLogic(bwapi, 2, 2, 30, 6);
 		
-		oneTypeTest(p1, p2, UnitTypes.Zerg_Zergling, 10);
+		//oneTypeTest(p1, p2, UnitTypes.Terran_Marine, 1000);
 		
 		//TODO: Write to file
 		
-		//realisticTest(p1, p2, 20);
+		//realisticTest(p1, p2, 10);
 		
 		//upgmaTest(p1, p2, 10, 6);
 		
-		//simulatorTest(p1, p2, 1, 250, 10, 10);
+		simulatorTest(p1, p2, 1, 250, 10, 10);
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -231,10 +240,11 @@ public class Test implements BWAPIEventListener  {
 	private void realisticTest(Player p1, Player p2, int runs) {
 		
 		// Combat size
-		for(int i = 1; i < 16; i++){
+		for(int i = 4; i < 16; i++){
 			try {
-				float result = testRealisticGames(p1, p2, i*4, i*2, i, runs);
-				System.out.println("REALISTIC TEST RESULT: " + result);
+				float result = testRealisticGames(p1, p2, i*4, i*2, i/2, runs);
+				//System.out.println("REALISTIC TEST RESULT: " + result);
+				System.out.println("Result=" + result);
 				// TODO:
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -255,7 +265,10 @@ public class Test implements BWAPIEventListener  {
 		unitsB.put(UnitTypes.Terran_Marine, marines);
 		unitsB.put(UnitTypes.Terran_Firebat, firebats);
 		
-		System.out.println("Marines: " + marines + "\tfirebats: " + firebats + "\tTanks: " + tanks + " on each side");
+		Constants.Max_Units = (marines+firebats+tanks)*2;
+		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
+		
+		//System.out.println("Marines: " + marines + "\tfirebats: " + firebats + "\tTanks: " + tanks + " on each side");
 		
 		float score = 0;
 		List<Double> results = new ArrayList<Double>();
@@ -265,18 +278,16 @@ public class Test implements BWAPIEventListener  {
 			results.add(result);
 			if (result>0)
 				wins++;
-			else if (result <0)
-				wins--;
 			
-			System.out.println("Result of game " + i + ": " + result);
+			//System.out.println("Result of game " + i + ": " + result);
 			score += result;
 		}
 		
 		// Calc deviation and average
-		System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
-		System.out.println("Win average: " + ((double)wins)/((double)games));
+		//System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
+		//System.out.println("Win average: " + ((double)wins)/((double)games));
 		
-		return score / games;
+		return (float)wins / (float)games;
 		
 	}
 
@@ -302,6 +313,9 @@ public class Test implements BWAPIEventListener  {
 		unitsA.put(type, units);
 		HashMap<UnitTypes, Integer> unitsB = new HashMap<UnitType.UnitTypes, Integer>();
 		unitsB.put(type, units);
+		
+		Constants.Max_Units = units*2;
+		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
 		
 		System.out.println("Units: " + units + " of type: " + type + " on each side.");
 		
@@ -330,14 +344,14 @@ public class Test implements BWAPIEventListener  {
 	
 	int testGame(Player p1, Player p2, HashMap<UnitTypes, Integer> unitsA, HashMap<UnitTypes, Integer> unitsB) throws Exception
 	{
-
+		
 		GameState initialState = gameState(unitsA, unitsB);
 		
 		p1.setID(0);
 		p2.setID(1);
 	    
 	    // enter a maximum move limit for the game to go on for
-	    int moveLimit = 2000;
+	    int moveLimit = 20000;
 
 	    // contruct the game
 	    Game g=new Game(initialState, p1, p2, moveLimit, graphics);
@@ -359,7 +373,7 @@ public class Test implements BWAPIEventListener  {
 		
 		// GameState only has a default constructor, you must add units to it manually
 	    GameState state=new GameState();
-	    state.setMap(new Map(50, 30));
+	    state.setMap(new Map(25, 20));
 	    
 	    int startXA = 275;
 	    int startXB = 575;

@@ -7,6 +7,7 @@ import javax.swing.*;
 import bwmcts.clustering.UPGMA;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,9 +44,9 @@ public class SparcraftUI extends JComponent {
 		Map map=_state.getMap();
 		if (map!=null){
 			if (background !=null){
-				g.drawImage(background, offSetX, offSetY, map.getPixelWidth(), map.getPixelHeight(),this);
+				g.drawImage(background, offSetX, offSetY, map.getPixelWidth()*2, map.getPixelHeight()*2,this);
 			} else {
-				g.drawRect(offSetX, offSetY, map.getPixelWidth(), map.getPixelHeight());
+				g.drawRect(offSetX, offSetY, map.getPixelWidth()*2, map.getPixelHeight()*2);
 			}
 			drawScaleForMap(g, map.getPixelWidth(), map.getPixelHeight());
 		}
@@ -84,15 +85,27 @@ public class SparcraftUI extends JComponent {
 			
 		} 
 		
-		/*UPGMA clustering=new UPGMA(_state.getAllUnit()[1], 1, 1);
-	    HashMap<Integer,List<Unit>>clusters=  clustering.getClusters(5);
+		List<Unit> myUnits = new ArrayList<Unit>();
+		for(Unit u : _state.getAllUnit()[0]){
+			if (u.canAttackNow() || u.canHealNow() || u.canMoveNow())
+				myUnits.add(u);
+		}
+		Unit[] myUnitsArr = (Unit[]) myUnits.toArray();
+		
+		UPGMA clustering=new UPGMA(myUnitsArr, 1, 1);
+	    HashMap<Integer,List<Unit>>clusters=  clustering.getClusters(6);
 	    int clusterId=0;
+	    if (clusters == null || clusters.values() == null)
+	    	return;
 	    for (List<Unit> list : clusters.values()){
 	    	g.setColor(getColor(clusterId++));
 	    	for (Unit a:list){
 	    		g.drawOval(a.pos().getX()-10+offSetX, a.pos().getY()-10+offSetY, 20, 20);
+	    		g.drawOval(a.pos().getX()-11+offSetX, a.pos().getY()-11+offSetY, 22, 22);
+	    		g.drawOval(a.pos().getX()-12+offSetX, a.pos().getY()-12+offSetY, 24, 24);
 	    	}
-	    }*/
+	    }
+	    
 	}
 	
 	private void drawScaleForMap(Graphics g, int pixelWidth, int pixelHeight) {

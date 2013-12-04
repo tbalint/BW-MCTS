@@ -640,7 +640,7 @@ public class GameState {
 	    int canMove=whoCanMove().ordinal();
 	    if (canMove == enemyPlayer)
 	    {
-	    	System.out.println("GameState Error - Called generateMoves() for a player that cannot currently move");
+	    	//System.out.println("GameState Error - Called generateMoves() for a player that cannot currently move");
 	        return;//throw new Exception("GameState Error - Called generateMoves() for a player that cannot currently move");
 	    }
 
@@ -659,12 +659,13 @@ public class GameState {
 				// stop checking
 				break;
 			}
-
+			/*
 			if (unit.previousActionTime() == _currentTime && _currentTime != 0)
 			{
 	            System.out.println("Previous Move Took 0 Time: " + unit.previousAction().moveString());
 	            return;
 			}
+			*/
 			ArrayList<UnitAction> actionTemp=new ArrayList<UnitAction>();
 			
 
@@ -929,5 +930,70 @@ public class GameState {
 		
 		return s;
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + _currentTime;
+		result = prime * result + ((_map == null) ? 0 : _map.hashCode());
+		result = prime * result + _maxUnits;
+		result = prime * result
+				+ ((_neutralUnits == null) ? 0 : _neutralUnits.hashCode());
+		result = prime * result + Arrays.hashCode(_numMovements);
+		result = prime * result + Arrays.hashCode(_numUnits);
+		result = prime * result + Arrays.hashCode(_prevHPSum);
+		result = prime * result + Arrays.hashCode(_prevNumUnits);
+		result = prime * result + _sameHPFrames;
+		result = prime * result + Arrays.hashCode(_totalLTD);
+		result = prime * result + Arrays.hashCode(_totalSumSQRT);
+		result = prime * result + Arrays.hashCode(_unitIndex);
+		result = prime * result + Arrays.hashCode(_units);
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		GameState other = (GameState) obj;
+		if (_currentTime != other._currentTime)
+			return false;
+		if (_map == null) {
+			if (other._map != null)
+				return false;
+		} else if (!_map.equals(other._map))
+			return false;
+		if (_maxUnits != other._maxUnits)
+			return false;
+		if (_neutralUnits == null) {
+			if (other._neutralUnits != null)
+				return false;
+		} else if (!_neutralUnits.equals(other._neutralUnits))
+			return false;
+		if (!Arrays.equals(_numMovements, other._numMovements))
+			return false;
+		if (!Arrays.equals(_numUnits, other._numUnits))
+			return false;
+		if (!Arrays.equals(_prevHPSum, other._prevHPSum))
+			return false;
+		if (!Arrays.equals(_prevNumUnits, other._prevNumUnits))
+			return false;
+		if (_sameHPFrames != other._sameHPFrames)
+			return false;
+		if (!Arrays.equals(_totalLTD, other._totalLTD))
+			return false;
+		if (!Arrays.equals(_totalSumSQRT, other._totalSumSQRT))
+			return false;
+		if (!Arrays.deepEquals(_unitIndex, other._unitIndex))
+			return false;
+		if (!Arrays.deepEquals(_units, other._units))
+			return false;
+		return true;
+	}
+	
+	
 
 }

@@ -37,8 +37,9 @@ public class UctcdLogic extends Player implements ICombatLogic {
 	private IUCTCD iuctcd;
 	private SparcraftUI ui;
 	private HashMap<Integer,UnitAction> actions=new HashMap<Integer,UnitAction>();
+	private int timeBudget;
 	
-	public UctcdLogic(JNIBWAPI bwapi, UCTCD uctcd){
+	public UctcdLogic(JNIBWAPI bwapi, UCTCD uctcd, int timeBudget){
 		
 		this.uctcd = uctcd;
 		
@@ -47,10 +48,11 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		PlayerProperties.Init();
 		WeaponProperties.Init(bwapi);
 		UnitProperties.Init(bwapi);
+		this.timeBudget = timeBudget;
 
 	}
 	
-	public UctcdLogic(JNIBWAPI bwapi, GUCTCD uctcd){
+	public UctcdLogic(JNIBWAPI bwapi, GUCTCD uctcd, int timeBudget){
 		
 		this.guctcd = uctcd;
 		
@@ -59,10 +61,11 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		PlayerProperties.Init();
 		WeaponProperties.Init(bwapi);
 		UnitProperties.Init(bwapi);
+		this.timeBudget = timeBudget;
 
 	}
 	
-	public UctcdLogic(JNIBWAPI bwapi, IUCTCD uctcd){
+	public UctcdLogic(JNIBWAPI bwapi, IUCTCD uctcd, int timeBudget){
 		
 		this.iuctcd = uctcd;
 		
@@ -71,6 +74,7 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		PlayerProperties.Init();
 		WeaponProperties.Init(bwapi);
 		UnitProperties.Init(bwapi);
+		this.timeBudget = timeBudget;
 
 	}
 
@@ -82,21 +86,21 @@ public class UctcdLogic extends Player implements ICombatLogic {
 			//state.print();
 			List<UnitAction> move=new ArrayList<UnitAction>();
 			if (uctcd!=null)
-				move = uctcd.search(state.clone(), time);
+				move = uctcd.search(state.clone(), timeBudget);
 			if (iuctcd!=null){
-				move = iuctcd.search(state.clone(), time);
+				move = iuctcd.search(state.clone(), timeBudget);
 			}
 			if (guctcd!=null){
 				
 				try{
-					UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[bwapi.getSelf().getID()], 1, 1);
-					UPGMA upgmaPlayerB = new UPGMA(state.getAllUnit()[bwapi.getEnemies().get(0).getID()], 1, 1);
-					move = guctcd.search(state, upgmaPlayerA, upgmaPlayerB, time);
-					HashMap<Integer, List<Unit>> clustersA = guctcd.getClustersA();
-					HashMap<Integer, List<Unit>> clustersB = guctcd.getClustersA();
+					UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[bwapi.getSelf().getID()], guctcd.getHpMulitplier(), 1);
+					UPGMA upgmaPlayerB = new UPGMA(state.getAllUnit()[bwapi.getEnemies().get(0).getID()], guctcd.getHpMulitplier(), 1);
+					move = guctcd.search(state, upgmaPlayerA, upgmaPlayerB, timeBudget);
+					for(UnitAction action : move)
+						System.out.print(action+";");
 					
-					drawClusters(bwapi, clustersA);
-					drawClusters(bwapi, clustersB);
+					drawClusters(bwapi, guctcd.getClustersA());
+					drawClusters(bwapi, guctcd.getClustersB());
 					
 				} catch(Exception e){
 					e.printStackTrace();
@@ -215,19 +219,33 @@ public class UctcdLogic extends Player implements ICombatLogic {
 	{
 		
 		moveVec.clear();
-		int time = 40;
 		List<UnitAction> move=new ArrayList<UnitAction>();
 		if (uctcd!=null)
-			move = uctcd.search(state.clone(), time-5);
+			move = uctcd.search(state.clone(), timeBudget);
 		if (iuctcd!=null){
-			move = iuctcd.search(state.clone(), time-5);
+			move = iuctcd.search(state.clone(), timeBudget);
 		}
 		if (guctcd!=null){
 			
+			List<Unit> myUnits = new ArrayList<Unit>();
+			for(Unit u : state.getAllUnit()[ID()]){
+				if (u.canAttackNow() || u.canHealNow() || u.canMoveNow())
+					myUnits.add(u);
+			}
+			Unit[] myUnitsArr = (Unit[]) myUnits.toArray();
+			
+			List<Unit> enemyUnits = new ArrayList<Unit>();
+			for(Unit u : state.getAllUnit()[state.getEnemy(ID())]){
+				if (u.canAttackNow() || u.canHealNow() || u.canMoveNow())
+					enemyUnits.add(u);
+			}
+			Unit[] enemyUnitsArr = (Unit[]) enemyUnits.toArray();
+			
 			try{
-				UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[ID()], 1, 1);
-				UPGMA upgmaPlayerB = new UPGMA(state.getAllUnit()[state.getEnemy(ID())], 1, 1);
-				move = guctcd.search(state, upgmaPlayerA, upgmaPlayerB, time-5);
+				UPGMA upgmaPlayerA = new UPGMA(myUnitsArr, guctcd.getHpMulitplier(), 1);
+				UPGMA upgmaPlayerB = new UPGMA(enemyUnitsArr, guctcd.getHpMulitplier(), 1);
+				move = guctcd.search(state, upgmaPlayerA, upgmaPlayerB, timeBudget);
+				
 			} catch (Exception e){
 				
 			}

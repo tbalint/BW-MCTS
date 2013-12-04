@@ -26,6 +26,7 @@ import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_AttackClosest;
 import bwmcts.sparcraft.players.Player_Defense;
 import bwmcts.sparcraft.players.Player_Kite;
+import bwmcts.sparcraft.players.Player_KiteDPS;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
 public class GUCTCD {
@@ -39,10 +40,8 @@ public class GUCTCD {
 	private Player baseScript;
 	private HashMap<Integer, List<Unit>> clustersA;
 	private HashMap<Integer, List<Unit>> clustersB;
-	
-	public GUCTCD() {
-		
-	}
+	private double hpMulitplier;
+	private int clusters;
 
 	public GUCTCD(double k, int maxChildren, int minPlayerIndex,
 			int maxPlayerIndex, int simulationSteps, boolean debug) {
@@ -381,7 +380,7 @@ public class GUCTCD {
 		HashMap<Integer, List<UnitAction>> attackingMap = new HashMap<Integer, List<UnitAction>>();
 		HashMap<Integer, List<UnitAction>> kitingMap = new HashMap<Integer, List<UnitAction>>();
 		
-		// TODO: Loop through the map instead
+		// Loop through the map
 		for(Integer i : map.keySet()){
 			int u = map.get(i).get(0)._unit;
 			int unitId = state.getUnit(player, u).getId();
@@ -538,6 +537,22 @@ public class GUCTCD {
 
 	public void setClustersB(HashMap<Integer, List<Unit>> clustersB) {
 		this.clustersB = clustersB;
+	}
+
+	public double getHpMulitplier() {
+		return hpMulitplier;
+	}
+
+	public void setHpMulitplier(double hpMulitplier) {
+		this.hpMulitplier = hpMulitplier;
+	}
+
+	public int getClusters() {
+		return clusters;
+	}
+
+	public void setClusters(int clusters) {
+		this.clusters = clusters;
 	}
 	
 	

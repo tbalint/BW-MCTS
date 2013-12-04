@@ -49,7 +49,7 @@ public class Player_NoOverKillAttackValue extends Player {
 			//Unit ourUnit = state.getUnitByID(u);
 			
 			if (ourUnit == null || moves.get(u) == null){
-				state.print();
+				//state.print();
 				System.out.println(ourUnit + " " + _id + " " + u);
 			}
 			

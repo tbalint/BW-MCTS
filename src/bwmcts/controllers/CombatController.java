@@ -26,6 +26,7 @@ public class CombatController implements BWAPIEventListener {
 		//combatLogic = new AttackValueLogic();
 		//combatLogic = new NoOverKillAttackValueLogic();
 		//combatLogic = new AttackClosestLogic();
+		//combatLogic = new KiterDPSLogic();
 		
 		bwapi.start();
 	} 
@@ -55,7 +56,7 @@ public class CombatController implements BWAPIEventListener {
 
 		//combatLogic =new GuctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false));
 		//combatLogic
-		combatLogic =new UctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),200,true));
+		combatLogic =new UctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,true), 35);
 		//combatLogic =new UctcdLogic(bwapi,new IUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false));
 		//combatLogic =new GPortfolioGreedyLogic(bwapi,2,2,30,6);
 		//combatLogic = new PortfolioGreedyLogic(bwapi,1,1,20 );
@@ -70,14 +71,17 @@ public class CombatController implements BWAPIEventListener {
 		
 		// ==========================================================
 	}
-	
+	int i = 0;
 	public void act() {
 		
 		// ============== YOUR CODE GOES HERE =======================
 		//System.out.println("Act called");
+		//if ((i++)%2==1){
 		int time = 40;	// 40 ms
 		System.out.println("CC Called at " + bwapi.getFrameCount());
 		combatLogic.act(bwapi, time);
+		//}
+		//System.out.println("CC Returning at " + bwapi.getFrameCount());
 		//System.out.println("Act done");
 	}
 	

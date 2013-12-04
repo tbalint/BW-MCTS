@@ -22,6 +22,7 @@ import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_AttackClosest;
 import bwmcts.sparcraft.players.Player_Defense;
 import bwmcts.sparcraft.players.Player_Kite;
+import bwmcts.sparcraft.players.Player_KiteDPS;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
 public class IUCTCD {
@@ -347,7 +348,7 @@ public class IUCTCD {
 			player = move.get(0).player;
 		
 		Player attack = new Player_NoOverKillAttackValue(player);
-		Player kite = new Player_Kite(player);
+		Player kite = new Player_KiteDPS(player);
 		
 		HashMap<Integer, List<UnitAction>> map = new HashMap<Integer, List<UnitAction>>();
 		
@@ -361,9 +362,9 @@ public class IUCTCD {
 		// Divide units into two groups
 		for(UnitState unitState : move){
 			
-			//if (unitState.type == UnitStateTypes.ATTACK)
-				//attackingUnits.add(unitState.unit);
-			//else if (unitState.type == UnitStateTypes.KITE)
+			if (unitState.type == UnitStateTypes.ATTACK)
+				attackingUnits.add(unitState.unit);
+			else if (unitState.type == UnitStateTypes.KITE)
 				kitingUnits.add(unitState.unit);
 			
 		}

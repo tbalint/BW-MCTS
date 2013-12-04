@@ -57,7 +57,7 @@ public class Game {
 	        f.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
 	        f.getContentPane().add(ui);    
 	        f.setVisible(true);
-	    	state.print();
+	    	//state.print();
 	    }
 	}
 
@@ -73,10 +73,12 @@ public class Game {
 	    // play until there is no winner
 	    while (!this.gameOver()){
 	    	
+	    	//System.out.println(state._currentTime + " limit " + moveLimit + " rounds " + rounds);
+	    	
 	        if (rounds >= moveLimit)
 	        {
-	        	//System.out.println(state._currentTime);
-	            break;
+	        	System.out.println(state._currentTime + " limit " + moveLimit + " rounds " + rounds);
+	            return;
 	        }
 	    	
 	        Timer frameTimer=new Timer();
@@ -95,54 +97,39 @@ public class Game {
 	        HashMap<Integer,List<UnitAction>> moves_B=new HashMap<Integer,List<UnitAction>>();
 	        try {
 				state.generateMoves(moves_A, toMove.ID());
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			} catch (Exception e1) {e1.printStackTrace();}
 	        
 	        // if both players can move, generate the other player's moves
 	        if (state.bothCanMove())
 	        {
 	            try {
 					state.generateMoves(moves_B, enemy.ID());
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				} catch (Exception e1) {e1.printStackTrace();}
 	            
 	            enemy.getMoves(state, moves_B, scriptMoves_B);
-	
+	            
 	            try {
 					state.makeMoves(scriptMoves_B);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				} catch (Exception e) {e.printStackTrace();}
 	            
 	        }
 	        
 	        // the tuple of moves he wishes to make
 	        toMove.getMoves(state, moves_A, scriptMoves_A);
-	
+	        
 	        // make the moves
 	        try {
 				state.makeMoves(scriptMoves_A);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			} catch (Exception e) {e.printStackTrace();}
 	        
 	        if (display)
 	        {
-		        state.print();
+		        //state.print();
 		        ui.setGameState(state);
 		        ui.repaint();
 	        	try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+					Thread.sleep(0);
+				} catch (InterruptedException e) {e.printStackTrace();}
 	        }
 	        
 	        state.finishedMoving();
@@ -181,12 +168,8 @@ public class Game {
 	public int getPlayerToMove()
 	{
 	   Players whoCanMove=state.whoCanMove();
-	
-	   //return (whoCanMove == Players::Player_Both) ? Players::Player_One : whoCanMove;
-		return whoCanMove==Players.Player_Both ? Players.Player_One.ordinal(): whoCanMove.ordinal();
+	   int random = (Math.random() >= 0.5) ? Players.Player_One.ordinal(): Players.Player_Two.ordinal();
+	   return whoCanMove==Players.Player_Both ? random: whoCanMove.ordinal();
 	}
 
-
-	
-	
 }

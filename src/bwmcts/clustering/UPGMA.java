@@ -16,8 +16,8 @@ public class UPGMA {
 	int K;			// The number of clusters created so far
 	UPCluster[] cluster;		// The nodes (clusters) of the resulting tree
 	List<Unit> input;
-	private float hpMultiplier;
-	private float distMultiplier;
+	private double hpMultiplier;
+	private double distMultiplier;
 	
 	public UPGMA(double[][] ds) {
 		int N = ds.length;
@@ -41,7 +41,7 @@ public class UPGMA {
 	    	findAndJoin();
 	}
 	
-	public UPGMA(Unit[] in, float hpMultiplier, float distMultiplier) {
+	public UPGMA(Unit[] in, double hpMultiplier, double distMultiplier) {
 		
 		this.hpMultiplier = hpMultiplier;
 		this.distMultiplier = distMultiplier;
