@@ -61,14 +61,15 @@ public class Test implements BWAPIEventListener  {
 		GUCTCD guctcd = new GUCTCD(1.6, 20, 1, 0, 500, true);
 		guctcd.setHpMulitplier(1);
 		guctcd.setClusters(6);
-		//Player p1 = new UctcdLogic(bwapi, guctcd, 400);
-		Player p1 = new Player_NoOverKillAttackValue(0);		
+		Player p1 = new UctcdLogic(bwapi, guctcd, 40);
+		//Player p1 = new Player_NoOverKillAttackValue(0);		
 		//Player p1 = new Player_KiteDPS(0);		
 		//Player p2 = new Player_KiteDPS(1);		
-		//Player p1 = new UctcdLogic(bwapi, new GUCTCD(1.6, 20, 1, 0, 500, false));
-		Player p2 = new Player_NoOverKillAttackValue(1);
+		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 500, false),40);
+		//Player p2 = new Player_NoOverKillAttackValue(1);
 		
-		//Player p2 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 0, 1, 500, false), 400);
+		Player p2 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 0, 1, 500, false), 40);
+		//Player p2 = new UctcdLogic(bwapi, guctcd, 40);		
 		//Player p2 = new GPortfolioGreedyLogic(bwapi, 2, 2, 30, 6);
 		
 		//oneTypeTest(p1, p2, UnitTypes.Terran_Marine, 1000);
@@ -391,7 +392,7 @@ public class Test implements BWAPIEventListener  {
 	    	
  	    	for(int i = 1; i < unitsA.get(type); i++){
  	    		int x = startXA - (i/unitsPerLine) * space;
- 	    		int y = startY + space*(i%unitsPerLine);
+ 	    		int y = startY + space*(i%unitsPerLine) + space;
  	    		try {
  	    			state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_One.ordinal(), new Position(x, y));
  	    		} catch (Exception e){
@@ -411,7 +412,7 @@ public class Test implements BWAPIEventListener  {
 	    	
  	    	for(int i = 1; i < unitsB.get(type); i++){
  	    		int x = startXB + (i/unitsPerLine) * space;
- 	    		int y = startY + space*(i%unitsPerLine);
+ 	    		int y = startY + space*(i%unitsPerLine) + space;
  	    		try {
  	    			state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_Two.ordinal(), new Position(x, y));
 	 	    	} catch (Exception e){
@@ -420,7 +421,7 @@ public class Test implements BWAPIEventListener  {
  	    	}
 	 	    
 	    	
-	    	startXB += space;
+	    	startXB += space * 2;
 	    	
 	    }
 	 	

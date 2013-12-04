@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.jws.soap.SOAPBinding.Style;
 import javax.swing.JFrame;
 
 
@@ -58,7 +59,7 @@ public class Game {
 	        f.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
 	        f.getContentPane().add(ui);    
 	        f.setVisible(true);
-	    	state.print();
+	    	//state.print();
 	    }
 	}
 	
@@ -96,7 +97,7 @@ public class Game {
 	        moves_A.clear();
 	        moves_B.clear();
 	        //long g=System.nanoTime();
-			//state.generateMoves(moves_A, toMove.ID());
+			state.generateMoves(moves_A, toMove.ID());
 			//generatemoves+=System.nanoTime()-g;
 	        
 	        // if both players can move, generate the other player's moves
@@ -123,7 +124,7 @@ public class Game {
 			//makemoves+=System.nanoTime()-g;
 	        if (display)
 	        {
-		        state.print();
+		        //state.print();
 		        ui.setGameState(state);
 		        ui.repaint();
 	        	try {
@@ -165,10 +166,12 @@ public class Game {
 // determine the player to move
 	public int getPlayerToMove()
 	{
-	   Players whoCanMove=state.whoCanMove();
+		Players whoCanMove=state.whoCanMove();
 	
-	   //return (whoCanMove == Players::Player_Both) ? Players::Player_One : whoCanMove;
-		return whoCanMove==Players.Player_Both ? Players.Player_One.ordinal(): whoCanMove.ordinal();
+		Players oneOf = state._currentTime % 2 == 0 ? Players.Player_One : Players.Player_Two;
+		
+	   	//return (whoCanMove == Players::Player_Both) ? Players::Player_One : whoCanMove;
+		return whoCanMove==Players.Player_Both ? oneOf.ordinal(): whoCanMove.ordinal();
 	}
 
 
