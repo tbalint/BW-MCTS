@@ -53,12 +53,12 @@ public class Test implements BWAPIEventListener  {
 		
 		System.out.println("BWAPI created"+ bwapi.getUnitType(3).getName());
 		
-		graphics = false;
+		graphics = true;
 		
 		//Player p1 = new Player_Kite(0);
 		
 		//Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 500, false), 200);
-		GUCTCD guctcd = new GUCTCD(1.6, 20, 1, 0, 500, false);
+		GUCTCD guctcd = new GUCTCD(1.6, 20, 1, 0, 500, true);
 		guctcd.setHpMulitplier(1);
 		guctcd.setClusters(6);
 		//Player p1 = new UctcdLogic(bwapi, guctcd, 400);
@@ -74,14 +74,13 @@ public class Test implements BWAPIEventListener  {
 		//oneTypeTest(p1, p2, UnitTypes.Terran_Marine, 1000);
 		//oneTypeTest(p1, p2, UnitTypes.Zerg_Zergling, 10);
 
-		
 		//TODO: Write to file
 		
-		//realisticTest(p1, p2, 10);
+		realisticTest(p1, p2, 10);
 		
 		//upgmaTest(p1, p2, 10, 6);
 		
-		simulatorTest(p1, p2, 1, 250, 10, 10);
+		//simulatorTest(p1, p2, 1, 250, 10, 10);
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

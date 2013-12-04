@@ -510,10 +510,12 @@ public class Unit implements Comparable<Unit> {
 	        else if (lastCommand == UnitCommandTypes.Move)
 	        {
         		
-                moveCooldown = currentFrame + Math.max(0, moveCooldown() - framesSinceCommand);
+                //moveCooldown = currentFrame + Math.max(0, moveCooldown() - framesSinceCommand);
+	        	moveCooldown = currentFrame;
+		        
 	        }
 
-	        if (moveCooldown - currentFrame < 4)
+	        if (moveCooldown - currentFrame < 4 || unit.isMoving())
 	        {
 	        	
 	                moveCooldown = currentFrame;

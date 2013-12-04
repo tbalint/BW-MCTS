@@ -120,8 +120,6 @@ public class GameState {
 		PlayerProperties.props[0]=new PlayerProperties(bwapi.getPlayer(0));
 		PlayerProperties.props[1]=new PlayerProperties(bwapi.getPlayer(1));
 		
-		
-		
 		_units=new Unit[Constants.Num_Players][Constants.Max_Moves];
 		int i=0;
 		for (javabot.model.Unit u: bwapi.getMyUnits()){

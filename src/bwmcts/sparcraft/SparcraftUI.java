@@ -84,13 +84,18 @@ public class SparcraftUI extends JComponent {
 			}
 			
 		} 
-		
+		/*
 		List<Unit> myUnits = new ArrayList<Unit>();
 		for(Unit u : _state.getAllUnit()[0]){
+			if (u==null)
+				continue;
 			if (u.canAttackNow() || u.canHealNow() || u.canMoveNow())
 				myUnits.add(u);
 		}
-		Unit[] myUnitsArr = (Unit[]) myUnits.toArray();
+		Object[] myObjectArr = (Object[]) myUnits.toArray();
+		Unit[] myUnitsArr = new Unit[myObjectArr.length];
+		for(int i = 0; i < myObjectArr.length; i++)
+			myUnitsArr[i] = (Unit) myObjectArr[i];
 		
 		UPGMA clustering=new UPGMA(myUnitsArr, 1, 1);
 	    HashMap<Integer,List<Unit>>clusters=  clustering.getClusters(6);
@@ -105,7 +110,7 @@ public class SparcraftUI extends JComponent {
 	    		g.drawOval(a.pos().getX()-12+offSetX, a.pos().getY()-12+offSetY, 24, 24);
 	    	}
 	    }
-	    
+	    */
 	}
 	
 	private void drawScaleForMap(Graphics g, int pixelWidth, int pixelHeight) {

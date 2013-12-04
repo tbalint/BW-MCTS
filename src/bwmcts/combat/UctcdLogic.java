@@ -227,23 +227,9 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		}
 		if (guctcd!=null){
 			
-			List<Unit> myUnits = new ArrayList<Unit>();
-			for(Unit u : state.getAllUnit()[ID()]){
-				if (u.canAttackNow() || u.canHealNow() || u.canMoveNow())
-					myUnits.add(u);
-			}
-			Unit[] myUnitsArr = (Unit[]) myUnits.toArray();
-			
-			List<Unit> enemyUnits = new ArrayList<Unit>();
-			for(Unit u : state.getAllUnit()[state.getEnemy(ID())]){
-				if (u.canAttackNow() || u.canHealNow() || u.canMoveNow())
-					enemyUnits.add(u);
-			}
-			Unit[] enemyUnitsArr = (Unit[]) enemyUnits.toArray();
-			
 			try{
-				UPGMA upgmaPlayerA = new UPGMA(myUnitsArr, guctcd.getHpMulitplier(), 1);
-				UPGMA upgmaPlayerB = new UPGMA(enemyUnitsArr, guctcd.getHpMulitplier(), 1);
+				UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[ID()], guctcd.getHpMulitplier(), 1);
+				UPGMA upgmaPlayerB = new UPGMA(state.getAllUnit()[state.getEnemy(ID())], guctcd.getHpMulitplier(), 1);
 				move = guctcd.search(state, upgmaPlayerA, upgmaPlayerB, timeBudget);
 				
 			} catch (Exception e){
