@@ -292,9 +292,9 @@ public class Unit implements Comparable<Unit> {
                 // calculate the new current position
                 
                 
-                //_prevCurrentPos.moveTo(_position);
+                _prevCurrentPos=new Position(_position.x-_previousPosition.x,_position.y-_previousPosition.y);
                 //_prevCurrentPos.subtractPosition(_previousPosition);
-                _prevCurrentPos.moveTo(_position.x-_previousPosition.x,_position.y-_previousPosition.y);
+                //_prevCurrentPos.moveTo(_position.x-_previousPosition.x,_position.y-_previousPosition.y);
                 _prevCurrentPos.scalePosition((float)(gameTime - _previousActionTime) / (_timeCanMove - _previousActionTime));
                 _prevCurrentPos.addPosition(_previousPosition);
 
