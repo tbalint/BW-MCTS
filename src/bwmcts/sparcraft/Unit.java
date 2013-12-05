@@ -465,7 +465,7 @@ public class Unit implements Comparable<Unit> {
 	    u._range=this._range;
 		
 	    if (this._position!=null)
-	    	u._position=new Position(this._position.getX(),this._position.getY());				// current location in a possibly infinite space
+	    	u._position=new Position(this._position.x,this._position.y);				// current location in a possibly infinite space
 		
 		u._unitID=this._unitID;				// unique unit ID to the state it's contained in
 	    u._playerID=this._playerID;				// the player who controls the unit
@@ -480,11 +480,11 @@ public class Unit implements Comparable<Unit> {
 			u._previousAction=this._previousAction.clone();;		// the previous move that the unit performed
 		u._previousActionTime=this._previousActionTime;	// the time the previous move was performed
 		if (this._previousPosition!=null)
-			u._previousPosition=new Position(this._previousPosition.getX(),this._previousPosition.getY());
+			u._previousPosition=new Position(this._previousPosition.x,this._previousPosition.y);
 
 	    u._prevCurrentPosTime=this._prevCurrentPosTime;
 	    if (this._prevCurrentPos!=null)
-	    	u._prevCurrentPos=new Position(this._prevCurrentPos.getX(),this._prevCurrentPos.getY());
+	    	u._prevCurrentPos=new Position(this._prevCurrentPos.x,this._prevCurrentPos.y);
 		return u;
 	}
 	

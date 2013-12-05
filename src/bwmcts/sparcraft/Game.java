@@ -72,12 +72,13 @@ public class Game {
 		Player enemy;
 		HashMap<Integer,List<UnitAction>> moves_A=new HashMap<Integer,List<UnitAction>>();
         HashMap<Integer,List<UnitAction>> moves_B=new HashMap<Integer,List<UnitAction>>();
+        int playerToMove=-1;
 	    // play until there is no winner
-		long generatemoves=0;
-		long getmoves=0;
-		long makemoves=0;
-		((Player_NoOverKillAttackValue)_players[0]).timeOnHpCopying=0;
-		((Player_NoOverKillAttackValue)_players[1]).timeOnHpCopying=0;
+		//long generatemoves=0;
+		//long getmoves=0;
+		//long makemoves=0;
+		//((Player_NoOverKillAttackValue)_players[0]).timeOnHpCopying=0;
+		//((Player_NoOverKillAttackValue)_players[1]).timeOnHpCopying=0;
 	    while (!this.gameOver()){
 	    	
 	        if (rounds >= moveLimit)
@@ -89,39 +90,39 @@ public class Game {
 	        scriptMoves_B.clear();
 	
 	        // the player that will move next
-	        int playerToMove=getPlayerToMove();
+	        playerToMove=getPlayerToMove();
 	        toMove = _players[playerToMove];
 	        enemy = _players[GameState.getEnemy(playerToMove)];
 
 	        // generate the moves possible from this state
 	        moves_A.clear();
 	        moves_B.clear();
-	        long g=System.nanoTime();
+	        //long g=System.nanoTime();
 			state.generateMoves(moves_A, toMove.ID());
-			generatemoves+=System.nanoTime()-g;
+			//generatemoves+=System.nanoTime()-g;
 	        
 	        // if both players can move, generate the other player's moves
 	        if (state.bothCanMove())
 	        {
-	        	g=System.nanoTime();
+	        	//g=System.nanoTime();
 	        	state.generateMoves(moves_B, enemy.ID());
-	        	generatemoves+=System.nanoTime()-g;
-	        	g=System.nanoTime();
+	        	//generatemoves+=System.nanoTime()-g;
+	        	//g=System.nanoTime();
 				enemy.getMoves(state, moves_B, scriptMoves_B);
-				getmoves+=System.nanoTime()-g;
-				g=System.nanoTime();
+				//getmoves+=System.nanoTime()-g;
+				//g=System.nanoTime();
 	            state.makeMoves(scriptMoves_B);
-	            makemoves+=System.nanoTime()-g;
+	            //makemoves+=System.nanoTime()-g;
 	        }
 	        
 	        // the tuple of moves he wishes to make
-	        g=System.nanoTime();
+	       // g=System.nanoTime();
 	        toMove.getMoves(state, moves_A, scriptMoves_A);
-	        getmoves+=System.nanoTime()-g;
+	        //getmoves+=System.nanoTime()-g;
 	        // make the moves
-	        g=System.nanoTime();
+	        //g=System.nanoTime();
 			state.makeMoves(scriptMoves_A);
-			makemoves+=System.nanoTime()-g;
+			//makemoves+=System.nanoTime()-g;
 	        if (display)
 	        {
 		        state.print();
@@ -139,11 +140,11 @@ public class Game {
 	        rounds++;
 	        
 	    }
-	    System.out.println("time spent on sorting "+(double)state.timeSpentOnSorting/1000000);
-	    System.out.println("time spent on generatemoves "+(double)generatemoves/1000000);
-	    System.out.println("time spent on getmoves "+(double)getmoves/1000000);
-	    System.out.println("time spent on makemoves "+(double)makemoves/1000000);
-	    System.out.println("time spent on timeonHP "+(double)(((Player_NoOverKillAttackValue)_players[0]).timeOnHpCopying+((Player_NoOverKillAttackValue)_players[1]).timeOnHpCopying)/1000000);
+	    //System.out.println("time spent on sorting "+(double)state.timeSpentOnSorting/1000000);
+	    //System.out.println("time spent on generatemoves "+(double)generatemoves/1000000);
+	    //System.out.println("time spent on getmoves "+(double)getmoves/1000000);
+	   // System.out.println("time spent on makemoves "+(double)makemoves/1000000);
+	    //System.out.println("time spent on timeonHP "+(double)(((Player_NoOverKillAttackValue)_players[0]).timeOnHpCopying+((Player_NoOverKillAttackValue)_players[1]).timeOnHpCopying)/1000000);
 	}
 
 

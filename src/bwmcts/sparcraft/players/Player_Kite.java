@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import javabot.JNIBWAPI;
-
 import bwmcts.sparcraft.Constants;
 import bwmcts.sparcraft.GameState;
 import bwmcts.sparcraft.PlayerProperties;
@@ -17,36 +16,48 @@ import bwmcts.sparcraft.WeaponProperties;
 public class Player_Kite extends Player {
 	
 	private int _id=0;
+	private int enemy;
 	
 	public Player_Kite(int playerID) {
 		_id=playerID;
 		setID(playerID);
+		enemy=GameState.getEnemy(_id);
 	}
 
 	public void getMoves(GameState  state, HashMap<Integer,List<UnitAction>> moves, List<UnitAction>  moveVec)
 	{
 		moveVec.clear();
+		boolean foundUnitAction					= false;
+		int actionMoveIndex						= 0;
+		int furthestMoveIndex					= 0;
+		int furthestMoveDist					= 0;
+		int closestMoveIndex					= 0;
+		int actionDistance						= Integer.MAX_VALUE;
+		int closestMoveDist		  			= Integer.MAX_VALUE;
+		Unit ourUnit, closestUnit;
+		List<UnitAction> actions;
+		int dist=0, bestMoveIndex = 0;
+		UnitAction move;
 		for (Integer u : moves.keySet())
 		{
-			boolean foundUnitAction					= false;
-			int actionMoveIndex						= 0;
-			int furthestMoveIndex					= 0;
-			int furthestMoveDist					= 0;
-			int closestMoveIndex					= 0;
-			int actionDistance						= Integer.MAX_VALUE;
-			long closestMoveDist		  			= Long.MAX_VALUE;
+			foundUnitAction		= false;
+			actionMoveIndex		= 0;
+			furthestMoveIndex	= 0;
+			furthestMoveDist	= 0;
+			closestMoveIndex	= 0;
+			actionDistance		= Integer.MAX_VALUE;
+			closestMoveDist		= Integer.MAX_VALUE;
 
-			Unit ourUnit							= (state.getUnit(_id, u));
-			Unit closestUnit						= (ourUnit.canHeal() ? state.getClosestOurUnit(_id, u) : state.getClosestEnemyUnit(_id,u));
-
-			for (int m = 0; m < moves.get(u).size(); ++m)
+			ourUnit				= (state.getUnit(_id, u));
+			closestUnit			= (ourUnit.canHeal() ? state.getClosestOurUnit(_id, u) : state.getClosestEnemyUnit(ourUnit.currentPosition(state._currentTime),enemy,Integer.MAX_VALUE,0,0));
+			actions=moves.get(u);
+			for (int m = 0; m <actions.size(); ++m)
 			{
-				UnitAction move						= moves.get(u).get(m);
+				move						= actions.get(m);
 					
 				if (move.type() == UnitActionTypes.ATTACK)
 				{
-					Unit target						= (state.getUnit(state.getEnemy(move.player()), move._moveIndex));
-					int dist						= (ourUnit.getDistanceSqToUnit(target, state.getTime()));
+					dist			= ourUnit.getDistanceSqToUnit(state.getUnit(enemy, move._moveIndex), state.getTime());
 
 					if (dist < actionDistance)
 					{
@@ -57,8 +68,8 @@ public class Player_Kite extends Player {
 				}
 				else if (move.type() == UnitActionTypes.HEAL)
 				{
-					Unit target				= (state.getUnit(move.player(), move._moveIndex));
-					int dist				= (ourUnit.getDistanceSqToUnit(target, state.getTime()));
+
+					dist				= ourUnit.getDistanceSqToUnit(state.getUnit(move.player(), move._moveIndex), state.getTime());
 
 					if (dist < actionDistance)
 					{
@@ -69,9 +80,9 @@ public class Player_Kite extends Player {
 				}
 				else if (move.type() == UnitActionTypes.MOVE)
 				{
-					Position ourDest = new Position(ourUnit.pos().getX() + Constants.Move_Dir[move._moveIndex][0], 
-													 ourUnit.pos().getY() + Constants.Move_Dir[move._moveIndex][1]);
-					int dist = (closestUnit.getDistanceSqToPosition(ourDest, state.getTime()));
+					//Position ourDest = new Position(ourUnit.pos().getX() + Constants.Move_Dir[move._moveIndex][0], 
+					//								 ourUnit.pos().getY() + Constants.Move_Dir[move._moveIndex][1]);
+					dist = closestUnit.getDistanceSqToPosition(ourUnit.pos().getX() + Constants.Move_DirX[move._moveIndex],ourUnit.pos().getY() + Constants.Move_DirY[move._moveIndex], state.getTime());
 
 					if (dist > furthestMoveDist)
 					{
@@ -88,7 +99,7 @@ public class Player_Kite extends Player {
 			}
 
 			// the move we will be returning
-			int bestMoveIndex = 0;
+			bestMoveIndex = 0;
 
 			// if we have an attack move we will use that one
 			if (foundUnitAction)
@@ -110,7 +121,7 @@ public class Player_Kite extends Player {
 				}
 			}
 			
-			moveVec.add(moves.get(u).get(bestMoveIndex));
+			moveVec.add(actions.get(bestMoveIndex));
 		}
 	}
 }

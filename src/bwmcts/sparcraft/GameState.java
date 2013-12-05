@@ -29,7 +29,7 @@ public class GameState {
 
 	 //int[] _numMovements=new int[Constants.Num_Players];
 	 //int[] _prevHPSum=new int[Constants.Num_Players];
-	long timeSpentOnSorting=0;
+	//long timeSpentOnSorting=0;
 	int[][] _closestMoveIndex=new int[Constants.Num_Players][Constants.Max_Moves];
     public int  _currentTime;
     //int _maxUnits;
@@ -178,7 +178,20 @@ public class GameState {
 	
 	// misc functions
 	public void finishedMoving(){
-		sortUnits();
+		//sortUnits();
+		for (int p=0; p<Constants.Num_Players; p++)
+		{
+			if (_prevNumUnits[p] <= 1)
+			{
+				_prevNumUnits[p]= _numUnits[p];
+				continue;
+			}
+			else
+			{
+				Arrays.sort(_units[p],0,_prevNumUnits[p]);
+				_prevNumUnits[p]= _numUnits[p];
+			}
+		}
 		//generateClosestUnits();
 		// update the current time of the state
 		//updateGameTime();
@@ -263,7 +276,7 @@ public class GameState {
 			return true;
 		}
 
-		for (int u=0; u<numUnits(player); u++)
+		for (int u=0; u<_numUnits[player]; u++)
 		{
 			if (getUnit(player, u).damage() > 0)
 			{
@@ -349,7 +362,7 @@ public class GameState {
 
 	    // Unit functions
 	public void sortUnits(){
-		long t=System.nanoTime();
+		//long t=System.nanoTime();
 		for (int p=0; p<Constants.Num_Players; p++)
 		{
 			if (_prevNumUnits[p] <= 1)
@@ -369,7 +382,7 @@ public class GameState {
 				_prevNumUnits[p]= _numUnits[p];
 			}
 		}	
-		timeSpentOnSorting+=System.nanoTime()-t;
+		//timeSpentOnSorting+=System.nanoTime()-t;
 	}
 	public void addUnit(Unit u) throws Exception{
 		checkFull(u.player());
@@ -501,35 +514,18 @@ public class GameState {
 	}
 	public Unit getClosestEnemyUnit(Position myUnitPosition,int enemyPlayer,int minDist,int minUnitInd,int distSq){
 
-		//int minDist=Integer.MAX_VALUE;
-		//int minUnitInd=0;
-	    //int minUnitID=255;
 
-		//Position currentPos = myUnit.currentPosition(_currentTime);
-		//int distSq=0;
 		for (int u=0; u<_numUnits[enemyPlayer]; u++)
 		{
-	        //Unit enemyUnit=getUnit(enemyPlayer, u);
-	        //int distSq = myUnit.currentPosition(_currentTime).getManhattanDistance(getUnit(enemyPlayer, u).currentPosition(_currentTime));
-			//long t=System.nanoTime();
 			distSq = myUnitPosition.getDistanceSq(getUnit(enemyPlayer, u).currentPosition(_currentTime));
-            //Constants.timespentonPosition+=System.nanoTime()-t;
-			if ((distSq < minDist))// || ((distSq == minDist) && (enemyUnit.ID() < minUnitID)))
+			if (distSq < minDist)
 			{
 				minDist = distSq;
 				minUnitInd = u;
-	           // minUnitID = enemyUnit.getId();
 			}
-	        /*else if ((distSq == minDist) && (enemyUnit.getId() < minUnitID))
-	        {
-	            minDist = distSq;
-				minUnitInd = u;
-	            minUnitID = enemyUnit.getId();
-	        }*/
 		}
 
 		return getUnit(enemyPlayer, minUnitInd);
-		//return getUnit(getEnemy(player),_closestMoveIndex[player][unitIndex]);
 	}
 	public Unit getClosestOurUnit(int player, int unitIndex){
 		Unit myUnit=getUnit(player,unitIndex);
@@ -853,7 +849,7 @@ public class GameState {
 	}
 	public void makeMoves(List<UnitAction> moves){
 		 if (moves.size() > 0) {
-
+			//if (getUnit(moves.get(0)._player,moves.get(0)._unit).firstTimeFree()!=_currentTime)
 	        if (whoCanMove().ordinal() == getEnemy(moves.get(0).player()))
 	        {
 	            //throw new Exception("GameState Error - Called makeMove() for a player that cannot currently move");

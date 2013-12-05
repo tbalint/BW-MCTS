@@ -15,8 +15,21 @@ public class Player_ClusteredUnitStateToUnitAction extends Player {
 	HashMap<Integer,List<Unit>> _clusters;
 	HashMap<Integer,UnitStateTypes> _scripts;
 	int id=0;
+	List<UnitAction> defendActions = new ArrayList<UnitAction>();
+	List<UnitAction> attackActions = new ArrayList<UnitAction>();
+	Player attack,kite;
+
+	List<Integer> attackingUnits = new ArrayList<Integer>();
+	List<Integer> kitingUnits = new ArrayList<Integer>();
+	HashMap<Integer, List<UnitAction>> attackingMap = new HashMap<Integer, List<UnitAction>>();
+	HashMap<Integer, List<UnitAction>> kitingMap = new HashMap<Integer, List<UnitAction>>();
+	
+	
 	public Player_ClusteredUnitStateToUnitAction(int id){
 		this.id=id;
+		setID(id);
+		attack = new Player_NoOverKillAttackValue(id);
+		kite = new Player_Kite(id);
 	}
 	
 	public void getMoves(GameState  state, HashMap<Integer,List<UnitAction>> moves, List<UnitAction>  moveVec)
@@ -25,22 +38,24 @@ public class Player_ClusteredUnitStateToUnitAction extends Player {
 			return;
 		
 		
-		int player = id;
+		//int player = id;
 		
-		Player attack = new Player_NoOverKillAttackValue(player);
-		Player kite = new Player_Kite(player);
+		defendActions.clear();
+		attackActions.clear();
+		attackingUnits.clear();
+		kitingUnits.clear();
+		attackingMap.clear();
+		kitingMap.clear();
 		
 
 		
-		List<Integer> attackingUnits = new ArrayList<Integer>();
-		List<Integer> kitingUnits = new ArrayList<Integer>();
 		
 		// Divide units into two groups
 		if (_clusters==null){
-			for (int unitIndex=0; unitIndex<state.numUnits(player); ++unitIndex)
+			for (int unitIndex=0; unitIndex<state.numUnits(id); ++unitIndex)
 	        {
 	
-	            Unit unit=state.getUnit(player, unitIndex);
+	            Unit unit=state.getUnit(id, unitIndex);
 	            if (unit==null || _scripts.get(unit.getId())==null){break;}
 	            if (_scripts.get(unit.getId()) == UnitStateTypes.ATTACK && unit.isAlive())
 					attackingUnits.add(unit.getId());
@@ -82,13 +97,12 @@ public class Player_ClusteredUnitStateToUnitAction extends Player {
 			}
 		}
 		//List<UnitAction> allActions = new ArrayList<UnitAction>();
-		HashMap<Integer, List<UnitAction>> attackingMap = new HashMap<Integer, List<UnitAction>>();
-		HashMap<Integer, List<UnitAction>> kitingMap = new HashMap<Integer, List<UnitAction>>();
+		
 		
 		// TODO: Loop through the map instead
 		for(Integer i : moves.keySet()){
 			int u = moves.get(i).get(0)._unit;
-			int unitId = state.getUnit(player, u).getId();
+			int unitId = state.getUnit(id, u).getId();
 			if (attackingUnits.contains(unitId))
 				attackingMap.put(i, moves.get(i)); 
 			if (kitingUnits.contains(unitId))
@@ -96,12 +110,12 @@ public class Player_ClusteredUnitStateToUnitAction extends Player {
 		}
 		
 		// Add attack actions
-		List<UnitAction> attackActions = new ArrayList<UnitAction>();
+		
 		attack.getMoves(state, attackingMap, attackActions);
 		moveVec.addAll(attackActions);
 		
 		// Add defend actions
-		List<UnitAction> defendActions = new ArrayList<UnitAction>();
+		
 		kite.getMoves(state, kitingMap, defendActions);
 		moveVec.addAll(defendActions);
 		
