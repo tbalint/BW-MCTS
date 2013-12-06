@@ -74,15 +74,15 @@ public class UCTCD {
 		
 		UctNode best = mostVisitedChildOf(root);
 		
-		if (debug){
-			System.out.println("Traversals " + (t++));
+		//if (debug){
+			//System.out.println(state._currentTime +  "\t" + (t++));
 			
-			String out = root.print(0);
-			writeToFile(out, "tree.xml");
-		}
+		//	String out = root.print(0);
+		//	writeToFile(out, "tree.xml");
+		//}
 		
 		if (best == null){
-			System.out.println("Exit with computing");
+			//System.out.println("Exit with computing");
 			return new ArrayList<UnitAction>();
 		}
 		
@@ -153,20 +153,38 @@ public class UCTCD {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-			
+		/*
+		if (containsDups(map)){
+			System.out.println("Error in map!");
+		}
+			*/
 		if (node.getChildren().isEmpty()){
 				
 			new Player_NoOverKillAttackValue(playerToMove).getMoves(state, map, move);
-			
+			/*
+			if (containsDups(move)){
+				System.out.println("Error in NOK-AV move!");
+			}
+			*/
 		} else if (node.getChildren().size() == 1){
 			
 			new Player_Kite(playerToMove).getMoves(state, map, move);
-			
+			/*
+			if (containsDups(move)){
+				System.out.println("Error in Kite move!");
+			}
+			*/
 		} else {
 	
 			move = getNextMove(playerToMove, state, map); // Possible moves?
-			
+			/*
+			if (containsDups(move)){
+				System.out.println("Error in random move!");
+			}
+			*/
 		}
+		
+		
 		
 		if (move == null)
 			return;
@@ -181,6 +199,35 @@ public class UCTCD {
 		if (node.getExpansions() >= maxChildren)
 			node.setFullyExpanded(true);
 		
+	}
+
+	private boolean containsDups(List<UnitAction> move) {
+		for(int a = 0; a < move.size(); a++){
+			for(int b = 0; b < move.size(); b++){
+				if (a==b)
+					continue;
+				if (move.get(a).equals(move.get(b))){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean containsDups(HashMap<Integer, List<UnitAction>> map) {
+		for(Integer ua : map.keySet()){
+			for(int a = 0; a < map.get(ua).size(); a++){
+				for(Integer ub : map.keySet()){
+					for(int b = 0; b < map.get(ub).size(); b++){
+						if (ua == ub && a==b)
+							continue;
+						if (map.get(ua).get(a).equals(map.get(ub).get(b)))
+							return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	private int getPlayerToMove(UctNode node, GameState state) {

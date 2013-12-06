@@ -58,7 +58,7 @@ public class Game {
 	        f.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
 	        f.getContentPane().add(ui);    
 	        f.setVisible(true);
-	    	state.print();
+	    	//state.print();
 	    }
 	}
 
@@ -104,6 +104,7 @@ public class Game {
 	        // if both players can move, generate the other player's moves
 	        if (state.bothCanMove())
 	        {
+	        	int i = 0;
 	        	//g=System.nanoTime();
 	        	state.generateMoves(moves_B, enemy.ID());
 	        	//generatemoves+=System.nanoTime()-g;
@@ -125,11 +126,11 @@ public class Game {
 			//makemoves+=System.nanoTime()-g;
 	        if (display)
 	        {
-		        state.print();
+		        //state.print();
 		        ui.setGameState(state);
 		        ui.repaint();
 	        	try {
-					Thread.sleep(0);
+					Thread.sleep(1);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -169,8 +170,10 @@ public class Game {
 	{
 	   Players whoCanMove=state.whoCanMove();
 	
+	   Players random = Math.random() >= 0.5 ? Players.Player_One : Players.Player_Two;
+	   
 	   //return (whoCanMove == Players::Player_Both) ? Players::Player_One : whoCanMove;
-		return whoCanMove==Players.Player_Both ? Players.Player_One.ordinal(): whoCanMove.ordinal();
+		return whoCanMove==Players.Player_Both ? random.ordinal(): whoCanMove.ordinal();
 	}
 
 

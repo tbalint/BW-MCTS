@@ -56,41 +56,45 @@ public class Test implements BWAPIEventListener  {
 		
 		graphics = false;
 		
-		//Constants.Max_Units = 200;
-		//Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
+		Constants.Max_Units = 200;
+		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
 		
 		//Player p1 = new Player_Kite(0);
 		
 		//Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 500, false), 200);
-		GUCTCD guctcd = new GUCTCD(1.6, 20, 1, 0, 500, true);
-		guctcd.setHpMulitplier(1);
-		guctcd.setClusters(6);
-		//Player p1 = new UctcdLogic(bwapi, guctcd, 40);
-		Player p1 = new Player_Random(0);		
+		GUCTCD guctcdA = new GUCTCD(1.6, 20, 1, 0, 100, true);
+		guctcdA.setHpMulitplier(1);
+		guctcdA.setClusters(6);
+		GUCTCD guctcdB = new GUCTCD(1.6, 20, 0, 1, 200, true);
+		guctcdB.setHpMulitplier(1);
+		guctcdB.setClusters(6);
+		//Player p1 = new UctcdLogic(bwapi, guctcdA, 40);
+		//Player p1 = new Player_Random(0);		
 		//Player p1 = new Player_KiteDPS(0);		
 		//Player p1 = new Player_NoOverKillAttackValue(0);
 		//Player p2 = new Player_KiteDPS(1);		
+		Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 100, false),40);
 		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 500, false),40);
 		
-		Player p2 = new Player_Random(1);
-		//Player p2 = new Player_NoOverKillAttackValue(1);
+		//Player p2 = new Player_Random(1);
+		Player p2 = new Player_NoOverKillAttackValue(1);
 		
 		//Player p2 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 0, 1, 500, false), 40);
-		//Player p2 = new UctcdLogic(bwapi, guctcd, 40);		
+		//Player p2 = new UctcdLogic(bwapi, guctcdB, 400);		
 		//Player p2 = new GPortfolioGreedyLogic(bwapi, 2, 2, 30, 6);
 		
-		//oneTypeTest(p1, p2, UnitTypes.Terran_Marine, 1000);
+		//oneTypeTest(p1, p2, UnitTypes.Terran_Marine, 25);
 
 		//p2.setID(1);
 		//oneTypeTest(p1, p2, UnitTypes.Zerg_Zergling, 10);
 
 		//TODO: Write to file
 		
-		//realisticTest(p1, p2, 10);
+		realisticTest(p1, p2, 25);
 		
 		//upgmaTest(p1, p2, 100, 25);
 		
-		simulatorTest(p1, p2, 1, 250, 10, 100);
+		//simulatorTest(p1, p2, 1, 250, 10, 100);
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -240,9 +244,10 @@ public class Test implements BWAPIEventListener  {
 	private void realisticTest(Player p1, Player p2, int runs) {
 		
 		// Combat size
-		for(int i = 12; i < 26; i++){
+		for(int i = 1; i <= 10; i+=3){
 			try {
-				float result = testRealisticGames(p1, p2, i*4, i*2, i/2, runs);
+				System.out.println("--- " + ((i*10)+(i*5)+(i)));
+				float result = testRealisticGames(p1, p2, i*10, i*5, i, runs);
 				//System.out.println("REALISTIC TEST RESULT: " + result);
 				System.out.println("Result=" + result);
 				// TODO:
@@ -268,7 +273,7 @@ public class Test implements BWAPIEventListener  {
 		Constants.Max_Units = (marines+firebats+tanks)*2;
 		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
 		
-		//System.out.println("Marines: " + marines + "\tfirebats: " + firebats + "\tTanks: " + tanks + " on each side");
+		System.out.println("Marines: " + marines + "\tfirebats: " + firebats + "\tTanks: " + tanks + " on each side");
 		
 		float score = 0;
 		List<Double> results = new ArrayList<Double>();
@@ -279,7 +284,7 @@ public class Test implements BWAPIEventListener  {
 			if (result>0)
 				wins++;
 			
-			//System.out.println("Result of game " + i + ": " + result);
+			System.out.println(result);
 			score += result;
 		}
 		
@@ -357,6 +362,11 @@ public class Test implements BWAPIEventListener  {
 	    Game g=new Game(initialState, p1, p2, moveLimit, graphics);
 
 	    // play the game
+	    
+	    for(int i = 0; i < 10000000; i++){
+	    	if(Math.random()>100)
+	    		break;
+	    }
 	    g.play();
 
 	    // you can access the resulting game state after g has been played via getState
@@ -412,12 +422,11 @@ public class Test implements BWAPIEventListener  {
  	    		int y = startY + space*(i%unitsPerLine) + space;
  	    		try {
  	    			state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_Two.ordinal(), new Position(x, y));
-	 	    	} catch (Exception e){
+ 	    		} catch (Exception e){
 		 	    	//e.printStackTrace();
 		 	    }
  	    	}
 	 	    
-	    	
 	    	startXB += space * 2;
 	    	
 	    }

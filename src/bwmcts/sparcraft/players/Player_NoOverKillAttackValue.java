@@ -32,8 +32,6 @@ public class Player_NoOverKillAttackValue extends Player {
 		
 		moveVec.clear();
 
-		
-		
 		for(int u = 0; u < state.numUnits(enemy); u++){
 			
 			hpRemaining[u] = state.getUnit(enemy,u)._currentHP;
@@ -52,7 +50,7 @@ public class Player_NoOverKillAttackValue extends Player {
 		int dist=0;
 		float dpsHPValue=0;
 		Unit closestUnit ;
-		UnitAction actionMove=null, passiveMove=null;
+		
 		int m=0;
 		List<UnitAction> movesForU;
 		for (Integer u : moves.keySet()){
@@ -70,10 +68,14 @@ public class Player_NoOverKillAttackValue extends Player {
 				System.out.println(ourUnit + " " + _id + " " + u);
 			}
 			movesForU=moves.get(u);
+			UnitAction actionMove=null;
+			UnitAction passiveMove=null;
+			
 			for (m=0; m<movesForU.size(); m++)
 			{
 				//long g=System.nanoTime();
 				move	= movesForU.get(m);
+				
 				//timeOnHpCopying+=System.nanoTime()-g;	
 				if ((move._moveType == UnitActionTypes.ATTACK) && (hpRemaining[move.index()] > 0))
 				{
@@ -109,7 +111,6 @@ public class Player_NoOverKillAttackValue extends Player {
 						
 					}
 					
-					
 					if (move._moveType== UnitActionTypes.RELOAD)
 					{
 						if (ourUnit.canAttackTarget(closestUnit, state._currentTime))
@@ -143,7 +144,6 @@ public class Player_NoOverKillAttackValue extends Player {
 					//hpRemaining[theMove.index()] -= state.getUnit(_id, theMove.unit()).damage();
 					hpRemaining[actionMove.index()] -= ourUnit.damage;
 				}
-					
 				moveVec.add(actionMove);
 			} else {
 				//moveVec.add(movesForU.get(closestMoveIndex));

@@ -230,9 +230,11 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		if (guctcd!=null){
 			
 			try{
+				long start = System.currentTimeMillis();
 				UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[ID()], guctcd.getHpMulitplier(), 1);
 				UPGMA upgmaPlayerB = new UPGMA(state.getAllUnit()[state.getEnemy(ID())], guctcd.getHpMulitplier(), 1);
-				move = guctcd.search(state, upgmaPlayerA, upgmaPlayerB, timeBudget);
+				long end = System.currentTimeMillis();
+				move = guctcd.search(state, upgmaPlayerA, upgmaPlayerB, timeBudget - (end-start));
 				
 			} catch (Exception e){
 				

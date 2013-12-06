@@ -87,11 +87,11 @@ public class GUCTCD {
 		//GuctNode best = mostVisitedChildOf(root);
 		GuctNode best = mostWinningChildOf(root);
 			
-		if (debug){
+		//if (debug){
 			//System.out.println("Traversals " + (t++));
 			//String out = root.print(0);
 			//writeToFile(out, "tree.xml");
-		}
+		//}
 		
 		if (best == null){
 			return new ArrayList<UnitAction>();
@@ -105,7 +105,7 @@ public class GUCTCD {
 		*/
 		
 		List<UnitAction> actions = statesToActions(best.getMove(), state.clone());
-		
+		System.out.println(state._currentTime +  "\t" + (t++));
 		return actions;
 		
 	}

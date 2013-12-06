@@ -79,25 +79,25 @@ public class IUCTCD {
 		//GuctNode best = mostVisitedChildOf(root);
 		IuctNode best = mostWinningChildOf(root);
 		
-		if (debug){
-			System.out.println("Traversals " + (t++));
+		//if (debug){
+			//System.out.println(state._currentTime +  "\t" + (t++));
 			/*
 			String out = root.print(0);
 			writeToFile(out, "tree.xml");
 			*/
-		}
+		//}
 		
 		if (best == null){
 			return new ArrayList<UnitAction>();
 		}
-		
+		/*
 		System.out.print("i:");
 		for(UnitState s : best.getMove())
 			System.out.print(s.type);
 		System.out.print("\n");
-		
+		*/
 		List<UnitAction> actions = statesToActions(best.getMove(), state.clone());
-		
+		System.out.println(state._currentTime +  "\t" + (t++));
 		return actions;
 		
 	}

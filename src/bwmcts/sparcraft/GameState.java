@@ -702,12 +702,13 @@ public class GameState {
 				// stop checking
 				break;
 			}*/
-
+/*
 			if (unit.previousActionTime() == _currentTime && _currentTime != 0)
 			{
 	            System.out.println("Previous Move Took 0 Time: " + unit.previousAction().moveString());
 	            return;
 			}
+			*/
 			ArrayList<UnitAction> actionTemp=new ArrayList<UnitAction>();
 			
 
@@ -817,7 +818,7 @@ public class GameState {
 	        if (whoCanMove().ordinal() == getEnemy(moves.get(0).player()))
 	        {
 	            //throw new Exception("GameState Error - Called makeMove() for a player that cannot currently move");
-	            System.out.print(" GameState Error - Called makeMove() for a player that cannot currently move ");
+	            //System.out.print(" GameState Error - Called makeMove() for a player that cannot currently move ");
 	        	return;
 	        }
 	    }
@@ -1026,6 +1027,10 @@ public class GameState {
 		}
 		
 		return s;
+	}
+	public int aliveUnits() {
+		// TODO Auto-generated method stub
+		return _numUnits[0] + _numUnits[1];
 	}
 
 }
