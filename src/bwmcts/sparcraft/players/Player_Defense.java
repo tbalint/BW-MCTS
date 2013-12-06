@@ -28,16 +28,46 @@ public class Player_Defense extends Player {
 		moveVec.clear();
 		for (Integer u : moves.keySet())
 		{
+			boolean foundUnitAction					= false;
+			int actionMoveIndex						= 0;
 			int furthestMoveIndex					= 0;
 			int furthestMoveDist					= 0;
+			int closestMoveIndex					= 0;
+			double actionHighestDPS					= 0;
+			long closestMoveDist		  			= Long.MAX_VALUE;
+
 			Unit ourUnit							= (state.getUnit(_id, u));
-			Unit closestUnit						= (ourUnit.canHeal() ? state.getClosestOurUnit(_id, u) : state.getClosestEnemyUnit(_id,u));
+			Unit closestUnit						= (ourUnit.canHeal() ? state.getClosestOurUnit(_id, u) : state.getClosestEnemyUnit(_id, u));
 
 			for (int m = 0; m < moves.get(u).size(); ++m)
 			{
 				UnitAction move						= moves.get(u).get(m);
 					
-				if (move.type() == UnitActionTypes.MOVE)
+				if (move.type() == UnitActionTypes.ATTACK)
+				{
+					Unit target						= (state.getUnit(state.getEnemy(move.player()), move._moveIndex));
+					double dpsHPValue				= (target.dpf() / target.currentHP());
+
+					if (dpsHPValue > actionHighestDPS)
+					{
+						actionHighestDPS = dpsHPValue;
+						actionMoveIndex = m;
+						foundUnitAction = true;
+					}
+				}
+				else if (move.type() == UnitActionTypes.HEAL)
+				{
+					Unit target				= (state.getUnit(move.player(), move._moveIndex));
+					double dpsHPValue 		= (target.dpf() / target.currentHP());
+
+					if (dpsHPValue > actionHighestDPS)
+					{
+						actionHighestDPS = dpsHPValue;
+						actionMoveIndex = m;
+						foundUnitAction = true;
+					}
+				}
+				else if (move.type() == UnitActionTypes.MOVE)
 				{
 					Position ourDest = new Position(ourUnit.pos().getX() + Constants.Move_Dir[move._moveIndex][0], 
 													 ourUnit.pos().getY() + Constants.Move_Dir[move._moveIndex][1]);
@@ -48,10 +78,39 @@ public class Player_Defense extends Player {
 						furthestMoveDist = dist;
 						furthestMoveIndex = m;
 					}
+
+					if (dist < closestMoveDist)
+					{
+						closestMoveDist = dist;
+						closestMoveIndex = m;
+					}
 				}
 			}
 
-			moveVec.add(moves.get(u).get(furthestMoveIndex));
+			// the move we will be returning
+			int bestMoveIndex = 0;
+
+			// if we have an attack move we will use that one
+			if (foundUnitAction)
+			{
+				bestMoveIndex = actionMoveIndex;
+			}
+			// otherwise use the closest move to the opponent
+			else
+			{
+				// if we are in attack range of the unit, back up
+				if (ourUnit.canAttackTarget(closestUnit, state.getTime()))
+				{
+					bestMoveIndex = furthestMoveIndex;
+				}
+				// otherwise get back into the fight
+				else
+				{
+					bestMoveIndex = closestMoveIndex;
+				}
+			}
+			
+			moveVec.add(moves.get(u).get(bestMoveIndex));
 		}
 	}
 }

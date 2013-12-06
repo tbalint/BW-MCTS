@@ -126,7 +126,7 @@ public class GameState {
 			//System.out.println(bwapi.getFrameCount()+" - "+u.getLastCommandFrame()+": "+u.getGroundWeaponCooldown()+": "+u.getAirWeaponCooldown());
 			_units[bwapi.getSelf().getID()][i]=new Unit(UnitProperties.Get(u.getTypeID()).type,new Position(u.getX(),u.getY()), u.getID(), u.getPlayerID(), u.getHitPoints()+u.getShield(), u.getEnergy(),bwapi.getFrameCount(),bwapi.getFrameCount());
 			_units[bwapi.getSelf().getID()][i].setUnitCooldown(bwapi, u);
-			  
+			
 			i++;
 		}
 		i=0;
@@ -136,7 +136,7 @@ public class GameState {
 			//System.out.println(bwapi.getFrameCount()+" - "+u.getLastCommandFrame()+": "+u.getGroundWeaponCooldown()+": "+u.getAirWeaponCooldown());
 			
 			_units[bwapi.getEnemies().get(0).getID()][i]=new Unit(UnitProperties.Get(u.getTypeID()).type,new Position(u.getX(),u.getY()), u.getID(), u.getPlayerID(), u.getHitPoints()+u.getShield(), u.getEnergy(),bwapi.getFrameCount(),bwapi.getFrameCount()+u.getGroundWeaponCooldown());
-
+			
 			i++;
 		}
 		

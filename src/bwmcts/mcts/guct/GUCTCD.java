@@ -86,9 +86,9 @@ public class GUCTCD {
 		
 		//GuctNode best = mostVisitedChildOf(root);
 		GuctNode best = mostWinningChildOf(root);
-		
+			
 		if (debug){
-			System.out.println("Traversals " + (t++));
+			//System.out.println("Traversals " + (t++));
 			//String out = root.print(0);
 			//writeToFile(out, "tree.xml");
 		}
@@ -96,6 +96,11 @@ public class GUCTCD {
 		if (best == null){
 			return new ArrayList<UnitAction>();
 		}
+		
+		System.out.print("guctcd:");
+		for(UnitState s : best.getMove())
+			System.out.print(s.type);
+		System.out.print("\n");
 		
 		List<UnitAction> actions = statesToActions(best.getMove(), state.clone());
 		
@@ -367,10 +372,14 @@ public class GUCTCD {
 			// Add units in cluster
 			for(Unit u : clusters.get(unitState.unit)){
 				
-				if (unitState.type == UnitStateTypes.ATTACK && u.isAlive())
-					attackingUnits.add(u.getId());
-				else if (unitState.type == UnitStateTypes.KITE && u.isAlive())
-					kitingUnits.add(u.getId());
+				if (u.isAlive() && (u.canAttackNow() || u.canMoveNow())){
+				
+					if (unitState.type == UnitStateTypes.ATTACK && u.isAlive())
+						attackingUnits.add(u.getId());
+					else if (unitState.type == UnitStateTypes.KITE && u.isAlive())
+						kitingUnits.add(u.getId());
+					
+				}
 				
 			}
 			

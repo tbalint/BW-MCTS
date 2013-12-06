@@ -66,6 +66,7 @@ public class Test implements BWAPIEventListener  {
 		//Player p1 = new Player_KiteDPS(0);		
 		//Player p2 = new Player_KiteDPS(1);		
 		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 500, false),40);
+		
 		//Player p2 = new Player_NoOverKillAttackValue(1);
 		
 		Player p2 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 0, 1, 500, false), 40);
@@ -243,7 +244,7 @@ public class Test implements BWAPIEventListener  {
 	private void realisticTest(Player p1, Player p2, int runs) {
 		
 		// Combat size
-		for(int i = 4; i < 16; i++){
+		for(int i = 12; i < 26; i++){
 			try {
 				float result = testRealisticGames(p1, p2, i*4, i*2, i/2, runs);
 				//System.out.println("REALISTIC TEST RESULT: " + result);

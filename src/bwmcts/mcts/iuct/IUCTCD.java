@@ -91,6 +91,11 @@ public class IUCTCD {
 			return new ArrayList<UnitAction>();
 		}
 		
+		System.out.print("i:");
+		for(UnitState s : best.getMove())
+			System.out.print(s.type);
+		System.out.print("\n");
+		
 		List<UnitAction> actions = statesToActions(best.getMove(), state.clone());
 		
 		return actions;
@@ -348,7 +353,7 @@ public class IUCTCD {
 			player = move.get(0).player;
 		
 		Player attack = new Player_NoOverKillAttackValue(player);
-		Player kite = new Player_KiteDPS(player);
+		Player kite = new Player_Kite(player);
 		
 		HashMap<Integer, List<UnitAction>> map = new HashMap<Integer, List<UnitAction>>();
 		
