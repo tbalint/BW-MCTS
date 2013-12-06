@@ -25,6 +25,7 @@ import bwmcts.sparcraft.players.Player_Defense;
 import bwmcts.sparcraft.players.Player_Kite;
 import bwmcts.sparcraft.players.Player_KiteDPS;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
+import bwmcts.sparcraft.players.Player_Random;
 
 public class Test implements BWAPIEventListener  {
 	
@@ -53,10 +54,10 @@ public class Test implements BWAPIEventListener  {
 		
 		System.out.println("BWAPI created"+ bwapi.getUnitType(3).getName());
 		
-		graphics = true;
+		graphics = false;
 		
-		Constants.Max_Units = 200;
-		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
+		//Constants.Max_Units = 200;
+		//Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
 		
 		//Player p1 = new Player_Kite(0);
 		
@@ -65,12 +66,14 @@ public class Test implements BWAPIEventListener  {
 		guctcd.setHpMulitplier(1);
 		guctcd.setClusters(6);
 		//Player p1 = new UctcdLogic(bwapi, guctcd, 40);
-		Player p1 = new Player_NoOverKillAttackValue(0);		
+		Player p1 = new Player_Random(0);		
 		//Player p1 = new Player_KiteDPS(0);		
+		//Player p1 = new Player_NoOverKillAttackValue(0);
 		//Player p2 = new Player_KiteDPS(1);		
 		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 500, false),40);
 		
-		Player p2 = new Player_NoOverKillAttackValue(1);
+		Player p2 = new Player_Random(1);
+		//Player p2 = new Player_NoOverKillAttackValue(1);
 		
 		//Player p2 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 0, 1, 500, false), 40);
 		//Player p2 = new UctcdLogic(bwapi, guctcd, 40);		
@@ -87,7 +90,7 @@ public class Test implements BWAPIEventListener  {
 		
 		//upgmaTest(p1, p2, 100, 25);
 		
-		//simulatorTest(p1, p2, 1, 250, 10, 10);
+		simulatorTest(p1, p2, 1, 250, 10, 100);
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -111,9 +114,11 @@ public class Test implements BWAPIEventListener  {
 			for(int s = 0; s < steps; s ++){
 				
 				List<Double> times = new ArrayList<Double>();
+				int limit = (int)(min + (float)(max-min)*(float)((float)s/(float)steps));
+				
 				// Runs
 				for(int r = 0; r < runs; r++){
-					int limit = (int)(min + (float)(max-min)*(float)((float)s/(float)steps));
+					
 					//Constants.callOfDistanceFunction1=0;
 					//Constants.callOfDistanceFunction2=0;
 					//Constants.callOfDistanceFunction3=0;
@@ -126,7 +131,8 @@ public class Test implements BWAPIEventListener  {
 				}
 				
 				// Calc deviation and average
-				System.out.println("Average: " + average(times) + "\tDeviation: " + deviation(times));
+				//System.out.println("Average: " + average(times) + "\tDeviation: " + deviation(times));
+				System.out.println((i*7*2) + "\t" + limit + "\t" + average(times) + "\t" + deviation(times));
 				
 			}
 			
@@ -167,7 +173,7 @@ public class Test implements BWAPIEventListener  {
 	    if (moveLimit < g.getRounds())
 	    	return -1;
 	    	
-	    System.out.println("Units: " + i*7*2 + "\tMoveLimit: " + moveLimit + "\tTime: " + time + " ms.");
+	    //System.out.println("Units: " + i*7*2 + "\tMoveLimit: " + moveLimit + "\tTime: " + time + " ms.");
 
 	    return time;
 		

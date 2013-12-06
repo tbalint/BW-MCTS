@@ -89,7 +89,7 @@ public class UctcdLogic extends Player implements ICombatLogic {
 				move = uctcd.search(state.clone(), timeBudget);
 			if (iuctcd!=null){
 				move = iuctcd.search(state.clone(), timeBudget);
-				System.out.println("IUCTCDs: " + move);
+				//System.out.println("IUCTCDs: " + move);
 			}
 			if (guctcd!=null){
 				
@@ -97,9 +97,9 @@ public class UctcdLogic extends Player implements ICombatLogic {
 					UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[bwapi.getSelf().getID()], guctcd.getHpMulitplier(), 1);
 					UPGMA upgmaPlayerB = new UPGMA(state.getAllUnit()[bwapi.getEnemies().get(0).getID()], guctcd.getHpMulitplier(), 1);
 					move = guctcd.search(state, upgmaPlayerA, upgmaPlayerB, timeBudget);
-					System.out.println("GUCTCD: " + move);
-					for(UnitAction action : move)
-						System.out.print(action+";");
+					//System.out.println("GUCTCD: " + move);
+					//for(UnitAction action : move)
+						//System.out.print(action+";");
 					
 					drawClusters(bwapi, guctcd.getClustersA());
 					drawClusters(bwapi, guctcd.getClustersB());

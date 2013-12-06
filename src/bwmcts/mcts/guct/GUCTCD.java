@@ -97,10 +97,12 @@ public class GUCTCD {
 			return new ArrayList<UnitAction>();
 		}
 		
+		/*
 		System.out.print("guctcd:");
 		for(UnitState s : best.getMove())
 			System.out.print(s.type);
 		System.out.print("\n");
+		*/
 		
 		List<UnitAction> actions = statesToActions(best.getMove(), state.clone());
 		

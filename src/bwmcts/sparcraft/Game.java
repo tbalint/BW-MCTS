@@ -129,7 +129,7 @@ public class Game {
 		        ui.setGameState(state);
 		        ui.repaint();
 	        	try {
-					Thread.sleep(100);
+					Thread.sleep(0);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
