@@ -116,7 +116,7 @@ public class Game {
 	        }
 	        
 	        // the tuple of moves he wishes to make
-	       // g=System.nanoTime();
+	        //g=System.nanoTime();
 	        toMove.getMoves(state, moves_A, scriptMoves_A);
 	        //getmoves+=System.nanoTime()-g;
 	        // make the moves
@@ -143,7 +143,7 @@ public class Game {
 	    //System.out.println("time spent on sorting "+(double)state.timeSpentOnSorting/1000000);
 	    //System.out.println("time spent on generatemoves "+(double)generatemoves/1000000);
 	    //System.out.println("time spent on getmoves "+(double)getmoves/1000000);
-	   // System.out.println("time spent on makemoves "+(double)makemoves/1000000);
+	    //System.out.println("time spent on makemoves "+(double)makemoves/1000000);
 	    //System.out.println("time spent on timeonHP "+(double)(((Player_NoOverKillAttackValue)_players[0]).timeOnHpCopying+((Player_NoOverKillAttackValue)_players[1]).timeOnHpCopying)/1000000);
 	}
 

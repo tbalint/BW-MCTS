@@ -34,7 +34,7 @@ public class Player_Kite extends Player {
 		int closestMoveIndex					= 0;
 		int actionDistance						= Integer.MAX_VALUE;
 		int closestMoveDist		  			= Integer.MAX_VALUE;
-		Unit ourUnit, closestUnit;
+		Unit ourUnit, closestUnit=null;
 		List<UnitAction> actions;
 		int dist=0, bestMoveIndex = 0;
 		UnitAction move;
@@ -49,7 +49,7 @@ public class Player_Kite extends Player {
 			closestMoveDist		= Integer.MAX_VALUE;
 
 			ourUnit				= (state.getUnit(_id, u));
-			closestUnit			= (ourUnit.canHeal() ? state.getClosestOurUnit(_id, u) : state.getClosestEnemyUnit(ourUnit.currentPosition(state._currentTime),enemy,Integer.MAX_VALUE,0,0));
+			
 			actions=moves.get(u);
 			for (int m = 0; m <actions.size(); ++m)
 			{
@@ -82,6 +82,7 @@ public class Player_Kite extends Player {
 				{
 					//Position ourDest = new Position(ourUnit.pos().getX() + Constants.Move_Dir[move._moveIndex][0], 
 					//								 ourUnit.pos().getY() + Constants.Move_Dir[move._moveIndex][1]);
+					closestUnit			= (ourUnit.canHeal() ? state.getClosestOurUnit(_id, u) : state.getClosestEnemyUnit(ourUnit.currentPosition(state._currentTime),enemy,Integer.MAX_VALUE,0,0));
 					dist = closestUnit.getDistanceSqToPosition(ourUnit.pos().getX() + Constants.Move_DirX[move._moveIndex],ourUnit.pos().getY() + Constants.Move_DirY[move._moveIndex], state.getTime());
 
 					if (dist > furthestMoveDist)

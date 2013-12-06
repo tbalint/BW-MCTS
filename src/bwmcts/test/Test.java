@@ -60,7 +60,7 @@ public class Test implements BWAPIEventListener  {
 		Player p2 = new Player_NoOverKillAttackValue(1);
 		//Player p2 = new UctcdLogic(bwapi, new GUCTCD(1.6, 2, 0, 1, 20, false));
 		//Player p2 = new GPortfolioGreedyLogic(bwapi, 2, 2, 30, 6);
-		
+		//p2.setID(1);
 		//oneTypeTest(p1, p2, UnitTypes.Zerg_Zergling, 10);
 		
 		//TODO: Write to file
@@ -96,8 +96,11 @@ public class Test implements BWAPIEventListener  {
 				// Runs
 				for(int r = 0; r < runs; r++){
 					int limit = (int)(min + (float)(max-min)*(float)((float)s/(float)steps));
+					//Constants.callOfDistanceFunction1=0;
+					//Constants.callOfDistanceFunction2=0;
+					//Constants.callOfDistanceFunction3=0;
 					double time = runSimulator(p1, p2, i, limit);
-					
+					//System.out.println(Constants.callOfDistanceFunction1+" / "+Constants.callOfDistanceFunction2+" / "+Constants.callOfDistanceFunction3);
 					if (time == -1)
 						break;
 					

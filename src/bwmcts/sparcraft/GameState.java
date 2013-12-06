@@ -8,6 +8,7 @@ import java.util.List;
 import javabot.JNIBWAPI;
 import javabot.types.UnitCommandType;
 import javabot.types.UnitCommandType.UnitCommandTypes;
+import javabot.types.UnitType.UnitTypes;
 import javabot.types.UnitType;
 
 
@@ -171,7 +172,6 @@ public class GameState {
 
 		
 		calculateStartingHealth();
-		generateClosestUnits();
 		this._map=new Map(bwapi.getMap());
 		sortUnits();
 	}
@@ -237,38 +237,7 @@ public class GameState {
 		}
 	}
 	
-	public void generateClosestUnits(){
-		for (int i=0; i<_numUnits[0]; i++){
-			Unit myUnit=getUnit(0,i);
-
-			int minDist=Integer.MAX_VALUE;
-			int minUnitInd=0;
-		    //int minUnitID=255;
-
-			//Position currentPos = myUnit.currentPosition(_currentTime);
-
-			for (int u=0; u<_numUnits[1]; u++)
-			{
-		        //Unit enemyUnit=getUnit(enemyPlayer, u);
-		        int distSq = myUnit.currentPosition(_currentTime).getManhattanDistance(getUnit(1, u).currentPosition(_currentTime));
-
-				if ((distSq < minDist))// || ((distSq == minDist) && (enemyUnit.ID() < minUnitID)))
-				{
-					minDist = distSq;
-					minUnitInd = u;
-		           // minUnitID = enemyUnit.getId();
-				}
-		        /*else if ((distSq == minDist) && (enemyUnit.getId() < minUnitID))
-		        {
-		            minDist = distSq;
-					minUnitInd = u;
-		            minUnitID = enemyUnit.getId();
-		        }*/
-			}
-			_closestMoveIndex[0][i]=minUnitInd;
-			_closestMoveIndex[1][minUnitInd]=i;
-		}
-	}
+	
 	
 	public boolean playerDead(int player){
 		if (numUnits(player) <= 0)
@@ -278,7 +247,7 @@ public class GameState {
 
 		for (int u=0; u<_numUnits[player]; u++)
 		{
-			if (getUnit(player, u).damage() > 0)
+			if (getUnit(player, u).damage > 0)
 			{
 				return false;
 			}
@@ -311,13 +280,14 @@ public class GameState {
 		}
 
 		// at this point we know everyone must be immobile, so check for attack deadlock
+		Unit unit1, unit2;
 		for (int u1=0; u1<numUnits(Players.Player_One.ordinal()); u1++)
 		{
-			Unit unit1=getUnit(Players.Player_One.ordinal(), u1);
+			unit1=getUnit(Players.Player_One.ordinal(), u1);
 
 			for (int u2=0; u2<numUnits(Players.Player_Two.ordinal());u2++)
 			{
-				Unit unit2=getUnit(Players.Player_Two.ordinal(), u2);
+				unit2=getUnit(Players.Player_Two.ordinal(), u2);
 
 				// if anyone can attack anyone else
 				if (unit1.canAttackTarget(unit2, _currentTime) || unit2.canAttackTarget(unit1, _currentTime))
@@ -611,17 +581,17 @@ public class GameState {
 	// evaluate the state for _playerToMove
 	private int evalLTD(int player) 
 	{
-		int enemyPlayer = getEnemy(player);
+		//int enemyPlayer = getEnemy(player);
 		
-		return LTD(player) - LTD(enemyPlayer);
+		return LTD(player) - LTD(getEnemy(player));
 	}
 
 	// evaluate the state for _playerToMove
 	private int evalLTD2(int player)
 	{
-		int enemyPlayer = getEnemy(player);
+		//int enemyPlayer = getEnemy(player);
 
-		return LTD2(player) - LTD2(enemyPlayer);
+		return LTD2(player) - LTD2(getEnemy(player));
 	}
 	
 	public int LTD(int player)
@@ -632,12 +602,12 @@ public class GameState {
 		}
 
 		float sum = 0;
-
-		for (int u = 0; u<numUnits(player); ++u)
+		Unit unit;
+		for (int u = 0; u<_numUnits[player]; ++u)
 		{
-			Unit unit = getUnit(player, u);
+			 unit= getUnit(player, u);
 
-			sum += unit.currentHP() * unit.dpf();
+			sum += unit.currentHP() * unit.dpf;
 		}
 
 		return (int) (1000 * sum / _totalLTD[player]);
@@ -656,7 +626,7 @@ public class GameState {
 		{
 			Unit unit = getUnit(player, u);
 
-			sum += Math.sqrt(unit.currentHP()) * unit.dpf();
+			sum += Math.sqrt(unit.currentHP()) * unit.dpf;
 		}
 
 		int ret = (int)(1000 * sum / _totalSumSQRT[player]);
@@ -671,6 +641,7 @@ public class GameState {
 
 	    // unit hitpoint calculations, needed for LTD2 evaluation
 	public void calculateStartingHealth(){
+		Unit unit;
 		for (int p=0; p<Constants.Num_Players; p++)
 		{
 			float totalHP=0;
@@ -684,8 +655,9 @@ public class GameState {
 					continue;
 				}
 				*/
-				totalHP += getUnit(p, u).maxHP() * getUnit(p, u).dpf();
-				totalSQRT += Math.sqrt(getUnit(p,u).maxHP()) * getUnit(p, u).dpf();;
+				unit=getUnit(p, u);
+				totalHP += unit.maxHP() * unit.dpf;
+				totalSQRT += Math.sqrt(unit.maxHP()) * unit.dpf;
 			}
 
 			_totalLTD[p] = totalHP;
@@ -708,17 +680,17 @@ public class GameState {
 
 	    // make sure this player can move right now
 	    //int canMove=whoCanMove().ordinal();
-	    if (whoCanMove().ordinal() == enemyPlayer)
+	    /*if (whoCanMove().ordinal() == enemyPlayer)
 	    {
 	    	System.out.println("GameState Error - Called generateMoves() for a player that cannot currently move");
 	        return;//throw new Exception("GameState Error - Called generateMoves() for a player that cannot currently move");
-	    }
+	    }*/
 
 		// we are interested in all simultaneous moves
 		// so return all units which can move at the same time as the first
 		int firstUnitMoveTime = getUnit(playerIndex, 0).firstTimeFree();
 		Unit unit;	
-		
+		Unit enemyUnit;
 		int moveDistance=0;
 		double timeUntilAttack=0;
 		for (int unitIndex=0; unitIndex < _numUnits[playerIndex]; unitIndex++)
@@ -744,18 +716,15 @@ public class GameState {
 			// generate attack moves
 			if (unit.canAttackNow())
 			{
-				Unit enemyUnit;
+				
 				for (int u=0; u<_numUnits[enemyPlayer]; u++)
 				{
 					enemyUnit=getUnit(enemyPlayer, u);
-					if (enemyUnit!=null){
-						if (unit.canAttackTarget(enemyUnit, _currentTime) && enemyUnit.isAlive())
-						{
-							actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.ATTACK, u, enemyUnit.pos()));
-		                    //moves.add(UnitAction(unitIndex, playerIndex, UnitActionTypes::ATTACK, unit.ID()));
-						}
-					} else {
-						break;
+
+					if (unit.canAttackTarget(enemyUnit, _currentTime))
+					{
+						actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.ATTACK, u, enemyUnit.pos()));
+	                    //moves.add(UnitAction(unitIndex, playerIndex, UnitActionTypes::ATTACK, unit.ID()));
 					}
 				}
 			}
@@ -782,12 +751,9 @@ public class GameState {
 				}
 			}
 			// generate the wait move if it can't attack yet
-			else
+			else if (unit._unitType.getID() != UnitTypes.Terran_Medic.ordinal())
 			{
-				if (!unit.canHeal())
-				{
-					actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.RELOAD, 0,unit.pos()));
-				}
+				actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.RELOAD, 0,unit.pos()));
 			}
 			
 			// generate movement moves
@@ -796,7 +762,7 @@ public class GameState {
 	            // In order to not move when we could be shooting, we want to move for the minimum of:
 	            // 1) default move distance move time
 	            // 2) time until unit can attack, or if it can attack, the next cooldown
-	            timeUntilAttack         = unit.nextAttackActionTime() - getTime();
+	            timeUntilAttack         = unit.nextAttackActionTime() - _currentTime;
 	           // timeUntilAttack                 = ;
 
 	            // the default move duration
@@ -806,8 +772,8 @@ public class GameState {
 	            //double chosenTime  = Math.min(timeUntilAttack, defaultMoveDuration);
 
 	            // the chosen movement distance
-	             moveDistance      = (int) (Math.min(timeUntilAttack == 0 ? unit.attackCooldown() : timeUntilAttack, (double)Constants.Move_Distance / unit.speed()) * unit.speed());
-
+	            // moveDistance      = (int) (Math.min(timeUntilAttack == 0 ? unit.attackCoolDown : timeUntilAttack, (double)Constants.Move_Distance / unit.speed()) * unit.speed());
+	            moveDistance      = (int) (Math.min(timeUntilAttack == 0 ? unit.attackCoolDown : timeUntilAttack, unit.moveCoolDown) * unit.speed());
 	            // DEBUG: If chosen move distance is ever 0, something is wrong
 	            if (moveDistance == 0)
 	            {
@@ -828,7 +794,7 @@ public class GameState {
 
 	                // the final destination position of the unit
 	                Position dest = new Position(unit.pos().x+moveDistance*Constants.Move_DirX[d],unit.pos().y+ moveDistance*Constants.Move_DirY[d]);
-	               
+	                
 	                // if that poisition on the map is walkable
 	                if (isWalkable(dest) || (unit.type().isFlyer() && isFlyable(dest)))
 					{
@@ -857,10 +823,65 @@ public class GameState {
 	        	return;
 	        }
 	    }
-		    
+		UnitAction move;
+		Unit ourUnit,enemyUnit;
 	    for (int m=0; m<moves.size(); m++)
 	    {
-	        performUnitAction(moves.get(m));
+	    	//performUnitAction(moves.get(m));
+	    	move=moves.get(m);
+	    	ourUnit		= getUnit(move._player, move._unit);
+	    	//int player		= ourUnit.player();
+	    	
+
+	    	if (move._moveType == UnitActionTypes.ATTACK)
+	    	{
+	    		//int enemyPlayer  =;
+	    		enemyUnit=getUnit( getEnemy(move._player),move._moveIndex);
+	            //Unit & enemyUnit(getUnitByID(enemyPlayer ,move._moveIndex));
+	    			
+	    		// attack the unit
+	    		ourUnit.attack(move, _currentTime);
+	    			
+	    		// enemy unit takes damage if it is alive
+	    		if (enemyUnit.isAlive())
+	    		{				
+	    			enemyUnit.takeAttack(ourUnit);
+
+	    			// check to see if enemy unit died
+	    			if (!enemyUnit.isAlive())
+	    			{
+	    				// if it died, remove it
+	    				_numUnits[enemyUnit.player()]--;
+	    			}
+	    		}			
+	    	}
+	    	else if (move._moveType == UnitActionTypes.MOVE)
+	    	{
+	    		//_numMovements[move._player]++;
+
+	    		ourUnit.move(move, _currentTime);
+	    	}
+	    	else if (move._moveType == UnitActionTypes.RELOAD)
+	    	{
+	    		ourUnit.waitUntilAttack(move, _currentTime);
+	    	}
+	    	else if (move._moveType == UnitActionTypes.HEAL)
+	    	{
+	    		Unit ourOtherUnit=getUnit(move._player,move._moveIndex);
+	    			
+	    		// attack the unit
+	    		ourUnit.heal(move, ourOtherUnit, _currentTime);
+	    			
+	    		if (ourOtherUnit.isAlive())
+	    		{
+	    			ourOtherUnit.takeHeal(ourUnit);
+	    		}
+	    	}
+	    	else if (move._moveType == UnitActionTypes.PASS)
+	    	{
+	    		ourUnit.pass(move, _currentTime);
+	    	}
+	        
 	    }
 	}
 	/*public int getNumMovements(int player){

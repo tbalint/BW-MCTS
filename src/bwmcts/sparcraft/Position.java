@@ -115,4 +115,7 @@ public class Position {
 		return "("+x+" : "+y+")";
 	}
 	
+	public Position clone(){
+		return new Position(x,y);
+	}
 }
