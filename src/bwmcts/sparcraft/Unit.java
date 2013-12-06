@@ -506,6 +506,11 @@ public class Unit implements Comparable<Unit> {
 	    u._prevCurrentPosTime=this._prevCurrentPosTime;
 	    if (this._prevCurrentPos!=null)
 	    	u._prevCurrentPos=new Position(this._prevCurrentPos.x,this._prevCurrentPos.y);
+	    u.moveCoolDown=this.moveCoolDown;
+	    u.attackCoolDown=this.attackCoolDown;
+	    u.damage=this.damage;
+	    u.dpf=this.dpf;
+
 		return u;
 	}
 	
