@@ -127,22 +127,20 @@ public class PortfolioGreedyLogic extends Player implements ICombatLogic {
 		
 		GameState clone = state.clone();
 		moveVec.clear();
-		for (UnitAction action: search(ID(),moves,clone)){
-			moveVec.add(action);
-		}
-
+		//long s=System.currentTimeMillis();
+		moveVec.addAll(search(ID(),moves,clone));
+		//System.out.println((System.currentTimeMillis()-s)+" ms spent on Portfolio");
 	}
 	
 	
-	Timer time=new Timer();
+	long startTime=0;
 	int _totalEvals=0;
 	UnitStateTypes _enemyScript=UnitStateTypes.ATTACK;
 	UnitStateTypes[] _playerScriptPortfolio=new UnitStateTypes[]{UnitStateTypes.ATTACK, UnitStateTypes.KITE};
 	
 	private List<UnitAction> search(int player,HashMap<Integer,List<UnitAction>> moves, GameState state)
 	{
-		time=new Timer();
-		time.start();
+		startTime=System.currentTimeMillis();
 	    int enemyPlayer=state.getEnemy(player);
 	
 	    // calculate the seed scripts for each player
@@ -159,7 +157,14 @@ public class PortfolioGreedyLogic extends Player implements ICombatLogic {
 	    //printf("\nFirst Part %lf ms\n", ms);
 	
 	    // do the initial root portfolio search for our player
-	    doPortfolioSearch(player, state, originalScriptDataA,originalScriptDataB);
+	    long t=System.currentTimeMillis()- startTime;
+	    //System.out.println(t);
+	    if (!(_timeLimit > 0 && t > _timeLimit))
+        {
+
+	    	doPortfolioSearch(player, state, originalScriptDataA,originalScriptDataB);
+        
+	    
 	
 	    // iterate as many times as required
 	    for (int i=0; i<_responses; ++i)
@@ -168,15 +173,16 @@ public class PortfolioGreedyLogic extends Player implements ICombatLogic {
 	        //doPortfolioSearch(enemyPlayer, state.clone(), originalScriptDataB,originalScriptDataA);
 	
 	        // then do portfolio search again for us to improve vs. enemy's update
-	        doPortfolioSearch(player, state.clone(), originalScriptDataA,originalScriptDataB);
+	        doPortfolioSearch(player, state, originalScriptDataA,originalScriptDataB);
 	    }
-	
+        }
 	    // convert the script vector into a move vector and return it
 	   
 	
 	    _totalEvals = 0;
 	    Player_ClusteredUnitStateToUnitAction playerA =new Player_ClusteredUnitStateToUnitAction(player);
 	    playerA.setScripts(originalScriptDataA);
+	    playerA.setID(player);
 	    List<UnitAction> list=new ArrayList<UnitAction>();
 	    playerA.getMoves(state, moves, list);
 	    return list;
@@ -196,7 +202,7 @@ public class PortfolioGreedyLogic extends Player implements ICombatLogic {
 	        // for each unit that can move
 	        for (int unitIndex=0; unitIndex<state.numUnits(player); ++unitIndex)
 	        {
-	            if (_timeLimit > 0 && time.getElapsedTimeInMilliSec() > _timeLimit)
+	            if (_timeLimit > 0 && System.currentTimeMillis()- startTime > _timeLimit)
 	            {
 	                break;
 	            }
@@ -206,6 +212,10 @@ public class PortfolioGreedyLogic extends Player implements ICombatLogic {
 	            // iterate over each script move that it can execute
 	            for (int sIndex=0; sIndex<_playerScriptPortfolio.length; ++sIndex)
 	            {
+	            	if (_timeLimit > 0 && System.currentTimeMillis()- startTime > _timeLimit)
+		            {
+		                break;
+		            }
 	                // set the current script for this unit
 	                currentScriptDataA.put(unit.getId(),_playerScriptPortfolio[sIndex]);
 	
@@ -230,32 +240,13 @@ public class PortfolioGreedyLogic extends Player implements ICombatLogic {
 	{
 		UnitStateTypes bestScript=null;
 	    StateEvalScore bestScriptScore=new StateEvalScore(0, 0);
-	    int enemyPlayer=state.getEnemy(player);
-	    
+
 	    // try each script in the portfolio for each unit as an initial seed
 	    for (int sIndex=0; sIndex<_playerScriptPortfolio.length; ++sIndex)
 	    {
-	    	HashMap<Integer,UnitStateTypes> currentScriptDataA=new HashMap<Integer,UnitStateTypes>();
-	    	HashMap<Integer,UnitStateTypes> currentScriptDataB=new HashMap<Integer,UnitStateTypes>();
-	        // set the player's chosen script initially to the seed choice
-	        for (int unitIndex=0; unitIndex < state.numUnits(player); ++unitIndex)
-	        {
-	        	Unit u=state.getUnit(player, unitIndex);
-	        	if (u==null){break;}
-	        	
-	            currentScriptDataA.put(u.getId(),_playerScriptPortfolio[sIndex]);
-	        }
-	
-	        // set the enemy units script choice to NOKDPS
-	        for (int unitIndex=0; unitIndex < state.numUnits(enemyPlayer); ++unitIndex)
-	        {
-	        	Unit u=state.getUnit(enemyPlayer, unitIndex);
-	        	if (u==null){break;}
-	            currentScriptDataB.put(u.getId(),_enemyScript);
-	        }
-	
+	    	
 	        // evaluate the current state given a playout with these unit scripts
-	        StateEvalScore score = eval(player, state.clone(), currentScriptDataA,currentScriptDataB);
+	        StateEvalScore score = eval(player, state.clone(), _playerScriptPortfolio[sIndex],_enemyScript);
 	
 	        if (sIndex == 0 || score._val > bestScriptScore._val)
 	        {
@@ -265,6 +256,33 @@ public class PortfolioGreedyLogic extends Player implements ICombatLogic {
 	    }
 	
 	    return bestScript;
+	}
+	
+	private StateEvalScore eval(int player, GameState state, UnitStateTypes playerScript, UnitStateTypes enemyScript){
+		Player playerA;
+		Player playerB;
+		int enemyPlayer=GameState.getEnemy(player);
+		if (playerScript == UnitStateTypes.ATTACK){
+			playerA=new Player_NoOverKillAttackValue(player);
+		} else {
+			playerA=new Player_Kite(player);
+		}
+		if (enemyScript==UnitStateTypes.ATTACK){
+			playerB=new Player_NoOverKillAttackValue(enemyPlayer);
+		} else {
+			playerB=new Player_Kite(enemyPlayer);
+		}
+		
+		
+		Game g=new Game(state, playerA, playerB, 100, false);
+	    if (player==1){
+	    	 g=new Game(state, playerB,playerA, 100, false);
+	    }
+
+	    g.play();
+	    _totalEvals++;
+	    
+		return g.getState().eval(player, EvaluationMethods.LTD2);
 	}
 	
 	private StateEvalScore eval(int player, GameState state, HashMap<Integer,UnitStateTypes> playerScriptsChosen, HashMap<Integer,UnitStateTypes> enemyScriptsChosen)

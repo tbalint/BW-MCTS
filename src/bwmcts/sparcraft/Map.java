@@ -106,13 +106,18 @@ public class Map {
 	public boolean isWalkable(Position pixelPosition)
 	{
 		//Position wp=getWalkPosition(pixelPosition);
-
+		if (pixelPosition.x<0 || pixelPosition.y<0){
+			return false;
+		}
 		return	isWalkable(pixelPosition.x/8, pixelPosition.y/8);
 	}
     
     public boolean isFlyable(Position pixelPosition)
 	{
 		//Position wp=getWalkPosition(pixelPosition);
+    	if (pixelPosition.x<0 || pixelPosition.y<0){
+			return false;
+		}
     	return	isWalkable(pixelPosition.x/8, pixelPosition.y/8);
 	}
 

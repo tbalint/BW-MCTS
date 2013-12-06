@@ -2,8 +2,8 @@ package bwmcts.sparcraft;
 
 public class Timer {
 
-	private float startTimeInMicroSec;
-	private float endTimeInMicroSec; 
+	private long startTimeInMicroSec;
+	private long endTimeInMicroSec; 
 	private int    stopped;                             // stop flag 
 
 	
@@ -24,15 +24,15 @@ public class Timer {
 		endTimeInMicroSec=System.currentTimeMillis();
 	}
 	
-	public double getElapsedTimeInMicroSec(){
+	public long getElapsedTimeInMicroSec(){
 		return System.currentTimeMillis()-startTimeInMicroSec;}
-	public double getElapsedTimeInMilliSec(){
+	public long getElapsedTimeInMilliSec(){
 		return this.getElapsedTimeInMicroSec();
 	}
-	public	double getElapsedTimeInSec(){
-		return this.getElapsedTimeInMicroSec() * 0.001;
+	public	long getElapsedTimeInSec(){
+		return (long)(this.getElapsedTimeInMicroSec() * 0.001);
 	}
-	public	double getElapsedTime(){
+	public	long getElapsedTime(){
 		return this.getElapsedTimeInSec();
 }
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.jws.soap.SOAPBinding.Style;
 import javax.swing.JFrame;
 
 
@@ -59,9 +58,10 @@ public class Game {
 	        f.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
 	        f.getContentPane().add(ui);    
 	        f.setVisible(true);
-	    	//state.print();
+	    	state.print();
 	    }
 	}
+
 	
 // play the game until there is a winner
 	public void play(){
@@ -72,11 +72,12 @@ public class Game {
 		Player enemy;
 		HashMap<Integer,List<UnitAction>> moves_A=new HashMap<Integer,List<UnitAction>>();
         HashMap<Integer,List<UnitAction>> moves_B=new HashMap<Integer,List<UnitAction>>();
+        int playerToMove=-1;
 	    // play until there is no winner
-//		long generatemoves=0;
-//		long getmoves=0;
-//		long makemoves=0;
-//		//((Player_NoOverKillAttackValue)_players[0]).timeOnHpCopying=0;
+		//long generatemoves=0;
+		//long getmoves=0;
+		//long makemoves=0;
+		//((Player_NoOverKillAttackValue)_players[0]).timeOnHpCopying=0;
 		//((Player_NoOverKillAttackValue)_players[1]).timeOnHpCopying=0;
 	    while (!this.gameOver()){
 	    	
@@ -89,7 +90,7 @@ public class Game {
 	        scriptMoves_B.clear();
 	
 	        // the player that will move next
-	        int playerToMove=getPlayerToMove();
+	        playerToMove=getPlayerToMove();
 	        toMove = _players[playerToMove];
 	        enemy = _players[GameState.getEnemy(playerToMove)];
 
@@ -124,11 +125,11 @@ public class Game {
 			//makemoves+=System.nanoTime()-g;
 	        if (display)
 	        {
-		        //state.print();
+		        state.print();
 		        ui.setGameState(state);
 		        ui.repaint();
 	        	try {
-					Thread.sleep(0);
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -139,11 +140,11 @@ public class Game {
 	        rounds++;
 	        
 	    }
-//	    System.out.println("time spent on sorting "+(double)state.timeSpentOnSorting/1000000);
-//	    System.out.println("time spent on generatemoves "+(double)generatemoves/1000000);
-//	    System.out.println("time spent on getmoves "+(double)getmoves/1000000);
-//	    System.out.println("time spent on makemoves "+(double)makemoves/1000000);
-//	    System.out.println("time spent on timeonHP "+(double)(((Player_NoOverKillAttackValue)_players[0]).timeOnHpCopying+((Player_NoOverKillAttackValue)_players[1]).timeOnHpCopying)/1000000);
+	    //System.out.println("time spent on sorting "+(double)state.timeSpentOnSorting/1000000);
+	    //System.out.println("time spent on generatemoves "+(double)generatemoves/1000000);
+	    //System.out.println("time spent on getmoves "+(double)getmoves/1000000);
+	    //System.out.println("time spent on makemoves "+(double)makemoves/1000000);
+	    //System.out.println("time spent on timeonHP "+(double)(((Player_NoOverKillAttackValue)_players[0]).timeOnHpCopying+((Player_NoOverKillAttackValue)_players[1]).timeOnHpCopying)/1000000);
 	}
 
 
@@ -166,12 +167,10 @@ public class Game {
 // determine the player to move
 	public int getPlayerToMove()
 	{
-		Players whoCanMove=state.whoCanMove();
+	   Players whoCanMove=state.whoCanMove();
 	
-		Players oneOf = state._currentTime % 2 == 0 ? Players.Player_One : Players.Player_Two;
-		
-	   	//return (whoCanMove == Players::Player_Both) ? Players::Player_One : whoCanMove;
-		return whoCanMove==Players.Player_Both ? oneOf.ordinal(): whoCanMove.ordinal();
+	   //return (whoCanMove == Players::Player_Both) ? Players::Player_One : whoCanMove;
+		return whoCanMove==Players.Player_Both ? Players.Player_One.ordinal(): whoCanMove.ordinal();
 	}
 
 

@@ -16,7 +16,7 @@ public class Unit implements Comparable<Unit> {
 	int              _unitID;				// unique unit ID to the state it's contained in
     int              _playerID;				// the player who controls the unit
 	
-	int          _currentHP;				// current HP of the unit
+	public int          _currentHP;				// current HP of the unit
 	int          _currentEnergy;
 
 	int            _timeCanMove;			// time the unit can next move
@@ -28,6 +28,10 @@ public class Unit implements Comparable<Unit> {
 
     int    _prevCurrentPosTime;
      Position    _prevCurrentPos;
+     int moveCoolDown;
+     int attackCoolDown;
+     public int damage;
+     public float dpf;
 
 
 	public Unit(UnitType unitType, int playerID, Position pos){
@@ -42,9 +46,13 @@ public class Unit implements Comparable<Unit> {
 	    _previousActionTime   =0;
 	    _prevCurrentPosTime   =0;
 	    _position=pos;
-	    _prevCurrentPos=pos;
-	    _previousPosition=pos;
-		
+	    _prevCurrentPos=pos.clone();
+	    _previousPosition=pos.clone();
+	    moveCoolDown=moveCooldown();
+	    attackCoolDown=attackCooldown();
+	    damage=damage();
+	    dpf=dpf();
+	    _range=_range*_range;
 	}
 	//Unit(BWAPI::Unit * unit, BWAPI::Game * game, const IDType & playerID, const TimeType & gameTime);
 	public Unit(UnitTypes unitType, int playerID, Position pos){
@@ -65,8 +73,13 @@ public class Unit implements Comparable<Unit> {
 	    _timeCanAttack        =ta;
 	    _previousActionTime   =0;
 	    _prevCurrentPosTime   =0;
-	    _prevCurrentPos=pos;
-	    _previousPosition=pos;
+	    _prevCurrentPos=pos.clone();
+	    _previousPosition=pos.clone();
+	    moveCoolDown=moveCooldown();
+	    attackCoolDown=attackCooldown();
+	    damage=damage();
+	    dpf=dpf();
+	    _range=_range*_range;
     }
 
 	
@@ -88,24 +101,26 @@ public class Unit implements Comparable<Unit> {
 		 _timeCanMove = newTime;
 	}
 	public void attack(UnitAction move, int gameTime){
-		if (_previousAction.type() == UnitActionTypes.ATTACK || _previousAction.type() == UnitActionTypes.RELOAD)
+		
+		if (_previousAction._moveType == UnitActionTypes.ATTACK || _previousAction._moveType == UnitActionTypes.RELOAD)
 	    {
+			
 	        // add the repeat attack animation duration
 	        // can't attack again until attack cooldown is up
-	        updateMoveActionTime      (gameTime + attackRepeatFrameTime());
-	        updateAttackActionTime    (gameTime + attackCooldown());
+			_timeCanMove=gameTime + attackRepeatFrameTime();
+			_timeCanAttack=gameTime + attackCoolDown;
 	    }
 	    // if there previous action was a MOVE action, add the move penalty
-	    else if (_previousAction.type() == UnitActionTypes.MOVE)
+	    else if (_previousAction._moveType == UnitActionTypes.MOVE)
 	    {
-	        updateMoveActionTime      (gameTime + attackInitFrameTime() + 2);
-	        updateAttackActionTime    (gameTime + attackCooldown() + Constants.Move_Penalty);
+	    	_timeCanMove=gameTime + attackInitFrameTime() + 2;
+	    	_timeCanAttack=gameTime + attackCoolDown + Constants.Move_Penalty;
 	    }
 	    else
 	    {
 	        // add the initial attack animation duration
-	        updateMoveActionTime      (gameTime + attackInitFrameTime() + 2);
-	        updateAttackActionTime    (gameTime + attackCooldown());
+	    	_timeCanMove=gameTime + attackInitFrameTime() + 2;
+	    	_timeCanAttack=gameTime + attackCoolDown;
 	    }
 	    setPreviousAction(move, gameTime);
 	}
@@ -135,10 +150,11 @@ public class Unit implements Comparable<Unit> {
 		    //int moveDuration = (int)((double)move.pos().getDistance(pos()) / speed());
 
 		    // update the next time we can move, make sure a move always takes 1 time step
-		    updateMoveActionTime(gameTime + Math.max( (int)((double)move.pos().getDistance(pos()) / speed()), 1));
+
+		 _timeCanMove=gameTime + Math.max( (int)((double)move.pos().getDistance(pos()) / _unitType.getTopSpeed()), 1);
 
 		    // assume we need 4 frames to turn around after moving
-		    updateAttackActionTime(Math.max(nextAttackActionTime(), nextMoveActionTime()));
+		 _timeCanAttack=Math.max(_timeCanAttack, _timeCanMove);
 
 		    // update the position
 		    //_position.addPosition(dist * dir.x(), dist * dir.y());
@@ -147,16 +163,16 @@ public class Unit implements Comparable<Unit> {
 		    setPreviousAction(move, gameTime);
 	}
 	public void waitUntilAttack(UnitAction move, int gameTime){
-		updateMoveActionTime(_timeCanAttack);
+		_timeCanMove=_timeCanAttack;
 	    setPreviousAction(move, gameTime);
 	}
 	public void pass(UnitAction move, int gameTime){
-		updateMoveActionTime(gameTime + Constants.Pass_Move_Duration);
-	    updateAttackActionTime(gameTime + Constants.Pass_Move_Duration);
+		_timeCanMove=gameTime + Constants.Pass_Move_Duration;
+		_timeCanAttack=gameTime + Constants.Pass_Move_Duration;
 	    setPreviousAction(move, gameTime);
 	}
 	public void takeAttack(Unit attacker){
-		//PlayerWeapon weapon=attacker.getWeapon(this);
+		PlayerWeapon weapon=attacker.getWeapon(this);
 	    //int      damage=attacker.getWeapon(this).GetDamageBase();
 
 	    //damage =Math.max((int)((attacker.getWeapon(this).GetDamageBase()-getArmor()) * attacker.getWeapon(this).GetDamageMultiplier(getSize())), 2);
@@ -164,7 +180,7 @@ public class Unit implements Comparable<Unit> {
 	    //std::cout << (int)attacker.player() << " " << damage << "\n";
 
 	   // updateCurrentHP(_currentHP - Math.max((int)((attacker.getWeapon(this).GetDamageBase()-getArmor()) * attacker.getWeapon(this).GetDamageMultiplier(getSize())), 2));
-		_currentHP -= Math.max((int)((attacker.getWeapon(this).GetDamageBase()-getArmor()) * attacker.getWeapon(this).GetDamageMultiplier(getSize())), 2);
+		_currentHP -= Math.max((int)((weapon.GetDamageBase()-getArmor()) * weapon.GetDamageMultiplier(getSize())), 2);
 	}
 	public void takeHeal(Unit healer){
 		updateCurrentHP(_currentHP + healer.healAmount());
@@ -181,10 +197,11 @@ public class Unit implements Comparable<Unit> {
 		return _currentHP > 0;
 	}
 	public boolean canAttackNow()    {
-		return !canHeal() && _timeCanAttack <= _timeCanMove;
+		return _unitType.getID() != UnitTypes.Terran_Medic.ordinal() && _timeCanAttack <= _timeCanMove;
 	}
 	public boolean canMoveNow()     {
-		return isMobile() && _timeCanMove <= _timeCanAttack; 
+		//return _unitType.isCanMove() && _timeCanMove <= _timeCanAttack;
+		return _timeCanMove <= _timeCanAttack;
 	}
 	public boolean canHealNow()  {
 		return canHeal() && (currentEnergy() >= healCost()) && (_timeCanAttack <= _timeCanMove); 
@@ -200,8 +217,9 @@ public class Unit implements Comparable<Unit> {
 
 		//WeaponType weapon =WeaponProperties.props[ unit.type().isFlyer() ? type().getAirWeaponID() : type().getGroundWeaponID()].type;
 
-	    if (WeaponProperties.props[ unit.type().isFlyer() ? type().getAirWeaponID() : type().getGroundWeaponID()].type.getDamageAmount() == 0)
-	    {
+	    if (WeaponProperties.props[ unit._unitType.isFlyer() ? _unitType.getAirWeaponID() : _unitType.getGroundWeaponID()].type.getDamageAmount() == 0)
+	    //if (!(unit._unitType.isFlyer() ? _unitType.isCanAttackAir() : _unitType.isCanAttackGround()))
+		{
 	        return false;
 	    }
 
@@ -209,7 +227,7 @@ public class Unit implements Comparable<Unit> {
 	    //int r = range();
 
 	    // return whether the target unit is in range
-	    return (range()* range()) >= getDistanceSqToPosition(unit.currentPosition(gameTime), gameTime);
+	    return _range >= getDistanceSqToPosition(unit.currentPosition(gameTime), gameTime);
     }
 	public boolean canHealTarget(Unit unit, int gameTime) { 
 		if (!canHeal() || !unit.isOrganic() || !(unit.player() == player()) || (unit.currentHP() == unit.maxHP()))
@@ -266,21 +284,25 @@ public class Unit implements Comparable<Unit> {
 		return currentPosition(gameTime).getDistanceSq(x,y);
 	}
     public Position currentPosition(int gameTime)  {
-    	if (_previousAction.type() == UnitActionTypes.MOVE)
+    	if (_previousAction._moveType == UnitActionTypes.MOVE)
         {
             // if gameTime is equal to previous move time then we haven't moved yet
-            if (gameTime == _previousActionTime)
+    		if (gameTime >= _timeCanMove)
+	        {
+	         	
+	             return _position;
+	        }
+    		else if (gameTime == _previousActionTime)
             {
+
                 return _previousPosition;
             }
             // else if game time is >= time we can move, then we have arrived at the destination
-            else if (gameTime >= _timeCanMove)
-            {
-                return _position;
-            }
+           
             // otherwise we are still moving, so calculate the current position
             else if (gameTime == _prevCurrentPosTime)
             {
+            	
                 return _prevCurrentPos;
             }
             else
@@ -290,9 +312,8 @@ public class Unit implements Comparable<Unit> {
                 _prevCurrentPosTime = gameTime;
 
                 // calculate the new current position
-                
-                
-                _prevCurrentPos=new Position(_position.x-_previousPosition.x,_position.y-_previousPosition.y);
+        		
+                _prevCurrentPos.moveTo(_position.x-_previousPosition.x,_position.y-_previousPosition.y);
                 //_prevCurrentPos.subtractPosition(_previousPosition);
                 //_prevCurrentPos.moveTo(_position.x-_previousPosition.x,_position.y-_previousPosition.y);
                 _prevCurrentPos.scalePosition((float)(gameTime - _previousActionTime) / (_timeCanMove - _previousActionTime));
@@ -362,7 +383,7 @@ public class Unit implements Comparable<Unit> {
 	}
 	
 	public float dpf()  {
-		return Math.max(Constants.Min_Unit_DPF, (float)damage() / (attackCooldown() + 1)); 
+		return Math.max(Constants.Min_Unit_DPF, (float)damage / (attackCoolDown + 1)); 
 	}
 	public void updateCurrentHP(int newHP){
 		 _currentHP =Math.min(maxHP(), newHP); 
@@ -465,7 +486,7 @@ public class Unit implements Comparable<Unit> {
 	    u._range=this._range;
 		
 	    if (this._position!=null)
-	    	u._position=new Position(this._position.getX(),this._position.getY());				// current location in a possibly infinite space
+	    	u._position=new Position(this._position.x,this._position.y);				// current location in a possibly infinite space
 		
 		u._unitID=this._unitID;				// unique unit ID to the state it's contained in
 	    u._playerID=this._playerID;				// the player who controls the unit
@@ -480,11 +501,11 @@ public class Unit implements Comparable<Unit> {
 			u._previousAction=this._previousAction.clone();;		// the previous move that the unit performed
 		u._previousActionTime=this._previousActionTime;	// the time the previous move was performed
 		if (this._previousPosition!=null)
-			u._previousPosition=new Position(this._previousPosition.getX(),this._previousPosition.getY());
+			u._previousPosition=new Position(this._previousPosition.x,this._previousPosition.y);
 
 	    u._prevCurrentPosTime=this._prevCurrentPosTime;
 	    if (this._prevCurrentPos!=null)
-	    	u._prevCurrentPos=new Position(this._prevCurrentPos.getX(),this._prevCurrentPos.getY());
+	    	u._prevCurrentPos=new Position(this._prevCurrentPos.x,this._prevCurrentPos.y);
 		return u;
 	}
 	
@@ -509,9 +530,8 @@ public class Unit implements Comparable<Unit> {
 	        else if (lastCommand == UnitCommandTypes.Move)
 	        {
         		
-                //moveCooldown = currentFrame + Math.max(0, moveCooldown() - framesSinceCommand);
-	        	moveCooldown = currentFrame;
-		        
+                moveCooldown = currentFrame + Math.max(0, moveCoolDown - framesSinceCommand);
+
 	        }
 
 	        if (moveCooldown - currentFrame < 4 || unit.isMoving())

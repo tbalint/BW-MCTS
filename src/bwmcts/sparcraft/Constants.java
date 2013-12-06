@@ -52,4 +52,8 @@ public class Constants {
 		public static int[] Move_DirX=new int[]{-1,1,0,0};
 		public static int[] Move_DirY=new int[]{0,0,1,-1};
 		
+		public static int callOfDistanceFunction1=0;
+		public static int callOfDistanceFunction2=0;
+		public static int callOfDistanceFunction3=0;
+		
 }
