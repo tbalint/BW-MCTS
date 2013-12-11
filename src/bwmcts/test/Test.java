@@ -62,25 +62,32 @@ public class Test implements BWAPIEventListener  {
 		//Player p1 = new Player_Kite(0);
 		
 		//Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 500, false), 200);
-		GUCTCD guctcdA = new GUCTCD(1.6, 20, 1, 0, 100, true);
+		GUCTCD guctcdA = new GUCTCD(1.6, 20, 1, 0, 100, false);
 		guctcdA.setHpMulitplier(1);
 		guctcdA.setClusters(6);
-		GUCTCD guctcdB = new GUCTCD(1.6, 20, 0, 1, 200, true);
+		GUCTCD guctcdB = new GUCTCD(1.6, 20, 0, 1, 200, false);
 		guctcdB.setHpMulitplier(1);
 		guctcdB.setClusters(6);
+		//Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 100, false),40);
+		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 100, false),40);
 		//Player p1 = new UctcdLogic(bwapi, guctcdA, 40);
+		Player p1 = new GPortfolioGreedyLogic(bwapi, 1, 0, 100, 40, 6);
+		//Player p1 = new PortfolioGreedyLogic(bwapi, 1, 0, 100, 40);
+		
 		//Player p1 = new Player_Random(0);		
 		//Player p1 = new Player_KiteDPS(0);		
 		//Player p1 = new Player_NoOverKillAttackValue(0);
 		//Player p2 = new Player_KiteDPS(1);		
-		Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 100, false),40);
+		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 100, false),40);
 		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 500, false),40);
+		//Player p1 = new GPortfolioGreedyLogic(bwapi, 2, 2, 40, 1);
+		//Player p1 = new PortfolioGreedyLogic(bwapi, 1, 0, 100, 400000);
 		
 		//Player p2 = new Player_Random(1);
 		Player p2 = new Player_NoOverKillAttackValue(1);
 		
-		//Player p2 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 0, 1, 500, false), 40);
-		//Player p2 = new UctcdLogic(bwapi, guctcdB, 400);		
+		//Player p2 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 0, 1, 100, false), 40);
+		//Player p2 = new UctcdLogic(bwapi, guctcdB, 40);		
 		//Player p2 = new GPortfolioGreedyLogic(bwapi, 2, 2, 30, 6);
 		
 		//oneTypeTest(p1, p2, UnitTypes.Terran_Marine, 25);
@@ -90,9 +97,11 @@ public class Test implements BWAPIEventListener  {
 
 		//TODO: Write to file
 		
-		realisticTest(p1, p2, 25);
+		realisticTest(p1, p2, 50);
 		
 		//upgmaTest(p1, p2, 100, 25);
+		
+		//upgmaScenario(p1, p2);
 		
 		//simulatorTest(p1, p2, 1, 250, 10, 100);
 		
@@ -234,6 +243,184 @@ public class Test implements BWAPIEventListener  {
 	    return time;
 		
 	}
+	
+	/**
+	 * UPGMA Scenario for screenshots of clusterings.
+	 * @param p1
+	 * @param p2
+	 */
+	private void upgmaScenario(Player p1, Player p2) {
+		
+		try {
+			testUPGMAScenario(p1,p2);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	void testUPGMAScenario(Player p1, Player p2) throws Exception
+	{
+		
+		GameState state = upgmaGameState();
+		
+		p1.setID(0);
+		p2.setID(1);
+	    
+	    // enter a maximum move limit for the game to go on for
+	    int moveLimit = 20000;
+
+	    // contruct the game
+	    Game g=new Game(state, p1, p2, moveLimit, graphics);
+
+	    //UPGMA upgma = new UPGMA(initialState.getAllUnit()[0], 1, 1);
+	    //upgma.getClusters(6);
+	    //g.play();
+	    /*
+	    g.ui.c = 1;
+	    g.ui.setGameState(state);
+	    g.ui.repaint();
+	    
+	    Thread.sleep(2000);
+        
+	    g.ui.c = 10;
+	    g.ui.setGameState(state);
+	    g.ui.repaint();
+	    
+	    Thread.sleep(2000);
+	    
+	    g.ui.c = 50;
+	    g.ui.setGameState(state);
+	    g.ui.repaint();
+	    
+	    Thread.sleep(2000);
+	    */
+	    g.ui.c = 100;
+	    g.ui.setGameState(state);
+	    g.ui.repaint();
+	    
+	    Thread.sleep(2000);
+	    
+	    g.ui.c = 200;
+	    g.ui.setGameState(state);
+	    g.ui.repaint();
+	    
+	    Thread.sleep(2000);
+	    
+	    g.ui.c = 500;
+	    g.ui.setGameState(state);
+	    g.ui.repaint();
+	    
+	    Thread.sleep(2000);
+	    
+	    g.ui.c = 1000;
+	    g.ui.setGameState(state);
+	    g.ui.repaint();
+	    
+	    Thread.sleep(2000);
+	    
+	    g.ui.c = 2000;
+	    g.ui.setGameState(state);
+	    g.ui.repaint();
+	    
+	    Thread.sleep(2000);
+	    
+	    g.ui.c = 5000;
+	    g.ui.setGameState(state);
+	    g.ui.repaint();
+	    
+	    Thread.sleep(2000);
+	    
+	    g.ui.c = 10000;
+	    g.ui.setGameState(state);
+	    g.ui.repaint();
+	    
+	    Thread.sleep(2000);
+	    
+	    g.ui.c = 20000;
+	    g.ui.setGameState(state);
+	    g.ui.repaint();
+	    
+	    Thread.sleep(2000);
+	    
+	    g.ui.c = 50000;
+	    g.ui.setGameState(state);
+	    g.ui.repaint();
+	    
+	    Thread.sleep(2000);
+	    
+	    g.ui.c = 100000;
+	    g.ui.setGameState(state);
+	    g.ui.repaint();
+	    
+	    Thread.sleep(2000);
+	    
+	    g.ui.c = 200000;
+	    g.ui.setGameState(state);
+	    g.ui.repaint();
+	    
+	    Thread.sleep(2000);
+	    
+	    g.ui.c = 500000;
+	    g.ui.setGameState(state);
+	    g.ui.repaint();
+	    
+	}
+	
+	private GameState upgmaGameState() {
+		
+		// GameState only has a default constructor, you must add units to it manually
+	    GameState state=new GameState();
+	    try {
+			state.setMap(new Map(25, 20));
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	    
+	    // Marines
+	    for(int i = 0; i < 8; i++){
+	    	
+		    Unit u = new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(),
+		    		new Position((int)(50+Math.random()*350),(int)(50+Math.random()*120)));
+		    u._currentHP = (int) (Math.random()*50);
+		    try {
+				state.addUnit(u);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
+	    
+	    // Firebats
+	    for(int i = 0; i < 8; i++){
+		    Unit u = new Unit(bwapi.getUnitType(UnitTypes.Terran_Firebat.ordinal()), Players.Player_One.ordinal(),
+		    		new Position((int)(50+Math.random()*350),(int)(50+Math.random()*120)));
+		    u._currentHP = (int) (Math.random()*60);
+		    try {
+				state.addUnit(u);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
+	    
+	    // Medics
+	    for(int i = 0; i < 8; i++){
+		    Unit u = new Unit(bwapi.getUnitType(UnitTypes.Terran_Medic.ordinal()), Players.Player_One.ordinal(),
+		    		new Position((int)(50+Math.random()*350),(int)(50+Math.random()*120)));
+		    u._currentHP = (int) (Math.random()*50);
+		    try {
+				state.addUnit(u);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
+	    
+	    return state;
+	}
 
 	/***********************
 	 ***  REALISTIC TEST ***
@@ -249,7 +436,7 @@ public class Test implements BWAPIEventListener  {
 				System.out.println("--- " + ((i*10)+(i*5)+(i)));
 				float result = testRealisticGames(p1, p2, i*10, i*5, i, runs);
 				//System.out.println("REALISTIC TEST RESULT: " + result);
-				System.out.println("Result=" + result);
+				//System.out.println("Result=" + result);
 				// TODO:
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -275,22 +462,23 @@ public class Test implements BWAPIEventListener  {
 		
 		System.out.println("Marines: " + marines + "\tfirebats: " + firebats + "\tTanks: " + tanks + " on each side");
 		
-		float score = 0;
 		List<Double> results = new ArrayList<Double>();
 		int wins = 0;
-		for(int i = 0; i < games; i++){
+		for(int i = 1; i <= games; i++){
 			double result = testGame(p1, p2, unitsA, unitsB);
 			results.add(result);
 			if (result>0)
 				wins++;
 			
-			System.out.println(result);
-			score += result;
+			if(i%1==0){
+				System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
+				System.out.println("Win average: " + ((double)wins)/((double)i));
+			}
 		}
 		
 		// Calc deviation and average
-		//System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
-		//System.out.println("Win average: " + ((double)wins)/((double)games));
+		System.out.println("--------------- Score average: " + average(results) + "\tDeviation: " + deviation(results));
+		System.out.println("--------------- Win average: " + ((double)wins)/((double)games));
 		
 		return (float)wins / (float)games;
 		
@@ -362,11 +550,12 @@ public class Test implements BWAPIEventListener  {
 	    Game g=new Game(initialState, p1, p2, moveLimit, graphics);
 
 	    // play the game
-	    
+	    /*
 	    for(int i = 0; i < 10000000; i++){
 	    	if(Math.random()>100)
 	    		break;
 	    }
+	    */
 	    g.play();
 
 	    // you can access the resulting game state after g has been played via getState

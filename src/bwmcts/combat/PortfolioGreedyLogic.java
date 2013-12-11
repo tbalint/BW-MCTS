@@ -31,10 +31,11 @@ public class PortfolioGreedyLogic extends Player implements ICombatLogic {
 	int _iterations;
     int _responses;
     int _timeLimit;
+    int _simulationLimit;
 	
 	
 	
-	public PortfolioGreedyLogic(JNIBWAPI bwapi, int iter, int responses, int timeLimit){
+	public PortfolioGreedyLogic(JNIBWAPI bwapi, int iter, int responses, int simulationLimit, int timeLimit){
 		
 
 		bwapi.loadTypeData();
@@ -45,6 +46,7 @@ public class PortfolioGreedyLogic extends Player implements ICombatLogic {
 		_iterations=iter;
 		_responses=responses;
 		_timeLimit=timeLimit;
+		_simulationLimit = simulationLimit;
 
 	}
 	
@@ -274,9 +276,9 @@ public class PortfolioGreedyLogic extends Player implements ICombatLogic {
 		}
 		
 		
-		Game g=new Game(state, playerA, playerB, 100, false);
+		Game g=new Game(state, playerA, playerB, _simulationLimit, false);
 	    if (player==1){
-	    	 g=new Game(state, playerB,playerA, 100, false);
+	    	 g=new Game(state, playerB,playerA, _simulationLimit, false);
 	    }
 
 	    g.play();

@@ -26,6 +26,7 @@ public class SparcraftUI extends JComponent {
 	 */
 	private static final long serialVersionUID = 1L;
 	private GameState _state;
+	public int c = 50000;
 	
 	public SparcraftUI(GameState state) {
 		_state=state;
@@ -84,20 +85,7 @@ public class SparcraftUI extends JComponent {
 			}
 			
 		} 
-		/*
-		List<Unit> myUnits = new ArrayList<Unit>();
-		for(Unit u : _state.getAllUnit()[0]){
-			if (u==null)
-				continue;
-			if (u.canAttackNow() || u.canHealNow() || u.canMoveNow())
-				myUnits.add(u);
-		}
-		Object[] myObjectArr = (Object[]) myUnits.toArray();
-		Unit[] myUnitsArr = new Unit[myObjectArr.length];
-		for(int i = 0; i < myObjectArr.length; i++)
-			myUnitsArr[i] = (Unit) myObjectArr[i];
-		
-		UPGMA clustering=new UPGMA(myUnitsArr, 1, 1);
+		UPGMA clustering=new UPGMA(_state.getAllUnit()[0], c, 1);
 	    HashMap<Integer,List<Unit>>clusters=  clustering.getClusters(6);
 	    int clusterId=0;
 	    if (clusters == null || clusters.values() == null)
@@ -105,12 +93,13 @@ public class SparcraftUI extends JComponent {
 	    for (List<Unit> list : clusters.values()){
 	    	g.setColor(getColor(clusterId++));
 	    	for (Unit a:list){
-	    		g.drawOval(a.pos().getX()-10+offSetX, a.pos().getY()-10+offSetY, 20, 20);
-	    		g.drawOval(a.pos().getX()-11+offSetX, a.pos().getY()-11+offSetY, 22, 22);
 	    		g.drawOval(a.pos().getX()-12+offSetX, a.pos().getY()-12+offSetY, 24, 24);
+	    		g.drawOval(a.pos().getX()-13+offSetX, a.pos().getY()-13+offSetY, 26, 26);
+	    		g.drawOval(a.pos().getX()-14+offSetX, a.pos().getY()-14+offSetY, 28, 28);
 	    	}
 	    }
-	    */
+		
+	    
 	}
 	
 	private void drawScaleForMap(Graphics g, int pixelWidth, int pixelHeight) {
@@ -159,17 +148,18 @@ public class SparcraftUI extends JComponent {
 			case 3:
 				return Color.PINK;
 			case 4:
-				return Color.ORANGE;
-			case 5:
 				return Color.YELLOW;
-			case 6:
+			case 5:
 				return Color.LIGHT_GRAY;
-			case 7:
+			case 6:
 				return Color.RED;
-			case 8:
+			case 7:
 				return Color.BLUE;
+			case 8:
+				return Color.ORANGE;
 			default:
 				return Color.BLACK;
+				
 		}
 	}
 }

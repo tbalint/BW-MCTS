@@ -105,7 +105,7 @@ public class GUCTCD {
 		*/
 		
 		List<UnitAction> actions = statesToActions(best.getMove(), state.clone());
-		System.out.println(state._currentTime +  "\t" + (t++));
+		//System.out.println(state._currentTime +  "\t" + (t++));
 		return actions;
 		
 	}

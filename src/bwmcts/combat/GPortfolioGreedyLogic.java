@@ -33,11 +33,10 @@ public class GPortfolioGreedyLogic extends Player implements ICombatLogic {
     int _responses;
     int _timeLimit;
 	int _numberOfClusters=0;
+	int _simulationLimit;
 	
-	
-	public GPortfolioGreedyLogic(JNIBWAPI bwapi, int iter, int responses, int timeLimit, int numberOfClusters){
+	public GPortfolioGreedyLogic(JNIBWAPI bwapi, int iter, int responses, int simulationLimit, int timeLimit, int numberOfClusters){
 		
-
 		bwapi.loadTypeData();
 		AnimationFrameData.Init();
 		PlayerProperties.Init();
@@ -47,6 +46,7 @@ public class GPortfolioGreedyLogic extends Player implements ICombatLogic {
 		_responses=responses;
 		_timeLimit=timeLimit;
 		_numberOfClusters=numberOfClusters;
+		_simulationLimit=simulationLimit;
 
 	}
 	
@@ -178,8 +178,18 @@ public class GPortfolioGreedyLogic extends Player implements ICombatLogic {
 	    }
 	
 	    // convert the script vector into a move vector and return it
-	   
+	    boolean set = false;
+	    for(UnitStateTypes t : originalScriptDataA.values()){
+	    	if(t != null)
+	    		set = true;
+	    }
 	
+	    if (!set){
+	    	 for(Integer i : originalScriptDataA.keySet()){
+	    		 originalScriptDataA.put(i, UnitStateTypes.ATTACK);
+	    	 }
+	    }
+	    	
 	    //System.out.println(_totalEvals);
 	    Player_ClusteredUnitStateToUnitAction playerA =new Player_ClusteredUnitStateToUnitAction(player);
 	    playerA.setScripts(originalScriptDataA);
@@ -205,10 +215,10 @@ public class GPortfolioGreedyLogic extends Player implements ICombatLogic {
 	        for (int unitIndex=0; unitIndex<_numberOfClusters; ++unitIndex)
 	        {
 
-
 	            // iterate over each script move that it can execute
 	            for (int sIndex=0; sIndex<_playerScriptPortfolio.length; ++sIndex)
 	            {
+	            	
 	            	if (_timeLimit > 0 && time.getElapsedTimeInMilliSec() > _timeLimit)
 	 	            {
 	 	                break;
@@ -305,9 +315,9 @@ public class GPortfolioGreedyLogic extends Player implements ICombatLogic {
 	    	playerB.setClusters(clustersPlayer.getClusters(_numberOfClusters));
 	    	playerA.setClusters(clustersEnemy.getClusters(_numberOfClusters));
 	    }
-	    Game g=new Game(state, playerA, playerB, 100, false);
+	    Game g=new Game(state, playerA, playerB, _simulationLimit, false);
 	    if (player==1){
-	    	 g=new Game(state, playerB,playerA, 100, false);
+	    	 g=new Game(state, playerB,playerA, _simulationLimit, false);
 	    }
 
 	    g.play();
@@ -319,12 +329,9 @@ public class GPortfolioGreedyLogic extends Player implements ICombatLogic {
 	
 	private void  setAllScripts(int player, GameState state, HashMap<Integer,UnitStateTypes> data, UnitStateTypes script)
 	{
-	    for (int unitIndex=0; unitIndex < state.numUnits(player); ++unitIndex)
+	    for (int c=0; c < _numberOfClusters; c++)
 	    {
-	    	Unit u=state.getUnit(player, unitIndex);
-	    	if (u!=null){
-	    		data.put(u.getId(),script);
-	    	}
+	    	data.put(c,script);
 	    }
 	}
 	

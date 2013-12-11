@@ -26,7 +26,7 @@ public class Game {
 	public int				moveLimit;
 	
 	private boolean display=false;
-	private SparcraftUI ui;
+	public SparcraftUI ui;
 		
 	public Game(GameState initialState){
 
@@ -104,7 +104,6 @@ public class Game {
 	        // if both players can move, generate the other player's moves
 	        if (state.bothCanMove())
 	        {
-	        	int i = 0;
 	        	//g=System.nanoTime();
 	        	state.generateMoves(moves_B, enemy.ID());
 	        	//generatemoves+=System.nanoTime()-g;
@@ -130,7 +129,7 @@ public class Game {
 		        ui.setGameState(state);
 		        ui.repaint();
 	        	try {
-					Thread.sleep(1);
+					Thread.sleep(10);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
