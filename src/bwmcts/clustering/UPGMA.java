@@ -1,3 +1,6 @@
+/**
+ * OIRGINAL CODE FROM http://www.itu.dk/~sestoft/bsa.html, http://www.itu.dk/~sestoft/bsa/Match2.java
+ */
 package bwmcts.clustering;
 
 import java.util.ArrayList;
@@ -8,9 +11,6 @@ import java.util.Map;
 import java.util.Queue;
 
 import bwmcts.sparcraft.Unit;
-
-
-//OIRGINAL CODE FROM http://www.itu.dk/~sestoft/bsa.html, http://www.itu.dk/~sestoft/bsa/Match2.java
 
 public class UPGMA {
 	int K;			// The number of clusters created so far

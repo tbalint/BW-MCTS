@@ -205,7 +205,9 @@ public class PortfolioGreedyLogic extends Player implements ICombatLogic {
 	        // set up data for best scripts
 	        UnitStateTypes[]  bestScriptVec=new UnitStateTypes[Constants.Max_Units];
 		    StateEvalScore[]  bestScoreVec=new StateEvalScore[Constants.Max_Units];
-	
+		    
+		    System.out.println("New iteration");
+		    
 	        // for each unit that can move
 	        for (int unitIndex=0; unitIndex<state.numUnits(player); ++unitIndex)
 	        {
@@ -228,7 +230,12 @@ public class PortfolioGreedyLogic extends Player implements ICombatLogic {
 	
 	                // evaluate the current state given a playout with these unit scripts
 	                StateEvalScore score = eval(player, state.clone(), currentScriptDataA, currentScriptDataB);
-	
+	                //StateEvalScore scoreB = eval(player, state.clone(), currentScriptDataA, currentScriptDataB);
+	               // StateEvalScore scoreC = eval(player, state.clone(), currentScriptDataA, currentScriptDataB);
+	                //StateEvalScore scoreD = eval(player, state.clone(), currentScriptDataA, currentScriptDataB);
+	                
+	               // System.out.println(score._val + " " + scoreB._val + " " + scoreC._val + " " + scoreD._val);
+	                
 	                // if we have a better score, set it
 	                if (sIndex == 0 || score._val > bestScoreVec[unitIndex]._val)
 	                {
@@ -236,6 +243,8 @@ public class PortfolioGreedyLogic extends Player implements ICombatLogic {
 	                    bestScoreVec[unitIndex]  = score;
 	                }
 	            }
+	            
+	           // System.out.println("Best: " + bestScoreVec[unitIndex]._val);
 	
 	            // set the current vector to the best move for use in future simulations
 	            currentScriptDataA.put(unit.getId(),bestScriptVec[unitIndex]);

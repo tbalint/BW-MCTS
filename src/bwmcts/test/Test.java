@@ -71,8 +71,8 @@ public class Test implements BWAPIEventListener  {
 		//Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 100, false),40);
 		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 100, false),40);
 		//Player p1 = new UctcdLogic(bwapi, guctcdA, 40);
-		Player p1 = new GPortfolioGreedyLogic(bwapi, 1, 0, 100, 40, 6);
-		//Player p1 = new PortfolioGreedyLogic(bwapi, 1, 0, 100, 40);
+		//Player p1 = new GPortfolioGreedyLogic(bwapi, 1, 0, 100, 40, 6);
+		Player p1 = new PortfolioGreedyLogic(bwapi, 1, 0, 100, 400);
 		
 		//Player p1 = new Player_Random(0);		
 		//Player p1 = new Player_KiteDPS(0);		
@@ -97,7 +97,9 @@ public class Test implements BWAPIEventListener  {
 
 		//TODO: Write to file
 		
-		realisticTest(p1, p2, 50);
+		PortfolioTest(p1, p2);
+		
+		//realisticTest(p1, p2, 50);
 		
 		//upgmaTest(p1, p2, 100, 25);
 		
@@ -109,6 +111,50 @@ public class Test implements BWAPIEventListener  {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private void PortfolioTest(Player p1, Player p2) throws Exception {
+		int tanks = 8;
+		int marines = 32;
+		int firebats = 16;
+		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
+		unitsA.put(UnitTypes.Terran_Siege_Tank_Tank_Mode, tanks);
+		unitsA.put(UnitTypes.Terran_Marine, marines);
+		unitsA.put(UnitTypes.Terran_Firebat, firebats);
+		
+		HashMap<UnitTypes, Integer> unitsB = new HashMap<UnitType.UnitTypes, Integer>();
+		unitsB.put(UnitTypes.Terran_Siege_Tank_Tank_Mode, tanks);
+		unitsB.put(UnitTypes.Terran_Marine, marines);
+		unitsB.put(UnitTypes.Terran_Firebat, firebats);
+		
+		Constants.Max_Units = (marines+firebats+tanks)*2;
+		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
+		
+		System.out.println("Marines: " + marines + "\tfirebats: " + firebats + "\tTanks: " + tanks + " on each side");
+		
+		List<Double> results = new ArrayList<Double>();
+
+		testPortfolioGame(p1, p2, unitsA, unitsB);
+
+	}
+
+	private void testPortfolioGame(Player p1, Player p2,
+			HashMap<UnitTypes, Integer> unitsA,
+			HashMap<UnitTypes, Integer> unitsB) throws Exception {
+		
+		GameState initialState = gameState(unitsA, unitsB);
+		
+		p1.setID(0);
+		p2.setID(1);
+	    
+	    // enter a maximum move limit for the game to go on for
+	    int moveLimit = 20000;
+
+	    // contruct the game
+	    Game g=new Game(initialState, p1, p2, moveLimit, graphics);
+	    
+	    g.play();
+		
 	}
 
 	/************************

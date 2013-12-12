@@ -47,8 +47,6 @@ public class Player_ClusteredUnitStateToUnitAction extends Player {
 		attackingMap.clear();
 		kitingMap.clear();
 		
-
-		
 		
 		// Divide units into two groups
 		if (_clusters==null){
