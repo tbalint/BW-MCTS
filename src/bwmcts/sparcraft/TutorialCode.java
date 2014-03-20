@@ -21,7 +21,6 @@ import bwmcts.combat.UctcdLogic;
 import bwmcts.mcts.guct.GUCTCD;
 import bwmcts.mcts.iuct.IUCTCD;
 import bwmcts.mcts.uctcd.UCTCD;
-import bwmcts.mcts.uctcd.UCTCDsingle;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_AttackClosest;
 import bwmcts.sparcraft.players.Player_Defense;

@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,9 +23,13 @@ import bwmcts.sparcraft.GameState;
 import bwmcts.sparcraft.Players;
 import bwmcts.sparcraft.StateEvalScore;
 import bwmcts.sparcraft.UnitAction;
+import bwmcts.sparcraft.UnitActionTypes;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_Kite;
+import bwmcts.sparcraft.players.Player_KiteDPS;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
+import bwmcts.sparcraft.players.Player_Nothing;
+import bwmcts.sparcraft.players.Player_Random;
 
 public class UCTCD {
 
@@ -34,8 +39,10 @@ public class UCTCD {
 	private int minPlayerIndex = 1;
 	private boolean debug;
 	private int simulationSteps;
-	private Player baseScript;
 	
+	private int NOK = 0;
+	private int KITE = 0;
+	private int RANDOM = 0;
 	
 	public UCTCD() {
 		
@@ -50,7 +57,6 @@ public class UCTCD {
 		this.maxPlayerIndex = maxPlayerIndex;
 		this.debug = debug;
 		this.simulationSteps = simulationSteps;
-		this.baseScript = new Player_NoOverKillAttackValue(maxPlayerIndex);
 	}
 
 	public List<UnitAction> search(GameState state, long timeBudget){
@@ -66,8 +72,15 @@ public class UCTCD {
 		
 		Date start = new Date();
 		
-		UctNode root = new UctNode(null, NodeType.ROOT, new ArrayList<UnitAction>(), maxPlayerIndex);
+		UctNode root = new UctNode(null, NodeType.ROOT, new ArrayList<UnitAction>(), maxPlayerIndex, "ROOT");
 		root.setVisits(1);
+		
+		if (state.getTime()==0){
+			System.out.println("NOK-AV=" + NOK + " KITE=" + KITE + " RANDOM=" + RANDOM);
+			NOK=0;
+			KITE=0;
+			RANDOM=0;
+		}
 		
 		int t = 0;
 		while(new Date().getTime() <= start.getTime() + timeBudget){
@@ -77,27 +90,41 @@ public class UCTCD {
 			
 		}
 		
+		//System.out.println(t + " iterarions.");
 		UctNode best = mostVisitedChildOf(root);
-		
-		//if (debug){
-			//System.out.println(state._currentTime +  "\t" + (t++));
-			
-		//	String out = root.print(0);
-		//	writeToFile(out, "tree.xml");
-		//}
+		//UctNode best = withLabel(root, "NOK-AV");
+		//UctNode best = bestValueChildOf(root);
+		//System.out.println("Best value " + best.getTotalScore() / best.getVisits() + ".");
+		//System.out.println(best.getLabel());
 		
 		if (best == null){
-			//System.out.println("Exit with computing");
 			return new ArrayList<UnitAction>();
 		}
+		
+		if (best.getLabel().equals("NOK-AV")){
+			NOK++;
+		} else if (best.getLabel().equals("KITE")){
+			KITE++;
+		}  else if (best.getLabel().equals("RANDOM")){
+			RANDOM++;
+		}
+		
+		if (debug){
+			System.out.println(state._currentTime +  "\t" + (t++));
+			
+			String out = root.print(0);
+			writeToFile(out, "tree.xml");
+		}
+		
 		
 		return best.getMove();
 		
 	}
 
+
 	private float traverse(UctNode node, GameState state) {
 		
-		float score = 0;
+		float score = 0f;
 		if (node.getVisits() == 0){
 			updateState(node, state, true);
 			score = evaluate(state.clone());
@@ -106,12 +133,20 @@ public class UCTCD {
 			if (state.isTerminal()){
 				score = evaluate(state.clone());
 			} else {
-				if (!node.isFullyExpanded())
+				if (node.getChildren().isEmpty())
 					generateChildren(node, state);
 				score = traverse(selectNode(node), state);
 			}
 		}
 		node.setVisits(node.getVisits() + 1);
+		
+		if (score > 0)
+			score = 1;
+	    else if (score == 0)
+	    	score = 0.5f;
+	    else
+	    	score = 0;
+		
 		node.setTotalScore(node.getTotalScore() + score);
 		return score;
 	}
@@ -150,89 +185,94 @@ public class UCTCD {
 		
 		HashMap<Integer, List<UnitAction>> map = new HashMap<Integer, List<UnitAction>>();
 		
-		List<UnitAction> move = new ArrayList<UnitAction>();
-		
 		try {
 			state.generateMoves(map, playerToMove);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// Move ordering
+		//shuffleMoveOrders(map);
+		
+		NodeType childType = getChildNodeType(node, state);
+		
+		// Add script moved
+		
+		List<UnitAction> moveNok = new ArrayList<UnitAction>();
+		new Player_NoOverKillAttackValue(playerToMove).getMoves(state, map, moveNok);
+		UctNode childNok = new UctNode(node, childType, moveNok, playerToMove, "NOK-AV");
+		node.getChildren().add(childNok);
 		/*
-		if (containsDups(map)){
-			System.out.println("Error in map!");
+		List<UnitAction> moveKite = new ArrayList<UnitAction>();
+		new Player_KiteDPS(playerToMove).getMoves(state, map, moveKite);
+		UctNode childKite = new UctNode(node, childType, moveKite, playerToMove, "KITE");
+		node.getChildren().add(childKite);
+		
+		while(node.getChildren().size() < maxChildren){
+			List<UnitAction> moveRandom = new ArrayList<UnitAction>();
+			moveRandom = getNextMove(playerToMove, state, map); // Possible moves?
+			UctNode childRandom = new UctNode(node, childType, moveRandom, playerToMove, "RANDOM");
+			node.getChildren().add(childRandom);
 		}
-			*/
-		if (node.getChildren().isEmpty()){
-				
-			new Player_NoOverKillAttackValue(playerToMove).getMoves(state, map, move);
-			/*
-			if (containsDups(move)){
-				System.out.println("Error in NOK-AV move!");
-			}
-			*/
-		} else if (node.getChildren().size() == 1){
+		*/
+	}
+
+	private void shuffleMoveOrders(HashMap<Integer, List<UnitAction>> map) {
+		
+		// Foreach unit
+		for(Integer u : map.keySet()){
 			
-			new Player_Kite(playerToMove).getMoves(state, map, move);
-			/*
-			if (containsDups(move)){
-				System.out.println("Error in Kite move!");
+			int moveEnd = -1;
+	        int moveBegin = -1;
+	        
+	        int numMoves = map.get(u).size();
+	        
+	        // reverse through the list of actions for this unit
+	        for(int a = numMoves-1; a >= 0; --a){
+				
+	        	UnitActionTypes moveType = map.get(u).get(a)._moveType;
+	        	
+	            // mark the end of the move actions
+	            if (moveEnd == -1 && (moveType == UnitActionTypes.MOVE))
+	            {
+	                moveEnd = a;
+	            }
+	            // mark the beginning of the MOVE unit actions
+	            else if ((moveEnd != -1) && (moveBegin == -1) && (moveType != UnitActionTypes.MOVE))
+	            {
+	                moveBegin = a;
+	            }
+	            else if (moveBegin != -1)
+	            {
+	                break;
+	            }
+	        	
 			}
-			*/
-		} else {
-	
-			move = getNextMove(playerToMove, state, map); // Possible moves?
-			/*
-			if (containsDups(move)){
-				System.out.println("Error in random move!");
-			}
-			*/
-		}
-		
-		
-		
-		if (move == null)
-			return;
-	
-		if (uniqueMove(move, node)){
-			UctNode child = new UctNode(node, getChildNodeType(node, state), move, playerToMove);
-			node.getChildren().add(child);
-		}
-		
-		node.setExpansions(node.getExpansions() + 1);
+	        
+	     	// if we found the end but didn't find the beginning
+	        if (moveEnd != -1 && moveBegin == -1)
+	        {
+	            // then the move actions begin at the beginning of the array
+	            moveBegin = 0;
+	        }
 
-		if (node.getExpansions() >= maxChildren)
-			node.setFullyExpanded(true);
+	        // shuffle the movement actions for this unit
+	        if (moveEnd != -1 && moveBegin != -1 && moveEnd != moveBegin)
+	        {
+	        	List<UnitAction> moveActions = map.get(u).subList(moveBegin, moveEnd+1);
+	        	/*
+	        	for(UnitAction action : moveActions)
+	        		map.get(u).remove(action);
+	        	*/
+	        	Collections.shuffle(moveActions);
+	        	//map.get(u).addAll(moveActions);
+	            //std::random_shuffle(&_moves[u][moveBegin], &_moves[u][moveEnd]);
+	            //resetMoveIterator();
+	        }
+			
+		}
 		
-	}
-
-	private boolean containsDups(List<UnitAction> move) {
-		for(int a = 0; a < move.size(); a++){
-			for(int b = 0; b < move.size(); b++){
-				if (a==b)
-					continue;
-				if (move.get(a).equals(move.get(b))){
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	private boolean containsDups(HashMap<Integer, List<UnitAction>> map) {
-		for(Integer ua : map.keySet()){
-			for(int a = 0; a < map.get(ua).size(); a++){
-				for(Integer ub : map.keySet()){
-					for(int b = 0; b < map.get(ub).size(); b++){
-						if (ua == ub && a==b)
-							continue;
-						if (map.get(ua).get(a).equals(map.get(ub).get(b)))
-							return true;
-					}
-				}
-			}
-		}
-		return false;
 	}
 
 	private int getPlayerToMove(UctNode node, GameState state) {
@@ -245,7 +285,7 @@ public class UCTCD {
 			
 			if (node.getType() == NodeType.FIRST)
 				
-				return state.getEnemy(node.getMovingPlayerIndex());
+				return GameState.getEnemy(node.getMovingPlayerIndex());
 			
 			return node.getMovingPlayerIndex();
 			
@@ -260,42 +300,6 @@ public class UCTCD {
 		
 	}
 	
-	private boolean uniqueMove(List<UnitAction> move, UctNode node) {
-
-		if(node.getChildren().isEmpty())
-			return true;
-		
-		for (UctNode child : node.getChildren()){
-			boolean identical = true;
-			if (child.getMove().size() != move.size()){
-				identical = false;
-			} else {
-				for(int i = 0; i < move.size(); i++){
-					if (!child.getMove().get(i).equals(move.get(i))){
-						identical = false;
-						break;
-					}
-				}
-			}
-			if (identical){
-				return false;
-			}
-		}
-		
-		return true;
-		
-	}
-
-	private int enemy(int player) {
-		
-		if (player == minPlayerIndex)
-			return maxPlayerIndex;
-		else if (player == maxPlayerIndex)
-			return minPlayerIndex;
-		
-		return -1;
-	}
-
 	private NodeType getChildNodeType(UctNode parent, GameState prevState) {
 		
 		if(!prevState.bothCanMove()){
@@ -434,6 +438,28 @@ public class UCTCD {
 			}
 		}
 		return best;
+	}
+	
+	private UctNode bestValueChildOf(UctNode parent) {
+		float bestValue = maxPlayerIndex == 0 ? -100000f : 100000f;
+		UctNode best = null;
+		for(UctNode node : parent.getChildren()){
+			if (node.getTotalScore()/node.getVisits()>bestValue && node.getVisits() > 0){
+				best = node;
+				bestValue = node.getTotalScore()/node.getVisits();
+			}
+		}
+		return best;
+	}
+	
+
+	private UctNode withLabel(UctNode parent, String label) {
+		for(UctNode node : parent.getChildren()){
+			if (node.getLabel().equals(label)){
+				return node;
+			}
+		}
+		return null;
 	}
 
 	public double getK() {

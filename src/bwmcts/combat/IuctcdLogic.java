@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 
 import bwmcts.mcts.iuct.IUCTCD;
 import bwmcts.mcts.uctcd.UCTCD;
-import bwmcts.mcts.uctcd.UCTCDsingle;
 
 import bwmcts.sparcraft.AnimationFrameData;
 import bwmcts.sparcraft.Game;

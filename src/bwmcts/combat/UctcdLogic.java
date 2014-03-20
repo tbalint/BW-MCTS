@@ -12,7 +12,6 @@ import bwmcts.clustering.UPGMA;
 import bwmcts.mcts.guct.GUCTCD;
 import bwmcts.mcts.iuct.IUCTCD;
 import bwmcts.mcts.uctcd.UCTCD;
-import bwmcts.mcts.uctcd.UCTCDsingle;
 
 import bwmcts.sparcraft.AnimationFrameData;
 import bwmcts.sparcraft.Game;

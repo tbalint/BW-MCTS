@@ -54,7 +54,7 @@ public class Test implements BWAPIEventListener  {
 		
 		System.out.println("BWAPI created"+ bwapi.getUnitType(3).getName());
 		
-		graphics = false;
+		//graphics = true;
 		
 		Constants.Max_Units = 200;
 		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
@@ -68,11 +68,11 @@ public class Test implements BWAPIEventListener  {
 		GUCTCD guctcdB = new GUCTCD(1.6, 20, 0, 1, 200, false);
 		guctcdB.setHpMulitplier(1);
 		guctcdB.setClusters(6);
-		//Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 100, false),40);
+		Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 500, false),40);
 		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 100, false),40);
 		//Player p1 = new UctcdLogic(bwapi, guctcdA, 40);
 		//Player p1 = new GPortfolioGreedyLogic(bwapi, 1, 0, 100, 40, 6);
-		Player p1 = new PortfolioGreedyLogic(bwapi, 1, 0, 100, 400);
+		//Player p1 = new PortfolioGreedyLogic(bwapi, 1, 0, 100, 400);
 		
 		//Player p1 = new Player_Random(0);		
 		//Player p1 = new Player_KiteDPS(0);		
@@ -87,6 +87,7 @@ public class Test implements BWAPIEventListener  {
 		Player p2 = new Player_NoOverKillAttackValue(1);
 		
 		//Player p2 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 0, 1, 100, false), 40);
+		//Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 0, 1, 500, false),40);
 		//Player p2 = new UctcdLogic(bwapi, guctcdB, 40);		
 		//Player p2 = new GPortfolioGreedyLogic(bwapi, 2, 2, 30, 6);
 		
@@ -97,9 +98,9 @@ public class Test implements BWAPIEventListener  {
 
 		//TODO: Write to file
 		
-		PortfolioTest(p1, p2);
+		//PortfolioTest(p1, p2);
 		
-		//realisticTest(p1, p2, 50);
+		realisticTest(p1, p2, 10);
 		
 		//upgmaTest(p1, p2, 100, 25);
 		
@@ -477,11 +478,12 @@ public class Test implements BWAPIEventListener  {
 	private void realisticTest(Player p1, Player p2, int runs) {
 		
 		// Combat size
-		for(int i = 1; i <= 10; i+=3){
+		for(int i = 1; i <= 10; i+=2){
 			try {
 				System.out.println("--- " + ((i*10)+(i*5)+(i)));
 				float result = testRealisticGames(p1, p2, i*10, i*5, i, runs);
-				//System.out.println("REALISTIC TEST RESULT: " + result);
+				System.out.println("REALISTIC TEST RESULT: " + result);
+				
 				//System.out.println("Result=" + result);
 				// TODO:
 			} catch (Exception e) {
@@ -517,7 +519,7 @@ public class Test implements BWAPIEventListener  {
 				wins++;
 			
 			if(i%1==0){
-				System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
+				//System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
 				System.out.println("Win average: " + ((double)wins)/((double)i));
 			}
 		}
