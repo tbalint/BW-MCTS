@@ -54,7 +54,7 @@ public class Test implements BWAPIEventListener  {
 		
 		System.out.println("BWAPI created"+ bwapi.getUnitType(3).getName());
 		
-		//graphics = true;
+		graphics = false;
 		
 		Constants.Max_Units = 200;
 		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
@@ -85,6 +85,7 @@ public class Test implements BWAPIEventListener  {
 		
 		//Player p2 = new Player_Random(1);
 		Player p2 = new Player_NoOverKillAttackValue(1);
+		//Player p2 = new Player_Random(1);
 		
 		//Player p2 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 0, 1, 100, false), 40);
 		//Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 0, 1, 500, false),40);
@@ -100,7 +101,7 @@ public class Test implements BWAPIEventListener  {
 		
 		//PortfolioTest(p1, p2);
 		
-		realisticTest(p1, p2, 10);
+		realisticTest(p1, p2, 20);
 		
 		//upgmaTest(p1, p2, 100, 25);
 		

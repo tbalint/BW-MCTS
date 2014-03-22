@@ -98,6 +98,7 @@ public class UCTCD {
 		//System.out.println(best.getLabel());
 		
 		if (best == null){
+			System.out.println("NULL MOVE!");
 			return new ArrayList<UnitAction>();
 		}
 		
@@ -141,13 +142,10 @@ public class UCTCD {
 		node.setVisits(node.getVisits() + 1);
 		
 		if (score > 0)
-			score = 1;
+			node.setTotalScore(node.getTotalScore() + 1);
 	    else if (score == 0)
-	    	score = 0.5f;
-	    else
-	    	score = 0;
+	    	node.setTotalScore(node.getTotalScore() + 0.5f);
 		
-		node.setTotalScore(node.getTotalScore() + score);
 		return score;
 	}
 
@@ -199,11 +197,12 @@ public class UCTCD {
 		
 		// Add script moved
 		
+		//while(node.getChildren().size() < maxChildren){
 		List<UnitAction> moveNok = new ArrayList<UnitAction>();
 		new Player_NoOverKillAttackValue(playerToMove).getMoves(state, map, moveNok);
 		UctNode childNok = new UctNode(node, childType, moveNok, playerToMove, "NOK-AV");
 		node.getChildren().add(childNok);
-		/*
+		//}
 		List<UnitAction> moveKite = new ArrayList<UnitAction>();
 		new Player_KiteDPS(playerToMove).getMoves(state, map, moveKite);
 		UctNode childKite = new UctNode(node, childType, moveKite, playerToMove, "KITE");
@@ -215,7 +214,6 @@ public class UCTCD {
 			UctNode childRandom = new UctNode(node, childType, moveRandom, playerToMove, "RANDOM");
 			node.getChildren().add(childRandom);
 		}
-		*/
 	}
 
 	private void shuffleMoveOrders(HashMap<Integer, List<UnitAction>> map) {
