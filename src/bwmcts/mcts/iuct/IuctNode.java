@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import bwmcts.mcts.NodeType;
 import bwmcts.mcts.UnitState;
 import bwmcts.sparcraft.UnitAction;
 
@@ -21,14 +22,12 @@ public class IuctNode {
 	private List<UnitState> move;
 	private int movingPlayerIndex;
 	private NodeType type;
-	private boolean fullyExpanded;
-	private int expansions;
 	
 	private List<IuctNode> children;
 	private IuctNode parent;
-	private HashMap<Integer, List<UnitAction>> possibleMoves;
+	private String label;
 	
-	public IuctNode(IuctNode parent, NodeType type, List<UnitState> move, int movingPlayerIndex) {
+	public IuctNode(IuctNode parent, NodeType childType, List<UnitState> move, int movingPlayerIndex, String label) {
 		
 		this.visits = 0;
 		this.totalScore = 0;
@@ -36,13 +35,12 @@ public class IuctNode {
 		this.movingPlayerIndex = movingPlayerIndex;
 		this.parent = parent;
 		this.children = new ArrayList<IuctNode>();
-		this.type = type;
+		this.type = childType;
 		this.move = move;
-		this.fullyExpanded = false;
-		this.expansions = 0;
+		this.label = label;
 		
 	}
-	
+
 	public IuctNode mostVisitedChild(){
 		IuctNode mostVisited = null;
 		for(IuctNode child : children){
@@ -127,7 +125,7 @@ public class IuctNode {
 		for(int n = 0; n < level; n++){
 			out += "\t";
 		}
-		out += "<node type="+type+ " playerToMove=" + movingPlayerIndex + " moves=" + moves + " totalScore=" + totalScore + " visited=" + visits;
+		out += "<node label="+label+" score=" + totalScore / visits + " visited=" + visits + " type="+type+ " playerToMove=" + movingPlayerIndex + " moves=" + moves;
 		
 		if (children.isEmpty()){
 			out += "/>\n";
@@ -153,28 +151,8 @@ public class IuctNode {
 		
 	}
 
-	public HashMap<Integer, List<UnitAction>> getPossibleMoves() {
-		return possibleMoves;
-	}
-
-	public void setPossibleMoves(HashMap<Integer, List<UnitAction>> possibleMoves) {
-		this.possibleMoves = possibleMoves;
-	}
-
-	public boolean isFullyExpanded() {
-		return fullyExpanded;
-	}
-
-	public void setFullyExpanded(boolean expanded) {
-		this.fullyExpanded = expanded;
-	}
-
-	public int getExpansions() {
-		return expansions;
-	}
-
-	public void setExpansions(int expansions) {
-		this.expansions = expansions;
+	public String getLabel() {
+		return label;
 	}
 	
 	

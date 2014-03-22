@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import bwmcts.mcts.NodeType;
 import bwmcts.mcts.UnitState;
 import bwmcts.mcts.UnitStateTypes;
 import bwmcts.sparcraft.EvaluationMethods;
@@ -38,8 +39,10 @@ public class IUCTCD {
 	private int minPlayerIndex = 1;
 	private boolean debug;
 	private int simulationSteps;
-	private Player baseScript;
 	
+	private int NOK = 0;
+	private int KITE = 0;
+	private int RANDOM = 0;
 	
 	public IUCTCD() {
 		
@@ -54,7 +57,6 @@ public class IUCTCD {
 		this.maxPlayerIndex = maxPlayerIndex;
 		this.debug = debug;
 		this.simulationSteps = simulationSteps;
-		this.baseScript = new Player_NoOverKillAttackValue(maxPlayerIndex);
 	}
 
 	public List<UnitAction> search(GameState state, long timeBudget){
@@ -67,8 +69,15 @@ public class IUCTCD {
 		
 		Date start = new Date();
 		
-		IuctNode root = new IuctNode(null, NodeType.ROOT, new ArrayList<UnitState>(), maxPlayerIndex);
-		//root.setVisits(1);
+		IuctNode root = new IuctNode(null, NodeType.ROOT, new ArrayList<UnitState>(), maxPlayerIndex, "ROOT");
+		root.setVisits(1);
+		
+		if (state.getTime()==0){
+			System.out.println("IUCT : NOK-AV=" + NOK + " KITE=" + KITE + " RANDOM=" + RANDOM);
+			NOK=0;
+			KITE=0;
+			RANDOM=0;
+		}
 		
 		int t = 0;
 		while(new Date().getTime() <= start.getTime() + timeBudget){
@@ -81,20 +90,28 @@ public class IUCTCD {
 			*/
 		}
 		
-		//GuctNode best = mostVisitedChildOf(root);
-		IuctNode best = mostWinningChildOf(root);
+		IuctNode best = mostVisitedChildOf(root);
+		//IuctNode best = mostWinningChildOf(root);
 		
-		//if (debug){
-			//System.out.println(state._currentTime +  "\t" + (t++));
-			/*
+		if (debug){
+			System.out.println(state._currentTime +  "\t" + (t++));
 			String out = root.print(0);
 			writeToFile(out, "tree.xml");
-			*/
-		//}
+		}
 		
 		if (best == null){
+			System.out.println("NULL MOVE!");
 			return new ArrayList<UnitAction>();
 		}
+		
+		if (best.getLabel().equals("NOK-AV")){
+			NOK++;
+		} else if (best.getLabel().equals("KITE")){
+			KITE++;
+		}  else if (best.getLabel().equals("RANDOM")){
+			RANDOM++;
+		}
+		
 		/*
 		System.out.print("i:");
 		for(UnitState s : best.getMove())
@@ -118,14 +135,24 @@ public class IUCTCD {
 			if (state.isTerminal()){
 				score = evaluate(state.clone());
 			} else {
-				if (!node.isFullyExpanded())
+				if (node.getChildren().isEmpty())
 					generateChildren(node, state);
 				score = traverse(selectNode(node), state);
 			}
 		}
 		node.setVisits(node.getVisits() + 1);
+		//if (score > 0)
+		//	node.setTotalScore(node.getTotalScore() + 1);
+	    //else if (score == 0)
+	    //	node.setTotalScore(node.getTotalScore() + 0.5f);
 		node.setTotalScore(node.getTotalScore() + score);
+		
 		return score;
+	}
+	
+	private float sigmoid(float x)
+	{
+	    return (float) (1 / (1 + Math.exp(-x)));
 	}
 
 	private float evaluate(GameState state) {
@@ -160,42 +187,35 @@ public class IUCTCD {
 		// Figure out who is next to move
 		int playerToMove = getPlayerToMove(node, state);
 		
-		List<UnitState> move = new ArrayList<UnitState>();
+		HashMap<Integer, List<UnitAction>> map = new HashMap<Integer, List<UnitAction>>();
+		try {
+			state.generateMoves(map, playerToMove);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		HashMap<Integer, List<UnitAction>> map;
-		if (node.getPossibleMoves() == null){
-
-			map = new HashMap<Integer, List<UnitAction>>();
-			try {
-				state.generateMoves(map, playerToMove);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		NodeType childType = getChildNodeType(node, state);
+		
+		List<UnitState> moveAttack = new ArrayList<UnitState>();
+		moveAttack.addAll(getAllMove(UnitStateTypes.ATTACK, map));
+		IuctNode childAttack = new IuctNode(node, childType, moveAttack, playerToMove, "NOK-AV");
+		node.getChildren().add(childAttack);
+		
+		List<UnitState> moveKite = new ArrayList<UnitState>();
+		moveKite.addAll(getAllMove(UnitStateTypes.KITE, map));
+		IuctNode childKite = new IuctNode(node, childType, moveKite, playerToMove, "KITE");
+		node.getChildren().add(childKite);
+		
+		int e = 2;
+		while(node.getChildren().size() < maxChildren && e < maxChildren){
+			List<UnitState> moveRandom = getRandomMove(playerToMove, map);
+			e++;
+			if (uniqueMove(moveRandom, node)){
+				IuctNode child = new IuctNode(node, childType, moveRandom, playerToMove, "RANDOM");
+				node.getChildren().add(child);
 			}
-			node.setPossibleMoves(map);
-			
 		}
-		
-			
-		if (node.getChildren().isEmpty())
-			move.addAll(getAllMove(UnitStateTypes.ATTACK, node.getPossibleMoves()));
-		else if (node.getChildren().size() == 1)
-			move.addAll(getAllMove(UnitStateTypes.KITE, node.getPossibleMoves()));
-		else 
-			move = getRandomMove(playerToMove, node.getPossibleMoves()); // Possible moves?
-			
-		if (move == null)
-			return;
-	
-		if (uniqueMove(move, node)){
-			IuctNode child = new IuctNode(node, getChildNodeType(node, state), move, playerToMove);
-			node.getChildren().add(child);
-		}
-		
-		node.setExpansions(node.getExpansions() + 1);
-
-		if (node.getExpansions() >= maxChildren)
-			node.setFullyExpanded(true);
 		
 	}
 
@@ -254,7 +274,7 @@ public class IUCTCD {
 			
 			if (node.getType() == NodeType.FIRST)
 				
-				return state.getEnemy(node.getMovingPlayerIndex());
+				return GameState.getEnemy(node.getMovingPlayerIndex());
 			
 			return node.getMovingPlayerIndex();
 			
@@ -418,10 +438,10 @@ public class IUCTCD {
 			
 			if (child.getVisits() > 0){
 				
-	            float winRate = child.getTotalScore() / child.getVisits();
-	            winRate = winRate / 500;
+	            float score = child.getTotalScore() / child.getVisits();
+	            score = sigmoid(score);
 	            float uctVal = (float) (K * Math.sqrt(Math.log(parent.getVisits()) / child.getVisits()));
-	            float currentVal = maxPlayer ? (winRate + uctVal) : (winRate - uctVal);
+	            float currentVal = maxPlayer ? (score + uctVal) : (score - uctVal);
 	            
 	            child.setUctValue(currentVal);
 				

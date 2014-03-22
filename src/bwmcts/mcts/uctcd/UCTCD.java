@@ -44,12 +44,10 @@ public class UCTCD {
 	private int KITE = 0;
 	private int RANDOM = 0;
 	
-	public UCTCD() {
-		
-	}
+	private boolean winRate;
 
 	public UCTCD(double k, int maxChildren, int minPlayerIndex,
-			int maxPlayerIndex, int simulationSteps, boolean debug) {
+			int maxPlayerIndex, int simulationSteps, boolean debug, boolean winRate) {
 		super();
 		this.K = k;
 		this.maxChildren = maxChildren;
@@ -57,6 +55,7 @@ public class UCTCD {
 		this.maxPlayerIndex = maxPlayerIndex;
 		this.debug = debug;
 		this.simulationSteps = simulationSteps;
+		this.winRate = winRate;
 	}
 
 	public List<UnitAction> search(GameState state, long timeBudget){
@@ -76,7 +75,7 @@ public class UCTCD {
 		root.setVisits(1);
 		
 		if (state.getTime()==0){
-			System.out.println("NOK-AV=" + NOK + " KITE=" + KITE + " RANDOM=" + RANDOM);
+			System.out.println("UCT : NOK-AV=" + NOK + " KITE=" + KITE + " RANDOM=" + RANDOM);
 			NOK=0;
 			KITE=0;
 			RANDOM=0;
@@ -121,7 +120,11 @@ public class UCTCD {
 		return best.getMove();
 		
 	}
-
+	
+	private float sigmoid(float x)
+	{
+	    return (float) (1 / (1 + Math.exp(-x)));
+	}
 
 	private float traverse(UctNode node, GameState state) {
 		
@@ -141,11 +144,15 @@ public class UCTCD {
 		}
 		node.setVisits(node.getVisits() + 1);
 		
-		if (score > 0)
-			node.setTotalScore(node.getTotalScore() + 1);
-	    else if (score == 0)
-	    	node.setTotalScore(node.getTotalScore() + 0.5f);
-		
+		if (winRate){
+			if (score > 0)
+				node.setTotalScore(node.getTotalScore() + 1);
+			else if (score == 0)
+				node.setTotalScore(node.getTotalScore() + 0.5f);
+		} else {
+			node.setTotalScore(node.getTotalScore() + score);
+		}
+
 		return score;
 	}
 
@@ -198,11 +205,13 @@ public class UCTCD {
 		// Add script moved
 		
 		//while(node.getChildren().size() < maxChildren){
+		
 		List<UnitAction> moveNok = new ArrayList<UnitAction>();
 		new Player_NoOverKillAttackValue(playerToMove).getMoves(state, map, moveNok);
 		UctNode childNok = new UctNode(node, childType, moveNok, playerToMove, "NOK-AV");
 		node.getChildren().add(childNok);
 		//}
+		
 		List<UnitAction> moveKite = new ArrayList<UnitAction>();
 		new Player_KiteDPS(playerToMove).getMoves(state, map, moveKite);
 		UctNode childKite = new UctNode(node, childType, moveKite, playerToMove, "KITE");
@@ -214,6 +223,7 @@ public class UCTCD {
 			UctNode childRandom = new UctNode(node, childType, moveRandom, playerToMove, "RANDOM");
 			node.getChildren().add(childRandom);
 		}
+		
 	}
 
 	private void shuffleMoveOrders(HashMap<Integer, List<UnitAction>> map) {
@@ -376,9 +386,11 @@ public class UCTCD {
 			
 			if (child.getVisits() > 0){
 				
-	            float winRate = child.getTotalScore() / child.getVisits();
+	            float score = child.getTotalScore() / child.getVisits();
+	            if (!winRate)
+	            	score = sigmoid(score);
 	            float uctVal = (float) (K * Math.sqrt(Math.log(parent.getVisits()) / child.getVisits()));
-	            float currentVal = maxPlayer ? (winRate + uctVal) : (winRate - uctVal);
+	            float currentVal = maxPlayer ? (score + uctVal) : (score - uctVal);
 	            
 	            child.setUctValue(currentVal);
 				

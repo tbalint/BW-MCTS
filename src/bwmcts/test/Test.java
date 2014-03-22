@@ -54,7 +54,7 @@ public class Test implements BWAPIEventListener  {
 		
 		System.out.println("BWAPI created"+ bwapi.getUnitType(3).getName());
 		
-		graphics = false;
+		graphics = true;
 		
 		Constants.Max_Units = 200;
 		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
@@ -65,11 +65,11 @@ public class Test implements BWAPIEventListener  {
 		GUCTCD guctcdA = new GUCTCD(1.6, 20, 1, 0, 100, false);
 		guctcdA.setHpMulitplier(1);
 		guctcdA.setClusters(6);
-		GUCTCD guctcdB = new GUCTCD(1.6, 20, 0, 1, 200, false);
+		GUCTCD guctcdB = new GUCTCD(1.6, 20, 0, 1, 100, false);
 		guctcdB.setHpMulitplier(1);
 		guctcdB.setClusters(6);
-		Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 500, false),40);
-		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 100, false),40);
+		//Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 500, false, false),40);
+		Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 500, false),40);
 		//Player p1 = new UctcdLogic(bwapi, guctcdA, 40);
 		//Player p1 = new GPortfolioGreedyLogic(bwapi, 1, 0, 100, 40, 6);
 		//Player p1 = new PortfolioGreedyLogic(bwapi, 1, 0, 100, 400);
@@ -78,18 +78,18 @@ public class Test implements BWAPIEventListener  {
 		//Player p1 = new Player_KiteDPS(0);		
 		//Player p1 = new Player_NoOverKillAttackValue(0);
 		//Player p2 = new Player_KiteDPS(1);		
-		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 100, false),40);
+		//Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 500, false, true),40);
 		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 500, false),40);
 		//Player p1 = new GPortfolioGreedyLogic(bwapi, 2, 2, 40, 1);
 		//Player p1 = new PortfolioGreedyLogic(bwapi, 1, 0, 100, 400000);
 		
 		//Player p2 = new Player_Random(1);
-		Player p2 = new Player_NoOverKillAttackValue(1);
+		//Player p2 = new Player_NoOverKillAttackValue(1);
 		//Player p2 = new Player_Random(1);
 		
-		//Player p2 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 0, 1, 100, false), 40);
-		//Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 0, 1, 500, false),40);
-		//Player p2 = new UctcdLogic(bwapi, guctcdB, 40);		
+		//Player p2 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 0, 1, 500, false), 40);
+		//Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 0, 1, 500, false, false),40);
+		Player p2 = new UctcdLogic(bwapi, guctcdB, 40);		
 		//Player p2 = new GPortfolioGreedyLogic(bwapi, 2, 2, 30, 6);
 		
 		//oneTypeTest(p1, p2, UnitTypes.Terran_Marine, 25);
@@ -479,7 +479,7 @@ public class Test implements BWAPIEventListener  {
 	private void realisticTest(Player p1, Player p2, int runs) {
 		
 		// Combat size
-		for(int i = 1; i <= 10; i+=2){
+		for(int i = 2; i <= 10; i+=2){
 			try {
 				System.out.println("--- " + ((i*10)+(i*5)+(i)));
 				float result = testRealisticGames(p1, p2, i*10, i*5, i, runs);
@@ -499,12 +499,12 @@ public class Test implements BWAPIEventListener  {
 		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
 		unitsA.put(UnitTypes.Terran_Siege_Tank_Tank_Mode, tanks);
 		unitsA.put(UnitTypes.Terran_Marine, marines);
-		unitsA.put(UnitTypes.Terran_Firebat, firebats);
+		//unitsA.put(UnitTypes.Terran_Firebat, firebats);
 		
 		HashMap<UnitTypes, Integer> unitsB = new HashMap<UnitType.UnitTypes, Integer>();
 		unitsB.put(UnitTypes.Terran_Siege_Tank_Tank_Mode, tanks);
 		unitsB.put(UnitTypes.Terran_Marine, marines);
-		unitsB.put(UnitTypes.Terran_Firebat, firebats);
+		//unitsB.put(UnitTypes.Terran_Firebat, firebats);
 		
 		Constants.Max_Units = (marines+firebats+tanks)*2;
 		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
