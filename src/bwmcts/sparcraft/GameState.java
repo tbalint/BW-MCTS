@@ -776,8 +776,8 @@ public class GameState {
 	            //double chosenTime  = Math.min(timeUntilAttack, defaultMoveDuration);
 
 	            // the chosen movement distance
-	            // moveDistance      = (int) (Math.min(timeUntilAttack == 0 ? unit.attackCoolDown : timeUntilAttack, (double)Constants.Move_Distance / unit.speed()) * unit.speed());
-	            moveDistance      = (int) (Math.min(timeUntilAttack == 0 ? unit.attackCoolDown : timeUntilAttack, unit.moveCoolDown) * unit.speed());
+	            moveDistance      = (int) (Math.min(timeUntilAttack == 0 ? unit.attackCoolDown : timeUntilAttack, (double)Constants.Move_Distance / unit.speed()) * unit.speed());
+	            //moveDistance      = (int) (Math.min(timeUntilAttack == 0 ? unit.attackCoolDown : timeUntilAttack, unit.moveCoolDown) * unit.speed());
 	            // DEBUG: If chosen move distance is ever 0, something is wrong
 	            if (moveDistance == 0)
 	            {
@@ -829,13 +829,18 @@ public class GameState {
 	    }
 		UnitAction move;
 		Unit ourUnit,enemyUnit;
+		HashMap<Unit,Boolean> moved=new HashMap<Unit,Boolean>();
 	    for (int m=0; m<moves.size(); m++)
 	    {
 	    	//performUnitAction(moves.get(m));
 	    	move=moves.get(m);
 	    	ourUnit		= getUnit(move._player, move._unit);
 	    	//int player		= ourUnit.player();
-	    	
+	    	if (moved.containsKey(ourUnit)){
+	    		continue;
+	    	} else {
+	    		moved.put(ourUnit, true);
+	    	}
 
 	    	if (move._moveType == UnitActionTypes.ATTACK)
 	    	{

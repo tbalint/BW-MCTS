@@ -49,7 +49,7 @@ public class SparcraftUI extends JComponent {
 			} else {
 				g.drawRect(offSetX, offSetY, map.getPixelWidth()*2, map.getPixelHeight()*2);
 			}
-			drawScaleForMap(g, map.getPixelWidth(), map.getPixelHeight());
+			drawScaleForMap(g, map.getPixelWidth()*2, map.getPixelHeight()*2);
 		}
 		
 		g.setColor(Color.blue);
@@ -58,7 +58,7 @@ public class SparcraftUI extends JComponent {
 			if (a!=null && a.isAlive()){
 				Image i=images.get(a.type().getName().replaceAll(" ", "_"));
 				if (i!=null){
-					drawImageOnPosition(g,i,a.pos());
+					drawImageOnPosition(g,i,a.currentPosition(_state._currentTime));
 			    } else{
 			    	g.drawOval(a.pos().getX()-2+offSetX, a.pos().getY()-2+offSetY, 4, 4);
 			    }
@@ -74,7 +74,7 @@ public class SparcraftUI extends JComponent {
 			if (a!=null && a.isAlive()){
 				Image i=images.get(a.type().getName().replaceAll(" ", "_"));
 				if (i!=null){
-					drawImageOnPosition(g,i,a.pos());
+					drawImageOnPosition(g,i,a.currentPosition(_state._currentTime));
 			    } else {
 			    	g.drawOval(a.pos().getX()-2+offSetX, a.pos().getY()-2+offSetY, 4, 4);
 			    }
