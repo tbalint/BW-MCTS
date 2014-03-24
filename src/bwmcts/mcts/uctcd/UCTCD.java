@@ -45,6 +45,9 @@ public class UCTCD {
 	private int RANDOM = 0;
 	
 	private boolean winRate;
+	
+	
+	private HashMap<Integer, Integer> currentMoves;
 
 	public UCTCD(double k, int maxChildren, int minPlayerIndex,
 			int maxPlayerIndex, int simulationSteps, boolean debug, boolean winRate) {
@@ -189,7 +192,7 @@ public class UCTCD {
 		int playerToMove = getPlayerToMove(node, state);
 		
 		HashMap<Integer, List<UnitAction>> map = new HashMap<Integer, List<UnitAction>>();
-		
+		currentMoves=new HashMap<Integer, Integer>();
 		try {
 			state.generateMoves(map, playerToMove);
 		} catch (Exception e) {
@@ -198,7 +201,7 @@ public class UCTCD {
 		}
 		
 		// Move ordering
-		//shuffleMoveOrders(map);
+		shuffleMoveOrders(map);
 		
 		NodeType childType = getChildNodeType(node, state);
 		
@@ -235,7 +238,7 @@ public class UCTCD {
 	        int moveBegin = -1;
 	        
 	        int numMoves = map.get(u).size();
-	        
+
 	        // reverse through the list of actions for this unit
 	        for(int a = numMoves-1; a >= 0; --a){
 				
@@ -268,7 +271,7 @@ public class UCTCD {
 	        // shuffle the movement actions for this unit
 	        if (moveEnd != -1 && moveBegin != -1 && moveEnd != moveBegin)
 	        {
-	        	List<UnitAction> moveActions = map.get(u).subList(moveBegin, moveEnd+1);
+	        	List<UnitAction> moveActions = map.get(u).subList(moveBegin+1, moveEnd+1);
 	        	/*
 	        	for(UnitAction action : moveActions)
 	        		map.get(u).remove(action);
@@ -340,11 +343,23 @@ public class UCTCD {
 		
 		ArrayList<UnitAction> move = new ArrayList<UnitAction>();
 		
-		Random r = new Random();
+		/*Random r = new Random();
 		for(Integer i : map.keySet()){
 			
 			// Add random possible action
 			move.add(map.get(i).get(r.nextInt(map.get(i).size())));
+			
+		}*/
+		
+		for(Integer i: map.keySet()){
+			if (currentMoves.containsKey(i)){
+				int a=(currentMoves.get(i)+1) % map.get(i).size(); 
+				currentMoves.put(i, a);
+				move.add(map.get(i).get(a));
+			} else {
+				currentMoves.put(i, 0);
+				move.add(map.get(i).get(0));
+			}
 			
 		}
 		

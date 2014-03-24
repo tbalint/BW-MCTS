@@ -68,8 +68,8 @@ public class Test implements BWAPIEventListener  {
 		GUCTCD guctcdB = new GUCTCD(1.6, 20, 0, 1, 100, false);
 		guctcdB.setHpMulitplier(1);
 		guctcdB.setClusters(6);
-		//Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 500, false, false),40);
-		Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 500, false),40);
+		Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 500, false, false),40);
+		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 500, false),40);
 		//Player p1 = new UctcdLogic(bwapi, guctcdA, 40);
 		//Player p1 = new GPortfolioGreedyLogic(bwapi, 1, 0, 100, 40, 6);
 		//Player p1 = new PortfolioGreedyLogic(bwapi, 1, 0, 100, 400);
