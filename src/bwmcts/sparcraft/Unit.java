@@ -163,7 +163,7 @@ public class Unit implements Comparable<Unit> {
 
 		    // update the position
 		    //_position.addPosition(dist * dir.x(), dist * dir.y());
-		    _position.moveTo(move.pos());
+		    _position=move.pos().clone();
 		    
 		    setPreviousAction(move, gameTime);
 	}
@@ -292,16 +292,18 @@ public class Unit implements Comparable<Unit> {
     	if (_previousAction._moveType == UnitActionTypes.MOVE)
         {
             // if gameTime is equal to previous move time then we haven't moved yet
-    		if (gameTime >= _timeCanMove)
-	        {
-	         	
-	             return _position;
-	        }
-    		else if (gameTime == _previousActionTime)
+    		if (gameTime == _previousActionTime)
             {
 
                 return _previousPosition;
             }
+    		
+    		else if (gameTime >= _timeCanMove)
+	        {
+	         	
+	             return _position;
+	        }
+    		
             // else if game time is >= time we can move, then we have arrived at the destination
            
             // otherwise we are still moving, so calculate the current position

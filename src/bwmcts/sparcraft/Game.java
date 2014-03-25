@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 
 
 
+
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
@@ -131,13 +132,32 @@ public class Game {
 	        if (display)
 	        {
 		        //state.print();
-		        ui.setGameState(state);
-		        ui.repaint();
-	        	try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+	        	GameState copy=state.clone();
+	        	copy.finishedMoving();
+	        	
+	        	int nextTime=Math.min(copy.getUnit(0,0).firstTimeFree(), copy.getUnit(1,0).firstTimeFree());
+	        	int time=state.getTime();
+	        	if (time<nextTime){
+		        	while (time<nextTime){
+		        		copy.setTime(time);
+				        ui.setGameState(copy);
+				        ui.repaint();
+			        	try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+			        	time++;
+		        	}
+	        	} else {
+	        		ui.setGameState(copy);
+			        ui.repaint();
+		        	try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+	        	}
 	        }
 	        
 	        state.finishedMoving();
