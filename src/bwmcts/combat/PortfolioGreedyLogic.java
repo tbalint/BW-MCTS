@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import javabot.JNIBWAPI;
-import bwmcts.mcts.UnitState;
-import bwmcts.mcts.UnitStateTypes;
+import bwmcts.uct.UnitState;
+import bwmcts.uct.UnitStateTypes;
 import bwmcts.sparcraft.AnimationFrameData;
 import bwmcts.sparcraft.Constants;
 import bwmcts.sparcraft.EvaluationMethods;

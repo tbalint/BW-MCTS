@@ -10,15 +10,12 @@ import javabot.types.UnitType;
 import javabot.types.UnitType.UnitTypes;
 import bwmcts.Util;
 import bwmcts.clustering.UPGMA;
-import bwmcts.combat.GPortfolioGreedyLogic;
-import bwmcts.combat.GuctcdLogic;
-import bwmcts.combat.IuctcdLogic;
-import bwmcts.combat.PortfolioGreedyLogic;
 import bwmcts.combat.UctcdLogic;
-import bwmcts.mcts.guct.GUCTCD;
-import bwmcts.mcts.iuct.IUCTCD;
-import bwmcts.mcts.oldiuct.OLDIUCTCD;
-import bwmcts.mcts.uctcd.UCTCD;
+import bwmcts.uct.UctConfig;
+import bwmcts.uct.UctStats;
+import bwmcts.uct.guctcd.ClusteringConfig;
+import bwmcts.uct.guctcd.GUCTCD;
+import bwmcts.uct.iuct.IUCTCD;
 import bwmcts.sparcraft.*;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_AttackClosest;
@@ -55,7 +52,7 @@ public class Test implements BWAPIEventListener  {
 		
 		System.out.println("BWAPI created"+ bwapi.getUnitType(3).getName());
 		
-		//graphics = true;
+		graphics = true;
 		
 		Constants.Max_Units = 200;
 		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
@@ -63,35 +60,22 @@ public class Test implements BWAPIEventListener  {
 		//Player p1 = new Player_Kite(0);
 		
 		//Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 500, false), 200);
-		GUCTCD guctcdA = new GUCTCD(1.6, 20, 1, 0, 100, false);
-		guctcdA.setHpMulitplier(1);
-		guctcdA.setClusters(6);
-		GUCTCD guctcdB = new GUCTCD(1.6, 20, 0, 1, 100, false);
-		guctcdB.setHpMulitplier(1);
-		guctcdB.setClusters(6);
-		//Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 50000, false, true),40);
+		GUCTCD guctcdA = new GUCTCD(new UctConfig(0), 
+									new UctStats(),
+									new ClusteringConfig(1, 6, new UPGMA()));
+
+		GUCTCD guctcdB = new GUCTCD(new UctConfig(1), 
+									new UctStats(),
+									new ClusteringConfig(1, 6, new UPGMA()));
+
+		Player p1 = new UctcdLogic(bwapi, new IUCTCD(new UctConfig(0), new UctStats()),40);
 		//Player p1 = new UctcdLogic(bwapi, new OLDIUCTCD(1.6, 20, 1, 0, 50000, false),40);
-		Player p1 = new UctcdLogic(bwapi, guctcdA, 40);
-		//Player p1 = new GPortfolioGreedyLogic(bwapi, 1, 0, 100, 40, 6);
-		//Player p1 = new PortfolioGreedyLogic(bwapi, 1, 0, 100, 400);
-		
-		//Player p1 = new Player_Random(0);		
-		//Player p1 = new Player_KiteDPS(0);		
+		//Player p1 = new UctcdLogic(bwapi, guctcdA, 40);
 		//Player p1 = new Player_NoOverKillAttackValue(0);
-		//Player p2 = new Player_KiteDPS(1);		
-		//Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 500, false, true),40);
-		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 500, false),40);
-		//Player p1 = new GPortfolioGreedyLogic(bwapi, 2, 2, 40, 1);
-		//Player p1 = new PortfolioGreedyLogic(bwapi, 1, 0, 100, 400000);
 		
-		//Player p2 = new Player_Random(1);
+		//Player p2 = new UctcdLogic(bwapi, new IUCTCD(new UctConfig(1), new UctStats()),40);
 		Player p2 = new Player_NoOverKillAttackValue(1);
-		//Player p2 = new Player_Random(1);
 		
-		//Player p2 = new UctcdLogic(bwapi, new OLDIUCTCD(1.6, 20, 0, 1, 500, false), 40);
-		//Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 0, 1, 500, false, false),40);
-		//Player p2 = new UctcdLogic(bwapi, guctcdB, 40);		
-		//Player p2 = new GPortfolioGreedyLogic(bwapi, 2, 2, 30, 6);
 		
 		//oneTypeTest(p1, p2, UnitTypes.Terran_Marine, 25);
 
@@ -105,7 +89,7 @@ public class Test implements BWAPIEventListener  {
 		//realisticTest(p1, p2, 20);
 		
 		//dragoonZTest(p1, p2, 20, new int[]{8,16,32,50,75,100});
-		dragoonZTest(p1, p2, 10, new int[]{50,75});
+		dragoonZTest(p1, p2, 2, new int[]{8,16,32,50,75});
 		
 		//upgmaTest(p1, p2, 100, 25);
 		
@@ -251,6 +235,7 @@ public class Test implements BWAPIEventListener  {
 	 * @param p2
 	 * @throws Exception 
 	 */
+	/*
 	private void upgmaTest(Player p1, Player p2, int runs, int numClusters) throws Exception {
 		
 		p1.setID(0);
@@ -270,7 +255,8 @@ public class Test implements BWAPIEventListener  {
 		}
 		
 	}
-	
+	*/
+	/*
 	private double runUpgma(Player p1, Player p2, int i, int numClusters) throws Exception {
 		
 		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
@@ -295,7 +281,7 @@ public class Test implements BWAPIEventListener  {
 	    return time;
 		
 	}
-	
+	*/
 	/**
 	 * UPGMA Scenario for screenshots of clusterings.
 	 * @param p1

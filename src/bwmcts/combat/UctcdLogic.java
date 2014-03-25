@@ -1,6 +1,5 @@
 package bwmcts.combat;
 
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,10 +8,6 @@ import java.util.List;
 import javax.swing.JFrame;
 
 import bwmcts.clustering.UPGMA;
-import bwmcts.mcts.guct.GUCTCD;
-import bwmcts.mcts.iuct.IUCTCD;
-import bwmcts.mcts.oldiuct.OLDIUCTCD;
-import bwmcts.mcts.uctcd.UCTCD;
 
 import bwmcts.sparcraft.AnimationFrameData;
 import bwmcts.sparcraft.Game;
@@ -27,35 +22,20 @@ import bwmcts.sparcraft.UnitActionTypes;
 import bwmcts.sparcraft.UnitProperties;
 import bwmcts.sparcraft.WeaponProperties;
 import bwmcts.sparcraft.players.Player;
+import bwmcts.uct.UCT;
 import javabot.JNIBWAPI;
 import javabot.util.BWColor;
 
 public class UctcdLogic extends Player implements ICombatLogic {
 
-	private UCTCD uctcd;
-	private GUCTCD guctcd;
-	private IUCTCD iuctcd;
+	private UCT uct;
 	private SparcraftUI ui;
 	private HashMap<Integer,UnitAction> actions=new HashMap<Integer,UnitAction>();
 	private int timeBudget;
-	private OLDIUCTCD oldiuctcd;
 	
-	public UctcdLogic(JNIBWAPI bwapi, UCTCD uctcd, int timeBudget){
+	public UctcdLogic(JNIBWAPI bwapi, UCT uct, int timeBudget){
 		
-		this.uctcd = uctcd;
-		
-		bwapi.loadTypeData();
-		AnimationFrameData.Init();
-		PlayerProperties.Init();
-		WeaponProperties.Init(bwapi);
-		UnitProperties.Init(bwapi);
-		this.timeBudget = timeBudget;
-
-	}
-	
-	public UctcdLogic(JNIBWAPI bwapi, GUCTCD uctcd, int timeBudget){
-		
-		this.guctcd = uctcd;
+		this.uct = uct;
 		
 		bwapi.loadTypeData();
 		AnimationFrameData.Init();
@@ -64,30 +44,6 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		UnitProperties.Init(bwapi);
 		this.timeBudget = timeBudget;
 
-	}
-	
-	public UctcdLogic(JNIBWAPI bwapi, IUCTCD uctcd, int timeBudget){
-		
-		this.iuctcd = uctcd;
-		
-		bwapi.loadTypeData();
-		AnimationFrameData.Init();
-		PlayerProperties.Init();
-		WeaponProperties.Init(bwapi);
-		UnitProperties.Init(bwapi);
-		this.timeBudget = timeBudget;
-
-	}
-
-	public UctcdLogic(JNIBWAPI bwapi, OLDIUCTCD oldiuctcd, int timeBudget) {
-		this.oldiuctcd = oldiuctcd;
-		
-		bwapi.loadTypeData();
-		AnimationFrameData.Init();
-		PlayerProperties.Init();
-		WeaponProperties.Init(bwapi);
-		UnitProperties.Init(bwapi);
-		this.timeBudget = timeBudget;
 	}
 
 	@Override	
@@ -97,16 +53,8 @@ public class UctcdLogic extends Player implements ICombatLogic {
 			GameState state = new GameState(bwapi);
 			//state.print();
 			List<UnitAction> move=new ArrayList<UnitAction>();
-			if (uctcd!=null)
-				move = uctcd.search(state.clone(), timeBudget);
-			if (iuctcd!=null){
-				move = iuctcd.search(state.clone(), timeBudget);
-				//System.out.println("IUCTCDs: " + move);
-			}
-			if (oldiuctcd!=null){
-				move = oldiuctcd.search(state.clone(), timeBudget);
-				//System.out.println("IUCTCDs: " + move);
-			}
+			move = uct.search(state.clone(), timeBudget);
+			/*
 			if (guctcd!=null){
 				
 				try{
@@ -125,6 +73,7 @@ public class UctcdLogic extends Player implements ICombatLogic {
 				}
 				
 			}
+			*/
 			System.out.println();
 			executeActions(bwapi,state,move);
 		} catch(Exception e){
@@ -238,14 +187,8 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		
 		moveVec.clear();
 		List<UnitAction> move=new ArrayList<UnitAction>();
-		if (uctcd!=null)
-			move = uctcd.search(state.clone(), timeBudget);
-		if (iuctcd!=null){
-			move = iuctcd.search(state.clone(), timeBudget);
-		}
-		if (oldiuctcd!=null){
-			move = oldiuctcd.search(state.clone(), timeBudget);
-		}
+		move = uct.search(state.clone(), timeBudget);
+		/*
 		if (guctcd!=null){
 			
 			try{
@@ -259,7 +202,7 @@ public class UctcdLogic extends Player implements ICombatLogic {
 				
 			}
 		}
-		
+		*/
 		for(UnitAction action : move)
 			moveVec.add(action.clone());
 	

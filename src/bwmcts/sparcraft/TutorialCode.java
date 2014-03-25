@@ -13,19 +13,13 @@ import javabot.BWAPIEventListener;
 import javabot.JNIBWAPI;
 import javabot.types.UnitType;
 import javabot.types.UnitType.UnitTypes;
-import bwmcts.combat.GPortfolioGreedyLogic;
-import bwmcts.combat.GuctcdLogic;
-import bwmcts.combat.IuctcdLogic;
-import bwmcts.combat.PortfolioGreedyLogic;
 import bwmcts.combat.UctcdLogic;
-import bwmcts.mcts.guct.GUCTCD;
-import bwmcts.mcts.iuct.IUCTCD;
-import bwmcts.mcts.uctcd.UCTCD;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_AttackClosest;
 import bwmcts.sparcraft.players.Player_Defense;
 import bwmcts.sparcraft.players.Player_Kite;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
+import bwmcts.uct.guctcd.GUCTCD;
 
 public class TutorialCode implements BWAPIEventListener  {
 	
@@ -215,69 +209,69 @@ public class TutorialCode implements BWAPIEventListener  {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	void runSampleGame() throws Exception
-	{
-	    // running a game is quite simple, you just need 2 players and an initial state
-	    //GameState initialState = AvsBState(16, UnitTypes.Protoss_Dragoon, 16, UnitTypes.Protoss_Dragoon);
-		//GameState initialState = AvsBState(20, UnitTypes.Terran_Marine, 20, UnitTypes.Terran_Marine);
-		/*
-		HashMap<UnitTypes, Integer> A = new HashMap<UnitType.UnitTypes, Integer>();
-		A.put(UnitTypes.Terran_Firebat, 10);
-		A.put(UnitTypes.Terran_Marine, 10);
-		HashMap<UnitTypes, Integer> B = new HashMap<UnitType.UnitTypes, Integer>();
-		B.put(UnitTypes.Protoss_Zealot, 5);
-		B.put(UnitTypes.Protoss_Dragoon, 5);
-		*/
-		
-		GameState initialState = AvsBState(20, UnitTypes.Terran_Marine, 20, UnitTypes.Terran_Marine);
-		
-	    // get the players
-	    Player p1 = new Player_NoOverKillAttackValue(Players.Player_One.ordinal());
-	    //Player p2 = new Player_NoOverKillAttackValue(Players.Player_Two.ordinal());
-	    //Player p2 = new Player_Kite(Players.Player_Two.ordinal());
-	    //Player p2 = new Player_Kite(Players.Player_Two.ordinal());
-	    //Player p2 = new Player_Kite(Players.Player_Two.ordinal());
-	    //Player p2 = getSamplePlayer(Players.Player_Two.ordinal());
-	    //Player p2 = new UctcdLogic(bwapi, new GUCTCD(1.6,20,0,1,500,true));
-	    
-	    //Player p1 = new IuctcdLogic(bwapi, new IUCTCD(1.6,20,1,0,5000,false));
-	    //p1.setID(0);
-	    
-	    //Player p2 = new IuctcdLogic(bwapi, new IUCTCD(1.6,20,0,1,5000,false));
-	    Player p2 = new GuctcdLogic(bwapi, new GUCTCD(1.6,20,0,1,500,false));
-	    //Player p2 = new GPortfolioGreedyLogic(bwapi,2,2,30,6);
-	    //Player p2 = new GuctcdLogic(bwapi, new GUCTCD(1.6,20,0,1,200,false));
-	    p2.setID(1);
-	    
-	    // enter a maximum move limit for the game to go on for
-	    int moveLimit = 1000;
-
-	    // contruct the game
-	    Game g=new Game(initialState, p1, p2, moveLimit,true);
-
-	    // play the game
-	    g.play();
-
-	    // you can access the resulting game state after g has been played via getState
-	    GameState finalState = g.getState();
-	    // you can now evaluate the state however you wish. let's use an LTD2 evaluation from the point of view of player one
-	    StateEvalScore score = finalState.eval(Players.Player_One.ordinal(), EvaluationMethods.LTD2);
-	    // StateEvalScore has two components, a numerical score and a number of Movement actions performed by each player
-	    // with this evaluation, positive val means win, negative means loss, 0 means tie
-	    if (score._val > 0)
-	    {
-	        System.out.println( "Player One Wins!\n");
-	    }
-	    else if (score._val < 0)
-	    {
-	    	 System.out.println( "Player Two Wins!\n");
-	    }
-	    else
-	    {
-	    	 System.out.println( "Game is a draw!\n");
-	    }
-	}
+/*
+//	void runSampleGame() throws Exception
+//	{
+//	    // running a game is quite simple, you just need 2 players and an initial state
+//	    //GameState initialState = AvsBState(16, UnitTypes.Protoss_Dragoon, 16, UnitTypes.Protoss_Dragoon);
+//		//GameState initialState = AvsBState(20, UnitTypes.Terran_Marine, 20, UnitTypes.Terran_Marine);
+//		/*
+//		HashMap<UnitTypes, Integer> A = new HashMap<UnitType.UnitTypes, Integer>();
+//		A.put(UnitTypes.Terran_Firebat, 10);
+//		A.put(UnitTypes.Terran_Marine, 10);
+//		HashMap<UnitTypes, Integer> B = new HashMap<UnitType.UnitTypes, Integer>();
+//		B.put(UnitTypes.Protoss_Zealot, 5);
+//		B.put(UnitTypes.Protoss_Dragoon, 5);
+//		*/
+//		
+//		GameState initialState = AvsBState(20, UnitTypes.Terran_Marine, 20, UnitTypes.Terran_Marine);
+//		
+//	    // get the players
+//	    Player p1 = new Player_NoOverKillAttackValue(Players.Player_One.ordinal());
+//	    //Player p2 = new Player_NoOverKillAttackValue(Players.Player_Two.ordinal());
+//	    //Player p2 = new Player_Kite(Players.Player_Two.ordinal());
+//	    //Player p2 = new Player_Kite(Players.Player_Two.ordinal());
+//	    //Player p2 = new Player_Kite(Players.Player_Two.ordinal());
+//	    //Player p2 = getSamplePlayer(Players.Player_Two.ordinal());
+//	    //Player p2 = new UctcdLogic(bwapi, new GUCTCD(1.6,20,0,1,500,true));
+//	    
+//	    //Player p1 = new IuctcdLogic(bwapi, new IUCTCD(1.6,20,1,0,5000,false));
+//	    //p1.setID(0);
+//	    
+//	    //Player p2 = new IuctcdLogic(bwapi, new IUCTCD(1.6,20,0,1,5000,false));
+//	    Player p2 = new GuctcdLogic(bwapi, new GUCTCD(1.6,20,0,1,500,false));
+//	    //Player p2 = new GPortfolioGreedyLogic(bwapi,2,2,30,6);
+//	    //Player p2 = new GuctcdLogic(bwapi, new GUCTCD(1.6,20,0,1,200,false));
+//	    p2.setID(1);
+//	    
+//	    // enter a maximum move limit for the game to go on for
+//	    int moveLimit = 1000;
+//
+//	    // contruct the game
+//	    Game g=new Game(initialState, p1, p2, moveLimit,true);
+//
+//	    // play the game
+//	    g.play();
+//
+//	    // you can access the resulting game state after g has been played via getState
+//	    GameState finalState = g.getState();
+//	    // you can now evaluate the state however you wish. let's use an LTD2 evaluation from the point of view of player one
+//	    StateEvalScore score = finalState.eval(Players.Player_One.ordinal(), EvaluationMethods.LTD2);
+//	    // StateEvalScore has two components, a numerical score and a number of Movement actions performed by each player
+//	    // with this evaluation, positive val means win, negative means loss, 0 means tie
+//	    if (score._val > 0)
+//	    {
+//	        System.out.println( "Player One Wins!\n");
+//	    }
+//	    else if (score._val < 0)
+//	    {
+//	    	 System.out.println( "Player Two Wins!\n");
+//	    }
+//	    else
+//	    {
+//	    	 System.out.println( "Game is a draw!\n");
+//	    }
+//	}
 	
 	
 
@@ -303,7 +297,7 @@ public class TutorialCode implements BWAPIEventListener  {
 		
 		System.out.println("BWAPI created"+ bwapi.getUnitType(3).getName());
 		//System.out.println(getSamplePlayerActionsFromState());
-			runSampleGame();
+			//runSampleGame();
 			/*
 			runSampleGame();
 			runSampleGame();

@@ -3,10 +3,8 @@
 * https://code.google.com/p/sparcraft/
 * author of the source: David Churchill
 **/
-package bwmcts.mcts;
+package bwmcts.uct;
 
-public enum NodeType {
-
-	FIRST, SECOND, SOLO, ROOT, DEFAULT;
-	
+public enum UnitStateTypes {
+	ATTACK, KITE;
 }

@@ -3,29 +3,29 @@
 * https://code.google.com/p/sparcraft/
 * author of the source: David Churchill
 **/
-package bwmcts.mcts.uctcd;
+package bwmcts.uct;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import bwmcts.mcts.NodeType;
+import bwmcts.uct.NodeType;
 import bwmcts.sparcraft.UnitAction;
 
 public class UctNode {
 
-	private int visits;
-	private float totalScore;
-	private float uctValue;
+	protected int visits;
+	protected float totalScore;
+	protected float uctValue;
 	
-	private List<UnitAction> move;
-	private int movingPlayerIndex;
-	private NodeType type;
+	protected List<UnitAction> move;
+	protected int movingPlayerIndex;
+	protected NodeType type;
 	
-	private List<UctNode> children;
-	private UctNode parent;
-	private HashMap<Integer, List<UnitAction>> possibleMoves;
-	private String label;
+	protected List<UctNode> children;
+	protected UctNode parent;
+	protected HashMap<Integer, List<UnitAction>> possibleMoves;
+	protected String label;
 	
 	public UctNode(UctNode parent, NodeType type, List<UnitAction> move, int movingPlayerIndex, String label) {
 		
@@ -36,11 +36,11 @@ public class UctNode {
 		this.parent = parent;
 		this.children = new ArrayList<UctNode>();
 		this.type = type;
-		this.move = move;
 		this.label = label;
+		this.move = move;
 		
 	}
-	
+
 	public UctNode mostVisitedChild(){
 		UctNode mostVisited = null;
 		for(UctNode child : children){
@@ -50,14 +50,6 @@ public class UctNode {
 		return mostVisited;
 	}
 	
-	public List<UnitAction> getMove() {
-		return move;
-	}
-
-	public void setMove(List<UnitAction> move) {
-		this.move = move;
-	}
-
 	public List<UctNode> getChildren() {
 		return children;
 	}
@@ -113,19 +105,22 @@ public class UctNode {
 	public void setMovingPlayerIndex(int movingPlayerIndex) {
 		this.movingPlayerIndex = movingPlayerIndex;
 	}
-
-	public String print(int level) {
-		
+	
+	public String moveString(){
 		String moves = "";
 		for(UnitAction a : move){
 			moves += a.moveString() + "(" + a.pos().getX() + "," + a.pos().getY() + ");";
 		}
+		return moves;
+	}
+
+	public String print(int level) {
 		
 		String out = "";
 		for(int n = 0; n < level; n++){
 			out += "\t";
 		}
-		out += "<node label="+label+" score=" + totalScore / visits + " visited=" + visits + " type="+type+ " playerToMove=" + movingPlayerIndex + " moves=" + moves;
+		out += "<node label="+label+" score=" + totalScore / visits + " visited=" + visits + " type="+type+ " playerToMove=" + movingPlayerIndex + " moves=" + moveString();
 		
 		if (children.isEmpty()){
 			out += "/>\n";
@@ -165,6 +160,14 @@ public class UctNode {
 
 	public void setPossibleMoves(HashMap<Integer, List<UnitAction>> possibleMoves) {
 		this.possibleMoves = possibleMoves;
+	}
+
+	public List<UnitAction> getMove() {
+		return move;
+	}
+
+	public void setMove(List<UnitAction> move) {
+		this.move = move;
 	}
 	
 }

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import bwmcts.mcts.UnitState;
-import bwmcts.mcts.UnitStateTypes;
+import bwmcts.uct.UnitState;
+import bwmcts.uct.UnitStateTypes;
 import bwmcts.sparcraft.GameState;
 import bwmcts.sparcraft.Unit;
 import bwmcts.sparcraft.UnitAction;

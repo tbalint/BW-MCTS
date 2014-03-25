@@ -12,40 +12,26 @@ import java.util.Queue;
 
 import bwmcts.sparcraft.Unit;
 
-public class UPGMA {
+public class UPGMA implements ClusteringAlgorithm {
 	int K;			// The number of clusters created so far
 	UPCluster[] cluster;		// The nodes (clusters) of the resulting tree
 	List<Unit> input;
 	private double hpMultiplier;
 	private double distMultiplier;
 	
-	public UPGMA(double[][] ds) {
-		int N = ds.length;
-	    cluster = new UPCluster[2*N-1];
-	    for (int i=0; i<N; i++) 
-	    	cluster[i] = new UPCluster(i, ds[i]);
-	    K = N;
-	    while (K < 2*N-1)
-	    	findAndJoin();
-	}
-	
-	public UPGMA(List<Unit> in) {
-		input = in;
-		double[][] ds = createDistanceMatrix(input);
-	    int N = ds.length;
-	    cluster = new UPCluster[2*N-1];
-	    for (int i=0; i<N; i++) 
-	    	cluster[i] = new UPCluster(i, ds[i]);
-	    K = N;
-	    while (K < 2*N-1)
-	    	findAndJoin();
-	}
-	
-	public UPGMA(Unit[] in, double hpMultiplier, double distMultiplier) {
+	@Override
+	public HashMap<Integer, List<Unit>> getClusters(Unit[] units, int numClusters, double hpMultiplier) {
 		
 		this.hpMultiplier = hpMultiplier;
-		this.distMultiplier = distMultiplier;
 		
+		init(units);
+		
+		return getClusters(numClusters);
+		
+	}
+
+	private void init(Unit[] in){
+
 		input = new ArrayList<Unit>();
 		for (int i=0; i<in.length;i++){
 			if (in[i]!=null && in[i].isAlive())
@@ -63,7 +49,7 @@ public class UPGMA {
 	    while (K < 2*N-1)
 	    	findAndJoin();
 	}
-
+	
 	public UPCluster getRoot()
 	{ return cluster[K-1]; }
 	  
@@ -222,6 +208,8 @@ public class UPGMA {
 		}
 		
 	}
+
+
 }
 
 // UPGMA clusters or trees, built by the UPGMA algorithm

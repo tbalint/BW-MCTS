@@ -26,7 +26,7 @@ public class SparcraftUI extends JComponent {
 	 */
 	private static final long serialVersionUID = 1L;
 	private GameState _state;
-	public int c = 1;
+	public int c = 6;
 	
 	public SparcraftUI(GameState state) {
 		_state=state;
@@ -88,8 +88,7 @@ public class SparcraftUI extends JComponent {
 			
 		} 
 		
-		UPGMA clustering=new UPGMA(_state.getAllUnit()[1], c, 1);
-	    HashMap<Integer,List<Unit>>clusters=  clustering.getClusters(6);
+		HashMap<Integer,List<Unit>>clusters=new UPGMA().getClusters(_state.getAllUnit()[0], c, 1);
 	    int clusterId=0;
 	    if (clusters == null || clusters.values() == null)
 	    	return;

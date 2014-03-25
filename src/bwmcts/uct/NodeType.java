@@ -3,7 +3,7 @@
 * https://code.google.com/p/sparcraft/
 * author of the source: David Churchill
 **/
-package bwmcts.mcts.oldiuct;
+package bwmcts.uct;
 
 public enum NodeType {
 

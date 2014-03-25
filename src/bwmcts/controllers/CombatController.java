@@ -1,10 +1,13 @@
 package bwmcts.controllers;
 
+import bwmcts.clustering.UPGMA;
 import bwmcts.combat.*;
-import bwmcts.mcts.uctcd.UCTCD;
-import bwmcts.mcts.guct.GUCTCD;
-import bwmcts.mcts.iuct.IUCTCD;
 import bwmcts.sparcraft.Position;
+import bwmcts.uct.UctConfig;
+import bwmcts.uct.UctStats;
+import bwmcts.uct.guctcd.GUCTCD;
+import bwmcts.uct.guctcd.ClusteringConfig;
+import bwmcts.uct.iuct.IUCTCD;
 import javabot.BWAPIEventListener;
 import javabot.JNIBWAPI;
 import javabot.model.*;
@@ -56,10 +59,10 @@ public class CombatController implements BWAPIEventListener {
 
 		//combatLogic =new GuctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false));
 		//combatLogic
-		GUCTCD guctcdA = new GUCTCD(1.6, 20, 0, 1, 100, false);
-		guctcdA.setHpMulitplier(1);
-		guctcdA.setClusters(6);
-		combatLogic =new UctcdLogic(bwapi,guctcdA, 35);
+		GUCTCD guctcdA = new GUCTCD(new UctConfig(0), 
+									new UctStats(), 
+									new ClusteringConfig(1, 6, new UPGMA()));
+		combatLogic = new UctcdLogic(bwapi, new IUCTCD(new UctConfig(0), new UctStats()),40);
 		//combatLogic = new UctcdLogic(bwapi,new IUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false), 30);
 		//combatLogic =new GPortfolioGreedyLogic(bwapi,2,2,30,6);
 		//combatLogic = new PortfolioGreedyLogic(bwapi,1,1,20 );
