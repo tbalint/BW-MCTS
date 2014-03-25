@@ -202,6 +202,9 @@ public class IUCTCD {
 		IuctNode childAttack = new IuctNode(node, childType, moveAttack, playerToMove, "NOK-AV");
 		node.getChildren().add(childAttack);
 		
+		if (playerToMove != maxPlayerIndex)
+			return;
+		
 		List<UnitState> moveKite = new ArrayList<UnitState>();
 		moveKite.addAll(getAllMove(UnitStateTypes.KITE, map));
 		IuctNode childKite = new IuctNode(node, childType, moveKite, playerToMove, "KITE");

@@ -214,9 +214,11 @@ public class UCTCD {
 		UctNode childNok = new UctNode(node, childType, moveNok, playerToMove, "NOK-AV");
 		node.getChildren().add(childNok);
 		//}
+		if (playerToMove != maxPlayerIndex)
+			return;
 		
 		List<UnitAction> moveKite = new ArrayList<UnitAction>();
-		new Player_KiteDPS(playerToMove).getMoves(state, map, moveKite);
+		new Player_Kite(playerToMove).getMoves(state, map, moveKite);
 		UctNode childKite = new UctNode(node, childType, moveKite, playerToMove, "KITE");
 		node.getChildren().add(childKite);
 		

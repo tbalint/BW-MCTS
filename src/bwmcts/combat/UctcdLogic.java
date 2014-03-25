@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import bwmcts.clustering.UPGMA;
 import bwmcts.mcts.guct.GUCTCD;
 import bwmcts.mcts.iuct.IUCTCD;
+import bwmcts.mcts.oldiuct.OLDIUCTCD;
 import bwmcts.mcts.uctcd.UCTCD;
 
 import bwmcts.sparcraft.AnimationFrameData;
@@ -37,6 +38,7 @@ public class UctcdLogic extends Player implements ICombatLogic {
 	private SparcraftUI ui;
 	private HashMap<Integer,UnitAction> actions=new HashMap<Integer,UnitAction>();
 	private int timeBudget;
+	private OLDIUCTCD oldiuctcd;
 	
 	public UctcdLogic(JNIBWAPI bwapi, UCTCD uctcd, int timeBudget){
 		
@@ -77,6 +79,17 @@ public class UctcdLogic extends Player implements ICombatLogic {
 
 	}
 
+	public UctcdLogic(JNIBWAPI bwapi, OLDIUCTCD oldiuctcd, int timeBudget) {
+		this.oldiuctcd = oldiuctcd;
+		
+		bwapi.loadTypeData();
+		AnimationFrameData.Init();
+		PlayerProperties.Init();
+		WeaponProperties.Init(bwapi);
+		UnitProperties.Init(bwapi);
+		this.timeBudget = timeBudget;
+	}
+
 	@Override	
 	public void act(JNIBWAPI bwapi, int time) {
 		
@@ -88,6 +101,10 @@ public class UctcdLogic extends Player implements ICombatLogic {
 				move = uctcd.search(state.clone(), timeBudget);
 			if (iuctcd!=null){
 				move = iuctcd.search(state.clone(), timeBudget);
+				//System.out.println("IUCTCDs: " + move);
+			}
+			if (oldiuctcd!=null){
+				move = oldiuctcd.search(state.clone(), timeBudget);
 				//System.out.println("IUCTCDs: " + move);
 			}
 			if (guctcd!=null){
@@ -225,6 +242,9 @@ public class UctcdLogic extends Player implements ICombatLogic {
 			move = uctcd.search(state.clone(), timeBudget);
 		if (iuctcd!=null){
 			move = iuctcd.search(state.clone(), timeBudget);
+		}
+		if (oldiuctcd!=null){
+			move = oldiuctcd.search(state.clone(), timeBudget);
 		}
 		if (guctcd!=null){
 			

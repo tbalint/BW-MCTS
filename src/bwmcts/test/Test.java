@@ -17,6 +17,7 @@ import bwmcts.combat.PortfolioGreedyLogic;
 import bwmcts.combat.UctcdLogic;
 import bwmcts.mcts.guct.GUCTCD;
 import bwmcts.mcts.iuct.IUCTCD;
+import bwmcts.mcts.oldiuct.OLDIUCTCD;
 import bwmcts.mcts.uctcd.UCTCD;
 import bwmcts.sparcraft.*;
 import bwmcts.sparcraft.players.Player;
@@ -54,7 +55,7 @@ public class Test implements BWAPIEventListener  {
 		
 		System.out.println("BWAPI created"+ bwapi.getUnitType(3).getName());
 		
-		graphics = true;
+		//graphics = true;
 		
 		Constants.Max_Units = 200;
 		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
@@ -68,9 +69,9 @@ public class Test implements BWAPIEventListener  {
 		GUCTCD guctcdB = new GUCTCD(1.6, 20, 0, 1, 100, false);
 		guctcdB.setHpMulitplier(1);
 		guctcdB.setClusters(6);
-		Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 500, false, false),40);
-		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 1, 0, 500, false),40);
-		//Player p1 = new UctcdLogic(bwapi, guctcdA, 40);
+		//Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 50000, false, true),40);
+		//Player p1 = new UctcdLogic(bwapi, new OLDIUCTCD(1.6, 20, 1, 0, 50000, false),40);
+		Player p1 = new UctcdLogic(bwapi, guctcdA, 40);
 		//Player p1 = new GPortfolioGreedyLogic(bwapi, 1, 0, 100, 40, 6);
 		//Player p1 = new PortfolioGreedyLogic(bwapi, 1, 0, 100, 400);
 		
@@ -84,12 +85,12 @@ public class Test implements BWAPIEventListener  {
 		//Player p1 = new PortfolioGreedyLogic(bwapi, 1, 0, 100, 400000);
 		
 		//Player p2 = new Player_Random(1);
-		//Player p2 = new Player_NoOverKillAttackValue(1);
+		Player p2 = new Player_NoOverKillAttackValue(1);
 		//Player p2 = new Player_Random(1);
 		
-		//Player p2 = new UctcdLogic(bwapi, new IUCTCD(1.6, 20, 0, 1, 500, false), 40);
+		//Player p2 = new UctcdLogic(bwapi, new OLDIUCTCD(1.6, 20, 0, 1, 500, false), 40);
 		//Player p2 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 0, 1, 500, false, false),40);
-		Player p2 = new UctcdLogic(bwapi, guctcdB, 40);		
+		//Player p2 = new UctcdLogic(bwapi, guctcdB, 40);		
 		//Player p2 = new GPortfolioGreedyLogic(bwapi, 2, 2, 30, 6);
 		
 		//oneTypeTest(p1, p2, UnitTypes.Terran_Marine, 25);
@@ -101,7 +102,10 @@ public class Test implements BWAPIEventListener  {
 		
 		//PortfolioTest(p1, p2);
 		
-		realisticTest(p1, p2, 20);
+		//realisticTest(p1, p2, 20);
+		
+		//dragoonZTest(p1, p2, 20, new int[]{8,16,32,50,75,100});
+		dragoonZTest(p1, p2, 10, new int[]{50,75});
 		
 		//upgmaTest(p1, p2, 100, 25);
 		
@@ -491,6 +495,73 @@ public class Test implements BWAPIEventListener  {
 				e.printStackTrace();
 			}
 		}
+		
+	}
+	
+	/***********************
+	 ***  DRAGOON-Z TEST ***
+	 ***********************
+	 * @param p2 
+	 * @param p1 
+	 */
+	private void dragoonZTest(Player p1, Player p2, int runs, int[] n) {
+		
+		// Combat size
+		//int[] n = new int[]{8,16,32,50};
+		
+		for(Integer i : n){
+			try {
+				System.out.println("--- units: " + i);
+				float result = testDragoonZealotGames(p1, p2, (int)i, runs);
+				System.out.println("DRAGOON ZEALOT TEST RESULT: " + result);
+				
+				//System.out.println("Result=" + result);
+				// TODO:
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	float testDragoonZealotGames(Player p1, Player p2, int n, int games) throws Exception{
+		
+		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
+		unitsA.put(UnitTypes.Protoss_Dragoon, n/2);
+		unitsA.put(UnitTypes.Protoss_Zealot, n/2);
+		//unitsA.put(UnitTypes.Terran_Firebat, firebats);
+		
+		HashMap<UnitTypes, Integer> unitsB = new HashMap<UnitType.UnitTypes, Integer>();
+		unitsB.put(UnitTypes.Protoss_Dragoon, n/2);
+		unitsB.put(UnitTypes.Protoss_Zealot, n/2);
+		//unitsB.put(UnitTypes.Terran_Firebat, firebats);
+		
+		Constants.Max_Units = n*2;
+		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
+		
+		System.out.println("Dragoons: " + n/2 + "\tZealots: " + n/2 + " on each side");
+		
+		List<Double> results = new ArrayList<Double>();
+		int wins = 0;
+		for(int i = 1; i <= games; i++){
+			double result = testGame(p1, p2, unitsA, unitsB);
+			results.add(result);
+			if (result>0)
+				wins++;
+			
+			//System.out.println("WHUUT " + result);
+			
+			if(i%1==0){
+				//System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
+				System.out.println("Win average: " + ((double)wins)/((double)i));
+			}
+		}
+		
+		// Calc deviation and average
+		System.out.println("--------------- Score average: " + average(results) + "\tDeviation: " + deviation(results));
+		System.out.println("--------------- Win average: " + ((double)wins)/((double)games));
+		
+		return (float)wins / (float)games;
 		
 	}
 	

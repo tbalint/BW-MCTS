@@ -30,9 +30,9 @@ public class JNIBWAPI {
     // load the BWAPI client library
     static {
     	try {
-    		//System.load("C:/Users/Niels/Documents/BW-MCTS/release/client-bridge-x86.dll");
+    		System.load("C:/Users/Niels/Documents/BW-MCTS/release/client-bridge-x86.dll");
     		//System.load("C:/BWAPI/release/client-bridge-x86.dll");
-            System.loadLibrary("client-bridge-x86"); // HACK. Original was: System.loadLibrary("client-bridge-" + System.getProperty("os.arch"));
+            //System.loadLibrary("client-bridge-x86"); // HACK. Original was: System.loadLibrary("client-bridge-" + System.getProperty("os.arch"));
         } catch (UnsatisfiedLinkError e) {
           System.err.println("Native code library failed to load.\n" + e);
         }
