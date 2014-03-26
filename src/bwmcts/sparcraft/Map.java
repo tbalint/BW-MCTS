@@ -189,8 +189,8 @@ public class Map {
 	{
 		if (unit.type().isBuilding())
 		{
-			int tx = unit.position().getX() / Constants.TILE_SIZE;
-			int ty = unit.position().getY() / Constants.TILE_SIZE;
+			int tx = unit.pos().getX() / Constants.TILE_SIZE;
+			int ty = unit.pos().getY() / Constants.TILE_SIZE;
 			int sx = unit.type().getTileWidth(); 
 			int sy = unit.type().getTileHeight();
 			for(int x = tx; x < tx + sx && x < (int)getBuildTileWidth(); ++x)
@@ -203,10 +203,10 @@ public class Map {
 		}
 		else
 		{
-			int startX = (unit.position().getX() - unit.type().getDimensionLeft()) / Constants.TILE_SIZE;
-			int endX   = (unit.position().getX() + unit.type().getDimensionRight() + Constants.TILE_SIZE - 1) / Constants.TILE_SIZE; // Division - round up
-			int startY = (unit.position().getY() - unit.type().getDimensionUp()) / Constants.TILE_SIZE;
-			int endY   = (unit.position().getY() + unit.type().getDimensionDown() + Constants.TILE_SIZE - 1) / Constants.TILE_SIZE;
+			int startX = (unit.pos().getX() - unit.type().getDimensionLeft()) / Constants.TILE_SIZE;
+			int endX   = (unit.pos().getX() + unit.type().getDimensionRight() + Constants.TILE_SIZE - 1) / Constants.TILE_SIZE; // Division - round up
+			int startY = (unit.pos().getY() - unit.type().getDimensionUp()) / Constants.TILE_SIZE;
+			int endY   = (unit.pos().getY() + unit.type().getDimensionDown() + Constants.TILE_SIZE - 1) / Constants.TILE_SIZE;
 			for (int x = startX; x < endX && x < (int)getBuildTileWidth(); ++x)
 			{
 				for (int y = startY; y < endY && y < (int)getBuildTileHeight(); ++y)
@@ -217,73 +217,6 @@ public class Map {
 		}
 	}
 
-	public int[] getRGBATexture()
-	{
-		int[] data = new int[getWalkTileWidth() * getWalkTileHeight()];
-		for (int x=0; x<getWalkTileWidth(); x++)
-		{
-			for (int y=0; y<getWalkTileHeight(); y++)
-			{
-				if (!isWalkable(x, y))
-				{
-					data[y*getWalkTileWidth() + x] = 0xffffffff;
-				}
-				else
-				{
-					data[y*getWalkTileWidth() + x] = 0x00000000;
-				}
-			}
-		}
-
-		return data;
-	}
-
-	public void write(String filename)
-	{/*
-		std::ofstream fout(filename.c_str());
-		fout << getWalkTileWidth() << "\n" << getWalkTileHeight() << "\n";
-
-		for (size_t y(0); y<getWalkTileHeight(); ++y)
-		{
-			for (size_t x(0); x<getWalkTileWidth(); ++x)
-			{
-				fout << (isWalkable(x, y) ? 1 : 0);
-			}
-
-			fout << "\n";
-		}
-
-		fout.close();*/
-	}
-
-	public void load(String filename)
-	{
-		//std::ifstream fin(filename.c_str());
-		/*String line;
-		
-		getline(fin, line);
-		_walkTileWidth = atoi(line.c_str());
-
-		getline(fin, line);
-		_walkTileHeight = atoi(line.c_str());
-
-        _buildTileWidth = _walkTileWidth/4;
-        _buildTileHeight = _walkTileHeight/4;
-
-		resetVectors();
-
-		for (size_t y(0); y<getWalkTileHeight(); ++y)
-		{
-			getline(fin, line);
-
-			for (size_t x(0); x<getWalkTileWidth(); ++x)
-			{
-				_mapData[x][y] = line[x] == '1' ? true : false;
-			}
-		}
-
-		fin.close();*/
-	}
 	public Map clone(){
 
 		Map m = new Map();

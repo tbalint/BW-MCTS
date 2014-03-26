@@ -5,8 +5,6 @@
 **/
 package bwmcts.sparcraft;
 
-import java.util.List;
-
 import javabot.types.UnitType;
 import javabot.types.UnitType.UnitTypes;
 

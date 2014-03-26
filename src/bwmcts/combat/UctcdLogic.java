@@ -1,21 +1,15 @@
 package bwmcts.combat;
 
-import java.awt.Color;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.JFrame;
 
-import bwmcts.clustering.UPGMA;
 
 import bwmcts.sparcraft.AnimationFrameData;
-import bwmcts.sparcraft.Game;
 import bwmcts.sparcraft.GameState;
 import bwmcts.sparcraft.PlayerProperties;
-import bwmcts.sparcraft.Players;
-import bwmcts.sparcraft.Position;
-import bwmcts.sparcraft.SparcraftUI;
 import bwmcts.sparcraft.Unit;
 import bwmcts.sparcraft.UnitAction;
 import bwmcts.sparcraft.UnitActionTypes;
@@ -29,8 +23,7 @@ import javabot.util.BWColor;
 public class UctcdLogic extends Player implements ICombatLogic {
 
 	private UCT uct;
-	private SparcraftUI ui;
-	private HashMap<Integer,UnitAction> actions=new HashMap<Integer,UnitAction>();
+	//private HashMap<Integer,UnitAction> actions=new HashMap<Integer,UnitAction>();
 	private int timeBudget;
 	
 	public UctcdLogic(JNIBWAPI bwapi, UCT uct, int timeBudget){
@@ -81,7 +74,7 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		}
 	}
 	
-	private void drawClusters(JNIBWAPI bwapi, HashMap<Integer, List<Unit>> clusters) {
+	public void drawClusters(JNIBWAPI bwapi, HashMap<Integer, List<Unit>> clusters) {
 		
 		if (clusters == null)
 			return;
@@ -133,7 +126,7 @@ public class UctcdLogic extends Player implements ICombatLogic {
 				
 				Unit ourUnit		= state.getUnit(move._player, move._unit);
 		    	int player		= ourUnit.player();
-		    	int enemyPlayer  = state.getEnemy(player);
+		    	int enemyPlayer  = GameState.getEnemy(player);
 		    	if (firstAttack.get(ourUnit.getId())!=null){
 		    		if (bwapi.getUnit(firstAttack.get(ourUnit.getId())._moveIndex) == null){
 		    			firstAttack.remove(ourUnit.getId());

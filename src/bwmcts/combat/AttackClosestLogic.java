@@ -9,7 +9,6 @@ import bwmcts.Util;
 import bwmcts.sparcraft.Position;
 import javabot.JNIBWAPI;
 import javabot.model.Unit;
-import javabot.util.BWColor;
 
 public class AttackClosestLogic implements ICombatLogic {
 
@@ -70,7 +69,7 @@ public class AttackClosestLogic implements ICombatLogic {
 			attackingUnits.put(unit.getID(), closestEnemy.getID());
 		}
 		
-		Unit newTarget = bwapi.getUnit(attackingUnits.get(unit.getID()));
+		//Unit newTarget = bwapi.getUnit(attackingUnits.get(unit.getID()));
 		//bwapi.drawLine(unit.getX(), unit.getY(), newTarget.getX(), newTarget.getY(), BWColor.RED, false);
 	}
 }

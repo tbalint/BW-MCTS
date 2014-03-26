@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import javabot.JNIBWAPI;
-import bwmcts.uct.UnitState;
 import bwmcts.uct.UnitStateTypes;
 import bwmcts.sparcraft.AnimationFrameData;
 import bwmcts.sparcraft.Constants;
@@ -19,7 +18,6 @@ import bwmcts.sparcraft.Game;
 import bwmcts.sparcraft.GameState;
 import bwmcts.sparcraft.PlayerProperties;
 import bwmcts.sparcraft.StateEvalScore;
-import bwmcts.sparcraft.Timer;
 import bwmcts.sparcraft.Unit;
 import bwmcts.sparcraft.UnitAction;
 import bwmcts.sparcraft.UnitActionTypes;
@@ -80,7 +78,7 @@ public class PortfolioGreedyLogic extends Player implements ICombatLogic {
 				
 				Unit ourUnit		= state.getUnit(move._player, move._unit);
 		    	int player		= ourUnit.player();
-		    	int enemyPlayer  = state.getEnemy(player);
+		    	int enemyPlayer  = GameState.getEnemy(player);
 		    	if (firstAttack.get(ourUnit.getId())!=null){
 		    		if (!bwapi.getUnit(firstAttack.get(ourUnit.getId())._moveIndex).isExists()){
 		    			firstAttack.remove(ourUnit.getId());
@@ -148,7 +146,7 @@ public class PortfolioGreedyLogic extends Player implements ICombatLogic {
 	private List<UnitAction> search(int player,HashMap<Integer,List<UnitAction>> moves, GameState state)
 	{
 		startTime=System.currentTimeMillis();
-	    int enemyPlayer=state.getEnemy(player);
+	    int enemyPlayer=GameState.getEnemy(player);
 	
 	    // calculate the seed scripts for each player
 	    // they will be used to seed the initial root search
@@ -303,7 +301,7 @@ public class PortfolioGreedyLogic extends Player implements ICombatLogic {
 	
 	private StateEvalScore eval(int player, GameState state, HashMap<Integer,UnitStateTypes> playerScriptsChosen, HashMap<Integer,UnitStateTypes> enemyScriptsChosen)
 	{
-	    int enemyPlayer=state.getEnemy(player);
+	    int enemyPlayer=GameState.getEnemy(player);
 	
 	    Player_ClusteredUnitStateToUnitAction playerA =new Player_ClusteredUnitStateToUnitAction(player);
 	    Player_ClusteredUnitStateToUnitAction playerB =new Player_ClusteredUnitStateToUnitAction(enemyPlayer);

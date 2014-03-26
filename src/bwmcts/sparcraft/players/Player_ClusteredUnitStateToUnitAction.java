@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import bwmcts.uct.UnitState;
 import bwmcts.uct.UnitStateTypes;
 import bwmcts.sparcraft.GameState;
 import bwmcts.sparcraft.Unit;

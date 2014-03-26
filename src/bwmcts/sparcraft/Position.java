@@ -83,8 +83,8 @@ public class Position {
 	}
 
 	public void moveTo(Position pos) {
-		x=pos.x;
-		y=pos.y;
+		x=pos.getX();
+		y=pos.getY();
 		
 	}
 	

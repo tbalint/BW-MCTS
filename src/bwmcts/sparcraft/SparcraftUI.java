@@ -7,7 +7,6 @@ import javax.swing.*;
 import bwmcts.clustering.UPGMA;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,18 +26,31 @@ public class SparcraftUI extends JComponent {
 	private static final long serialVersionUID = 1L;
 	private GameState _state;
 	public int c = 6;
-	
-	public SparcraftUI(GameState state) {
-		_state=state;
+	private static SparcraftUI instance;
+
+	private SparcraftUI() {
+		JFrame f = new JFrame();
+        f.setSize(1000,700);
+        f.setTitle("Sparcraft in JAVA");
+        f.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+        f.getContentPane().add(this);    
+        f.setVisible(true);
 		for (UnitTypes u: UnitTypes.values()){
-			//System.out.println(u.toString());
-			//System.out.println(dirPath+u.toString()+".png");
+
 			images.put(u.toString(), Toolkit.getDefaultToolkit().getImage(dirPath+"units\\"+u.toString()+".png"));
 		}
-		//Terran_Marine = Toolkit.getDefaultToolkit().getImage("c:\\itu\\Sparcraft\\starcraft_images\\units\\Terran_Marine.png");
 		int  i=(int)(Math.random()*10 % 4); 
 		background=Toolkit.getDefaultToolkit().getImage(dirPath+"ground\\ground"+(i>0?i:"")+".png");
 	}
+	
+	public static synchronized SparcraftUI getUI(GameState state) {
+        if (instance == null) {
+            instance = new SparcraftUI();
+        }
+        instance.setGameState(state);
+        
+        return instance;
+    }
 	
 	
 	public void paint(Graphics g){

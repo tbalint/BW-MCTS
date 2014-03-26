@@ -9,14 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.JFrame;
-
-
-
-
-
 import bwmcts.sparcraft.players.Player;
-import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
 public class Game {
 
@@ -27,17 +20,12 @@ public class Game {
 	private GameState state;
 	
 	private Player[]	_players=new Player[2];
-	int	_playerToMoveMethod;
 	private int				rounds;
 	public int				moveLimit;
 	
 	private boolean display=false;
 	public SparcraftUI ui;
 		
-	public Game(GameState initialState){
-
-	}
-	
 	
 	public Game(GameState initialState, Player p1, Player p2, int limit){
 		state=initialState;
@@ -55,16 +43,7 @@ public class Game {
 		this.rounds=0;
 		this.display=display;
 		if (display){
-	    	ui = new SparcraftUI(state);
-	        
-	        // Setup of the frame containing the game
-	        JFrame f = new JFrame();
-	        f.setSize(1000,700);
-	        f.setTitle("Sparcraft in JAVA");
-	        f.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
-	        f.getContentPane().add(ui);    
-	        f.setVisible(true);
-	    	//state.print();
+	    	ui = SparcraftUI.getUI(state);
 	    }
 	}
 
@@ -79,12 +58,7 @@ public class Game {
 		HashMap<Integer,List<UnitAction>> moves_A=new HashMap<Integer,List<UnitAction>>();
         HashMap<Integer,List<UnitAction>> moves_B=new HashMap<Integer,List<UnitAction>>();
         int playerToMove=-1;
-	    // play until there is no winner
-		//long generatemoves=0;
-		//long getmoves=0;
-		//long makemoves=0;
-		//((Player_NoOverKillAttackValue)_players[0]).timeOnHpCopying=0;
-		//((Player_NoOverKillAttackValue)_players[1]).timeOnHpCopying=0;
+
 	    while (!this.gameOver()){
 	    	
 	        if (rounds >= moveLimit)
@@ -103,35 +77,29 @@ public class Game {
 	        // generate the moves possible from this state
 	        moves_A.clear();
 	        moves_B.clear();
-	        //long g=System.nanoTime();
+
 			state.generateMoves(moves_A, toMove.ID());
-			//generatemoves+=System.nanoTime()-g;
+
 	        
 	        // if both players can move, generate the other player's moves
 	        if (state.bothCanMove())
 	        {
-	        	//g=System.nanoTime();
+
 	        	state.generateMoves(moves_B, enemy.ID());
-	        	//generatemoves+=System.nanoTime()-g;
-	        	//g=System.nanoTime();
+
 				enemy.getMoves(state, moves_B, scriptMoves_B);
-				//getmoves+=System.nanoTime()-g;
-				//g=System.nanoTime();
+
 	            state.makeMoves(scriptMoves_B);
-	            //makemoves+=System.nanoTime()-g;
+
 	        }
 	        
 	        // the tuple of moves he wishes to make
-	        //g=System.nanoTime();
 	        toMove.getMoves(state, moves_A, scriptMoves_A);
-	        //getmoves+=System.nanoTime()-g;
 	        // make the moves
-	        //g=System.nanoTime();
 			state.makeMoves(scriptMoves_A);
-			//makemoves+=System.nanoTime()-g;
+
 	        if (display)
 	        {
-		        //state.print();
 	        	GameState copy=state.clone();
 	        	copy.finishedMoving();
 	        	
@@ -165,17 +133,12 @@ public class Game {
 	        rounds++;
 	        
 	    }
-	    //System.out.println("time spent on sorting "+(double)state.timeSpentOnSorting/1000000);
-	    //System.out.println("time spent on generatemoves "+(double)generatemoves/1000000);
-	    //System.out.println("time spent on getmoves "+(double)getmoves/1000000);
-	    //System.out.println("time spent on makemoves "+(double)makemoves/1000000);
-	    //System.out.println("time spent on timeonHP "+(double)(((Player_NoOverKillAttackValue)_players[0]).timeOnHpCopying+((Player_NoOverKillAttackValue)_players[1]).timeOnHpCopying)/1000000);
 	}
 
 
-	 public int getRounds(){
-	    return this.rounds;
-	 }
+	public int getRounds(){
+		return rounds;
+	}
 	
 
 // returns whether or not the game is over
@@ -196,11 +159,7 @@ public class Game {
 	
 	   Players random = Math.random() >= 0.5 ? Players.Player_One : Players.Player_Two;
 	   
-	   //return (whoCanMove == Players::Player_Both) ? Players::Player_One : whoCanMove;
-		return whoCanMove==Players.Player_Both ? random.ordinal(): whoCanMove.ordinal();
+	   return whoCanMove==Players.Player_Both ? random.ordinal(): whoCanMove.ordinal();
 	}
 
-
-	
-	
 }

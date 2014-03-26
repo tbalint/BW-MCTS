@@ -8,7 +8,6 @@ import javabot.BWAPIEventListener;
 import javabot.JNIBWAPI;
 import javabot.types.UnitType;
 import javabot.types.UnitType.UnitTypes;
-import bwmcts.Util;
 import bwmcts.clustering.UPGMA;
 import bwmcts.combat.UctcdLogic;
 import bwmcts.uct.UctConfig;
@@ -17,13 +16,7 @@ import bwmcts.uct.guctcd.ClusteringConfig;
 import bwmcts.uct.guctcd.GUCTCD;
 import bwmcts.uct.iuct.IUCTCD;
 import bwmcts.sparcraft.*;
-import bwmcts.sparcraft.players.Player;
-import bwmcts.sparcraft.players.Player_AttackClosest;
-import bwmcts.sparcraft.players.Player_Defense;
-import bwmcts.sparcraft.players.Player_Kite;
-import bwmcts.sparcraft.players.Player_KiteDPS;
-import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
-import bwmcts.sparcraft.players.Player_Random;
+import bwmcts.sparcraft.players.*;
 
 public class Test implements BWAPIEventListener  {
 	
@@ -40,17 +33,13 @@ public class Test implements BWAPIEventListener  {
 
 	@Override
 	public void connected() {
-		// TODO Auto-generated method stub
 		System.out.println("BWAPI connected");
 		bwapi.loadTypeData();
 		try {
 		AnimationFrameData.Init();
 		PlayerProperties.Init();
 		WeaponProperties.Init(bwapi);
-		UnitProperties.Init(bwapi);
-		//tc.bwapi.start();
-		
-		System.out.println("BWAPI created"+ bwapi.getUnitType(3).getName());
+		UnitProperties.Init(bwapi);		
 		
 		graphics = true;
 		
@@ -292,7 +281,6 @@ public class Test implements BWAPIEventListener  {
 		try {
 			testUPGMAScenario(p1,p2);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -413,7 +401,6 @@ public class Test implements BWAPIEventListener  {
 	    try {
 			state.setMap(new Map(25, 20));
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	    
@@ -426,7 +413,6 @@ public class Test implements BWAPIEventListener  {
 		    try {
 				state.addUnit(u);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	    }
@@ -439,7 +425,6 @@ public class Test implements BWAPIEventListener  {
 		    try {
 				state.addUnit(u);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	    }
@@ -452,7 +437,6 @@ public class Test implements BWAPIEventListener  {
 		    try {
 				state.addUnit(u);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	    }
@@ -598,7 +582,7 @@ public class Test implements BWAPIEventListener  {
 		for(int i = 1; i < 16; i++){
 			try {
 				float result = oneTypeGames(p1, p2, i*8, type, runs);
-				//System.out.println("MARINE TEST RESULT: " + result);
+				System.out.println("MARINE TEST RESULT: " + result);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -747,92 +731,47 @@ public class Test implements BWAPIEventListener  {
 	}
 
 	@Override
-	public void gameStarted() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void gameStarted() {}
 
 	@Override
-	public void gameUpdate() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void gameUpdate() {}
 
 	@Override
-	public void gameEnded() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void gameEnded() {}
 
 	@Override
-	public void keyPressed(int keyCode) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyPressed(int keyCode) {}
 
 	@Override
-	public void matchEnded(boolean winner) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void matchEnded(boolean winner) {}
 
 	@Override
-	public void playerLeft(int id) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void playerLeft(int id) {}
 
 	@Override
-	public void nukeDetect(int x, int y) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void nukeDetect(int x, int y) {}
 
 	@Override
-	public void nukeDetect() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void nukeDetect() {}
 
 	@Override
-	public void unitDiscover(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitDiscover(int unitID) {}
 
 	@Override
-	public void unitEvade(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitEvade(int unitID) {}
 
 	@Override
-	public void unitShow(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitShow(int unitID) {}
 
 	@Override
-	public void unitHide(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitHide(int unitID) {}
 
 	@Override
-	public void unitCreate(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitCreate(int unitID) {}
 
 	@Override
-	public void unitDestroy(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitDestroy(int unitID) {}
 
 	@Override
-	public void unitMorph(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitMorph(int unitID) {}
 }

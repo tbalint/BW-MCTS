@@ -1,6 +1,5 @@
 package bwmcts.combat;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +80,7 @@ public class AttackValueLogic implements ICombatLogic {
 			
 		}
 		
-		boolean outOfRange = false;
+		//boolean outOfRange = false;
 		if (bestEnemy == null){
 			//System.out.println("No enemy in range found");
 			closestLogic.actUnit(bwapi, unit);

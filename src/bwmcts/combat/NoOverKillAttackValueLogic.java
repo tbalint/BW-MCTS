@@ -1,6 +1,5 @@
 package bwmcts.combat;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,9 +10,6 @@ import bwmcts.Util;
 import bwmcts.sparcraft.Position;
 import javabot.JNIBWAPI;
 import javabot.model.Unit;
-import javabot.types.DamageType;
-import javabot.types.DamageType.DamageTypes;
-import javabot.util.BWColor;
 
 public class NoOverKillAttackValueLogic implements ICombatLogic {
 

@@ -5,7 +5,6 @@
 **/
 package bwmcts.sparcraft;
 
-import javabot.JNIBWAPI;
 import javabot.model.Player;
 import javabot.types.TechType;
 import javabot.types.TechType.TechTypes;

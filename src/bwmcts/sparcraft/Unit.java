@@ -7,7 +7,6 @@ package bwmcts.sparcraft;
 
 import javabot.JNIBWAPI;
 import javabot.types.UnitCommandType.UnitCommandTypes;
-import javabot.types.UnitSizeType;
 import javabot.types.UnitType;
 import javabot.types.UnitType.UnitTypes;
 import javabot.types.WeaponType;
@@ -163,9 +162,9 @@ public class Unit implements Comparable<Unit> {
 
 		    // update the position
 		    //_position.addPosition(dist * dir.x(), dist * dir.y());
-		    _position=move.pos().clone();
-		    
-		    setPreviousAction(move, gameTime);
+	    _position=move.pos().clone();
+	    
+	    setPreviousAction(move, gameTime);
 	}
 	public void waitUntilAttack(UnitAction move, int gameTime){
 		_timeCanMove=_timeCanAttack;
@@ -217,7 +216,7 @@ public class Unit implements Comparable<Unit> {
 	public boolean canHeal()      { 
 		return _unitType.getID() == UnitTypes.Terran_Medic.ordinal(); 
 	}
-	public boolean equalsID(Unit rhs) {return true;}
+
 	public boolean canAttackTarget(Unit unit,int gameTime){
 
 		//WeaponType weapon =WeaponProperties.props[ unit.type().isFlyer() ? type().getAirWeaponID() : type().getGroundWeaponID()].type;
@@ -260,9 +259,6 @@ public class Unit implements Comparable<Unit> {
 		}
 
     // position related functions
-	public Position  position() {
-		return _position;
-	}
 	public Position pos() {
 		return _position;
 	}
@@ -314,22 +310,16 @@ public class Unit implements Comparable<Unit> {
             }
             else
             {
-                //int moveDuration = _timeCanMove - _previousActionTime;
-                //float moveTimeRatio = (float)(gameTime - _previousActionTime) / (_timeCanMove - _previousActionTime);
+
                 _prevCurrentPosTime = gameTime;
 
                 // calculate the new current position
         		
                 _prevCurrentPos.moveTo(_position.x-_previousPosition.x,_position.y-_previousPosition.y);
-                //_prevCurrentPos.subtractPosition(_previousPosition);
-                //_prevCurrentPos.moveTo(_position.x-_previousPosition.x,_position.y-_previousPosition.y);
+
                 _prevCurrentPos.scalePosition((float)(gameTime - _previousActionTime) / (_timeCanMove - _previousActionTime));
                 _prevCurrentPos.addPosition(_previousPosition);
 
-                
-                
-                
-                //_prevCurrentPos = _previousPosition + (_position - _previousPosition).scale(moveTimeRatio);
                 return _prevCurrentPos;
             }
         }
@@ -338,16 +328,6 @@ public class Unit implements Comparable<Unit> {
         {
             return _position;
         }
-    }
-    public void setPreviousPosition(int gameTime){
-        float moveTimeRatio = (float)(gameTime - _previousActionTime) / (_timeCanMove - _previousActionTime);
-        _prevCurrentPosTime = gameTime;
-        Position temp=_previousPosition;
-        Position temp2=_position;
-        temp2.subtractPosition(_previousPosition);
-        temp2.scalePosition(moveTimeRatio);
-        temp.addPosition(temp2);
-        _prevCurrentPos = temp;
     }
 
     // health and damage related functions
@@ -458,7 +438,6 @@ public class Unit implements Comparable<Unit> {
 	}
 	
 	public int compareTo(Unit u) {
-		// TODO Auto-generated method stub
 		if (!isAlive() && !u.isAlive()){
 			return 0;
 		}
@@ -466,23 +445,19 @@ public class Unit implements Comparable<Unit> {
 		if (!isAlive())
 	    {
 			return 1;
-	        //return -1;
 	    }
 	    else if (!u.isAlive())
 	    {
 	    	return -1;
-	        //return 1;
 	    }
 
 	    if (firstTimeFree() == u.firstTimeFree())
 	    {
 	    	return getId() >= u.getId()? 1:-1;
-	        //return getId() < u.getId()? 1:-1;
 	    }
 	    else
 	    {
 	    	return firstTimeFree() >= u.firstTimeFree()? 1:-1;
-	        //return firstTimeFree() < u.firstTimeFree()? 1:-1;
 	    }
 		
 	}

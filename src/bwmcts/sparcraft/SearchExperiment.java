@@ -5,7 +5,6 @@
 **/
 package bwmcts.sparcraft;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -310,9 +309,9 @@ public class SearchExperiment {
 	   // std::istringstream iss(line);
 	
 	    // the first number is the playerID
-	    String state;
-	    String stateType;
-	    int numStates;
+	    //String state;
+	    //String stateType;
+	    //int numStates;
 	    /*
 	    iss >> state;
 	    iss >> stateType;
@@ -453,10 +452,10 @@ public class SearchExperiment {
 	
 	    // the first number is the playerID
 	
-	    String player;
-	    int playerID;
-	    int playerModelID;
-	    String playerModelString;
+	    //String player;
+	    //int playerID;
+	    //int playerModelID;
+	    //String playerModelString;
 	    
 	    //iss >> player;
 	    //iss >> playerID;
