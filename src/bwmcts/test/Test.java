@@ -21,22 +21,23 @@ import bwmcts.sparcraft.players.*;
 public class Test implements BWAPIEventListener  {
 	
 	private static boolean graphics = false;
-	//JNIBWAPI bwapi;
-	JNIBWAPI_LOAD bwapi_load; 
+	JNIBWAPI bwapi;
 	
 	public static void main(String[] args) throws Exception{
 		System.out.println("Create TC instance");
 		Test tc=new Test();
 		//tc.bwapi=new JNIBWAPI(tc);
-		//tc.bwapi.loadTypeData();
+		//tc.bwapi.start();
 		
-		tc.bwapi_load = new JNIBWAPI_LOAD(tc);
-		tc.bwapi_load.loadTypeData();
+		
+		
+		tc.bwapi = new JNIBWAPI_LOAD(tc);
+		tc.bwapi.loadTypeData();
 		
 		AnimationFrameData.Init();
 		PlayerProperties.Init();
-		WeaponProperties.Init(tc.bwapi_load);
-		UnitProperties.Init(tc.bwapi_load);
+		WeaponProperties.Init(tc.bwapi);
+		UnitProperties.Init(tc.bwapi);
 		graphics = true;
 		
 		Constants.Max_Units = 200;
@@ -44,19 +45,19 @@ public class Test implements BWAPIEventListener  {
 		Player p1 = new Player_NoOverKillAttackValue(0);
 		Player p2 = new Player_NoOverKillAttackValue(1);
 		tc.dragoonZTest(p1, p2, 2, new int[]{8,16,32,50,75});
-		//tc.bwapi.start();
+		
 		
 	}
 
 	@Override
 	public void connected() {
 		System.out.println("BWAPI connected");
-		//bwapi.loadTypeData();
+		bwapi.loadTypeData();
 		try {
 		AnimationFrameData.Init();
 		PlayerProperties.Init();
-		//WeaponProperties.Init(bwapi);
-		//UnitProperties.Init(bwapi);		
+		WeaponProperties.Init(bwapi);
+		UnitProperties.Init(bwapi);		
 		
 		graphics = true;
 		
@@ -74,7 +75,7 @@ public class Test implements BWAPIEventListener  {
 									new UctStats(),
 									new ClusteringConfig(1, 6, new UPGMA()));
 
-		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(new UctConfig(0), new UctStats()),40);
+		Player p1 = new UctcdLogic(bwapi, new IUCTCD(new UctConfig(0), new UctStats()),40);
 		//Player p1 = new UctcdLogic(bwapi, new OLDIUCTCD(1.6, 20, 1, 0, 50000, false),40);
 		//Player p1 = new UctcdLogic(bwapi, guctcdA, 40);
 		//Player p1 = new Player_NoOverKillAttackValue(0);
@@ -101,7 +102,7 @@ public class Test implements BWAPIEventListener  {
 		
 		//upgmaScenario(p1, p2);
 		
-		//simulatorTest(p1, p2, 1, 250, 10, 100);
+		simulatorTest(p1, p2, 1, 250, 10, 100);
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -424,7 +425,7 @@ public class Test implements BWAPIEventListener  {
 	    // Marines
 	    for(int i = 0; i < 8; i++){
 	    	
-		    Unit u = new Unit(bwapi_load.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(),
+		    Unit u = new Unit(bwapi.getUnitType(UnitTypes.Terran_Marine.ordinal()), Players.Player_One.ordinal(),
 		    		new Position((int)(50+Math.random()*350),(int)(50+Math.random()*120)));
 		    u._currentHP = (int) (Math.random()*50);
 		    try {
@@ -436,7 +437,7 @@ public class Test implements BWAPIEventListener  {
 	    
 	    // Firebats
 	    for(int i = 0; i < 8; i++){
-		    Unit u = new Unit(bwapi_load.getUnitType(UnitTypes.Terran_Firebat.ordinal()), Players.Player_One.ordinal(),
+		    Unit u = new Unit(bwapi.getUnitType(UnitTypes.Terran_Firebat.ordinal()), Players.Player_One.ordinal(),
 		    		new Position((int)(50+Math.random()*350),(int)(50+Math.random()*120)));
 		    u._currentHP = (int) (Math.random()*60);
 		    try {
@@ -448,7 +449,7 @@ public class Test implements BWAPIEventListener  {
 	    
 	    // Medics
 	    for(int i = 0; i < 8; i++){
-		    Unit u = new Unit(bwapi_load.getUnitType(UnitTypes.Terran_Medic.ordinal()), Players.Player_One.ordinal(),
+		    Unit u = new Unit(bwapi.getUnitType(UnitTypes.Terran_Medic.ordinal()), Players.Player_One.ordinal(),
 		    		new Position((int)(50+Math.random()*350),(int)(50+Math.random()*120)));
 		    u._currentHP = (int) (Math.random()*50);
 		    try {
@@ -690,14 +691,14 @@ public class Test implements BWAPIEventListener  {
 	    for(UnitTypes type : unitsA.keySet()){
 	    	
 	    	try {
-	    	    state.addUnit(bwapi_load.getUnitType(type.ordinal()), Players.Player_One.ordinal(),new Position(startXA, startY + space));
+	    	    state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_One.ordinal(),new Position(startXA, startY + space));
 	    	} catch (Exception e){}
 	    	
  	    	for(int i = 1; i < unitsA.get(type); i++){
  	    		int x = startXA - (i/unitsPerLine) * space;
  	    		int y = startY + space*(i%unitsPerLine) + space;
  	    		try {
- 	    			state.addUnit(bwapi_load.getUnitType(type.ordinal()), Players.Player_One.ordinal(), new Position(x, y));
+ 	    			state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_One.ordinal(), new Position(x, y));
  	    		} catch (Exception e){
  		 	    	//e.printStackTrace();
  		 	    }
@@ -710,14 +711,14 @@ public class Test implements BWAPIEventListener  {
 	    for(UnitTypes type : unitsB.keySet()){
 	    	
 	    	try {
-	    	    state.addUnit(bwapi_load.getUnitType(type.ordinal()), Players.Player_Two.ordinal(),new Position(startXB, startY + space));
+	    	    state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_Two.ordinal(),new Position(startXB, startY + space));
 	    	} catch (Exception e){}
 	    	
  	    	for(int i = 1; i < unitsB.get(type); i++){
  	    		int x = startXB + (i/unitsPerLine) * space;
  	    		int y = startY + space*(i%unitsPerLine) + space;
  	    		try {
- 	    			state.addUnit(bwapi_load.getUnitType(type.ordinal()), Players.Player_Two.ordinal(), new Position(x, y));
+ 	    			state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_Two.ordinal(), new Position(x, y));
  	    		} catch (Exception e){
 		 	    	//e.printStackTrace();
 		 	    }
