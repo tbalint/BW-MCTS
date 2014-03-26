@@ -38,4 +38,8 @@ public class Player_Nothing extends Player {
 		}
 		
 	}
+	
+	public String toString(){
+		return "No_AI";
+	}
 }

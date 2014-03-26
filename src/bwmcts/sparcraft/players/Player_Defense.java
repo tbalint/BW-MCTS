@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
+
 import bwmcts.sparcraft.Constants;
 import bwmcts.sparcraft.GameState;
 import bwmcts.sparcraft.Position;
@@ -114,5 +115,9 @@ public class Player_Defense extends Player {
 			
 			moveVec.add(moves.get(u).get(bestMoveIndex));
 		}
+	}
+	
+	public String toString(){
+		return "Defense";
 	}
 }

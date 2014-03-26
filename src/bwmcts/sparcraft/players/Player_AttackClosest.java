@@ -92,4 +92,8 @@ public class Player_AttackClosest extends Player {
 			moveVec.add(moves.get(u).get(bestMoveIndex));
 		}
 	}
+	
+	public String toString(){
+		return "AttackClosest";
+	}
 }

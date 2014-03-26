@@ -27,11 +27,14 @@ public class Player_Random extends Player {
 	    moveVec.clear();
 		for (int u=0; u< moves.size(); u++)
 		{
-			
 			int a = (int) Math.floor((r.nextDouble() * (double)moves.get(u).size()));
 			
 			moveVec.add(moves.get(u).get(a));
 			
 		}
+	}
+	
+	public String toString(){
+		return "Random";
 	}
 }

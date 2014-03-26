@@ -114,4 +114,8 @@ public class Player_KiteDPS extends Player {
 			moveVec.add(moves.get(u).get(bestMoveIndex));
 		}
 	}
+	
+	public String toString(){
+		return "KiteDPS";
+	}
 }

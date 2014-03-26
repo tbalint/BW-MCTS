@@ -126,4 +126,8 @@ public class Player_Kite extends Player {
 			moveVec.add(actions.get(bestMoveIndex));
 		}
 	}
+	
+	public String toString(){
+		return "Kite";
+	}
 }

@@ -1,5 +1,9 @@
 package bwmcts.test;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +25,10 @@ import bwmcts.sparcraft.players.*;
 public class Test implements BWAPIEventListener  {
 	
 	private static boolean graphics = false;
+	
 	JNIBWAPI bwapi;
+	
+	StringBuffer buf;
 	
 	public static void main(String[] args) throws Exception{
 		System.out.println("Create TC instance");
@@ -44,9 +51,23 @@ public class Test implements BWAPIEventListener  {
 		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
 		Player p1 = new Player_NoOverKillAttackValue(0);
 		Player p2 = new Player_NoOverKillAttackValue(1);
+		
+		tc.buf=new StringBuffer();
+		System.out.println(p1.toString()+ " vs "+p2.toString());
+		tc.buf.append(p1.toString()+ " vs "+p2.toString()+"\r\n");
+		
 		tc.dragoonZTest(p1, p2, 2, new int[]{8,16,32,50,75});
 		
 		
+		try {
+			File f = new File(p1.toString()+ "_vs_"+p2.toString()+"_"+System.currentTimeMillis()+".txt");
+	        BufferedWriter out = new BufferedWriter(new FileWriter(f));
+	        out.write(tc.buf.toString());
+	        out.close();
+	    } catch (IOException e) {
+	    	e.printStackTrace();
+	    }
+
 	}
 
 	@Override
@@ -500,7 +521,9 @@ public class Test implements BWAPIEventListener  {
 		for(Integer i : n){
 			try {
 				System.out.println("--- units: " + i);
+				buf.append("--- units: " + i+"\r\n");
 				float result = testDragoonZealotGames(p1, p2, (int)i, runs);
+				buf.append("DRAGOON ZEALOT TEST RESULT: " + result+"\r\n");
 				System.out.println("DRAGOON ZEALOT TEST RESULT: " + result);
 				
 				//System.out.println("Result=" + result);
@@ -528,7 +551,7 @@ public class Test implements BWAPIEventListener  {
 		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
 		
 		System.out.println("Dragoons: " + n/2 + "\tZealots: " + n/2 + " on each side");
-		
+		buf.append("Dragoons: " + n/2 + "\tZealots: " + n/2 + " on each side\r\n");
 		List<Double> results = new ArrayList<Double>();
 		int wins = 0;
 		for(int i = 1; i <= games; i++){
@@ -542,13 +565,15 @@ public class Test implements BWAPIEventListener  {
 			if(i%1==0){
 				//System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
 				System.out.println("Win average: " + ((double)wins)/((double)i));
+				buf.append("Win average: " + ((double)wins)/((double)i)+"\r\n");
 			}
 		}
 		
 		// Calc deviation and average
 		System.out.println("--------------- Score average: " + average(results) + "\tDeviation: " + deviation(results));
+		buf.append("--------------- Score average: " + average(results) + "\tDeviation: " + deviation(results)+"\r\n");
 		System.out.println("--------------- Win average: " + ((double)wins)/((double)games));
-		
+		buf.append("--------------- Win average: " + ((double)wins)/((double)games)+"\r\n");
 		return (float)wins / (float)games;
 		
 	}

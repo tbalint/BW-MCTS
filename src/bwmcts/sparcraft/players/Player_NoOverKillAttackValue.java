@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
+
 import bwmcts.sparcraft.Constants;
 import bwmcts.sparcraft.GameState;
 import bwmcts.sparcraft.Unit;
@@ -152,5 +153,9 @@ public class Player_NoOverKillAttackValue extends Player {
 			}
 			
 		}
+	}
+	
+	public String toString(){
+		return "NOK-AV";
 	}
 }

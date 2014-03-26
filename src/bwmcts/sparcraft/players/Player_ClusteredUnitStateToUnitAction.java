@@ -127,4 +127,8 @@ public class Player_ClusteredUnitStateToUnitAction extends Player {
 	public void setScripts(HashMap<Integer,UnitStateTypes> scripts){
 		_scripts=scripts;
 	}
+	
+	public String toString(){
+		return "ClusteredUnits";
+	}
 }
