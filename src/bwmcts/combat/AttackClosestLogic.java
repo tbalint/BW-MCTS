@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import bwmcts.Util;
 import bwmcts.sparcraft.Position;
 import javabot.JNIBWAPI;
 import javabot.model.Unit;
@@ -43,10 +42,12 @@ public class AttackClosestLogic implements ICombatLogic {
 		Unit closestEnemy = null;
 		for(Unit enemy : enemyUnits){
 			
-			Position enemyPosition = new Position(enemy.getX(), enemy.getY());
+			//Position enemyPosition = new Position(enemy.getX(), enemy.getY());
 			
-			int distance = Util.distance(position, enemyPosition);
+			//int distance = Util.distance(position, enemyPosition);
 			//System.out.println("d = " + distance);
+			int distance = position.getDistance(enemy.getX(),enemy.getY());
+			
 			
 			if (distance < closestDistance){
 				closestEnemy = enemy;

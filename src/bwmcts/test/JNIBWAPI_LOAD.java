@@ -11,11 +11,8 @@ import javabot.types.UnitType.UnitTypes;
 import javabot.types.UpgradeType.UpgradeTypes;
 import javabot.types.WeaponType.WeaponTypes;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * JNI interface for the Brood War API.

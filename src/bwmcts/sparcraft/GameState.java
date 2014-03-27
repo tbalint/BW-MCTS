@@ -116,7 +116,7 @@ public class GameState {
 	
 	// misc functions
 	public void finishedMoving(){
-		//sort units;
+		//sort units
 		for (int p=0; p<Constants.Num_Players; p++)
 		{
 			if (_prevNumUnits[p] <= 1)
@@ -159,10 +159,6 @@ public class GameState {
 	        return true;
 	    }
 
-	    //if (_sameHPFrames > 200)
-	    //{
-	    //    return true;
-	    //}
 
 		for (int p=0; p<Constants.Num_Players; p++)
 		{
@@ -448,7 +444,7 @@ public class GameState {
 			return score;
 		}
 
-		int winBonus=0;
+		/*int winBonus=0;
 
 		if (playerDead(enemyPlayer) && !playerDead(player))
 		{
@@ -457,9 +453,9 @@ public class GameState {
 		else if (playerDead(player) && !playerDead(enemyPlayer))
 		{
 			//winBonus = -100000;
-		}
+		}*/
 
-		return new StateEvalScore(score._val + winBonus, score._numMoves);
+		return new StateEvalScore(score._val /*+ winBonus*/, score._numMoves);
 	}
 	
 	// evaluate the state for _playerToMove

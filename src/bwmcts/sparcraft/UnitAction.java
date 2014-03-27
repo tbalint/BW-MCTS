@@ -43,6 +43,7 @@ public class UnitAction {
 	public int player()	{ return _player; }
 	public int index()	{ return _moveIndex; }
     public Position pos()    { return _p; }
+	public UnitActionTypes type(){return _moveType;}
 
 	public String moveString(){
 		if (_moveType == UnitActionTypes.ATTACK) 
@@ -74,9 +75,6 @@ public class UnitAction {
 
 		return new Position(Constants.Move_Dir[_moveIndex][0], Constants.Move_Dir[_moveIndex][1]);
 	}
-
-	
-	public UnitActionTypes type(){return _moveType;}
 	
 	public String toString(){
 		return this._moveIndex+","+this._player+","+this._unit+","+this.moveString()+","+this.pos();

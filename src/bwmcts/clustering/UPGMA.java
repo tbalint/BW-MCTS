@@ -84,21 +84,6 @@ public class UPGMA implements ClusteringAlgorithm {
 		cluster[j].kill();
 		K++;
 	}
-	/**
-	 * @param args
-	 */
-	/*
-	public static void main(String[] args) {
-		
-		double[][] ds1 = createDistanceMatrix(input);
-	
-	    UPGMA upclu = new UPGMA(ds1);
-	    try {
-	    	System.out.println(upclu.getClusters(5));
-	    } catch (Exception e){
-	    	e.printStackTrace();
-	    }  
-	}*/
 	
 	public HashMap<Integer,List<Unit>> getClusters(int clusters){
 		if (K==0)
@@ -135,16 +120,7 @@ public class UPGMA implements ClusteringAlgorithm {
 	public List<UPCluster> cutTree(UPCluster c, int clusterLimit){
 		List<UPCluster> up=new ArrayList<UPCluster>();
 		Queue<UPCluster> q=new LinkedList<UPCluster>();
-		if (c.card > 0 && c.left != null && c.right != null){/*
-			if (c.height-Math.max(c.left.height,c.right.height)>limit){
-				up.addAll(cutTree(c.left,limit));
-				up.addAll(cutTree(c.right,limit));
-			} else if (Math.abs(c.left.height-c.right.height)>limit){
-				up.addAll(cutTree(c.left,limit));
-				up.addAll(cutTree(c.right,limit));
-			} else {
-				up.add(c);
-			}*/
+		if (c.card > 0 && c.left != null && c.right != null){
 			q.add(c);
 			up.add(c);
 			while (up.size()<clusterLimit && !q.isEmpty()){
@@ -240,20 +216,4 @@ class UPCluster {
 	public void kill() 
 	{ dmat = null; }
 
-	public void print() 
-	{ print(0); }
-
-  	void print(int n) {
-  		if (right != null)
-  			right.print(n + 6);
-    	indent(n); 
-    	System.out.println("[" + lab + "] (" + (int)(100*height)/100.0 + ")"); 
-    	if (left != null)
-    		left.print(n + 6);
-  	}
-
-  	void indent(int n) {
-  		for (int i=0; i<n; i++)
-  			System.out.print(" ");
-  	}
 }

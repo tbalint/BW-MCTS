@@ -97,10 +97,32 @@ public class Position {
 	public int getManhattanDistance(Position p){
 		return Math.abs(x-p.getX()) + Math.abs(y-p.getY());	 
 	}
+	
+	public int getManhattanDistance(int p, int q){
+		return Math.abs(x-p) + Math.abs(y-q);	 
+	}
 
 	public int getDistance(Position pos) {
 		int dX = x - pos.x;
         int dY = y - pos.y;
+
+        if (dX == 0)
+        {
+            return Math.abs(dY);
+        }
+        else if (dY == 0)
+        {
+            return Math.abs(dX);
+        }
+        else
+        {
+            return (int)Math.sqrt((dX*dX - dY*dY));
+        }
+	}
+	
+	public int getDistance(int p, int q) {
+		int dX = x - p;
+        int dY = y - q;
 
         if (dX == 0)
         {

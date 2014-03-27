@@ -39,27 +39,12 @@ public class Constants {
 		static int Pass_Move_Duration			= 20;
 		static float  Min_Unit_DPF				= 0.1f;
 		static int Starting_Energy		= 50;
-
-		// whether to use transposition table in search
-		static boolean   Use_Transposition_Table	= true;
-		static int Transposition_Table_Size	= 100000;
-		static int Transposition_Table_Scan	= 10;
-		static int Num_Hashes					= 2;
         
-        // UCT options
-		static int Max_UCT_Children           = 10;
-
-		// rng seeding options
-		static boolean Seed_Hash_Time				= false;
-		static boolean Seed_Player_Random_Time		= true;
 
 		// directions of movement
 		public static int Move_Dir[][] = new int[][]{{-1,0}, {1,0}, {0,1}, {0,-1} };
 		public static int[] Move_DirX=new int[]{-1,1,0,0};
 		public static int[] Move_DirY=new int[]{0,0,1,-1};
 		
-		public static int callOfDistanceFunction1=0;
-		public static int callOfDistanceFunction2=0;
-		public static int callOfDistanceFunction3=0;
 		
 }
