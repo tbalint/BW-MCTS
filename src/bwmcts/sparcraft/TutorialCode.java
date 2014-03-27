@@ -20,6 +20,7 @@ import bwmcts.sparcraft.players.Player_Defense;
 import bwmcts.sparcraft.players.Player_Kite;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 import bwmcts.uct.guctcd.GUCTCD;
+import bwmcts.sparcraft.players.*;
 
 public class TutorialCode implements BWAPIEventListener  {
 	
@@ -86,7 +87,7 @@ public class TutorialCode implements BWAPIEventListener  {
 	    return state;
 	}
 	
-	private GameState AvsBState(HashMap<UnitTypes, Integer> a,
+	public GameState AvsBState(HashMap<UnitTypes, Integer> a,
 			HashMap<UnitTypes, Integer> b) throws Exception {
 		
 		// GameState only has a default constructor, you must add units to it manually
@@ -145,7 +146,7 @@ public class TutorialCode implements BWAPIEventListener  {
 
 	    // The default map sets all tiles to walkable, with an upper-left boundary of (0,0) and a lower-right boundary of (x,y)
 	    // We can query whether or not a unit can walk at a given position 
-	    boolean canWalkHere = smallMap.isWalkable(new Position(100, 30));
+	    //boolean canWalkHere = smallMap.isWalkable(new Position(100, 30));
 
 	    // You can also construct a Map from a BWAPI::Game object, if you are using this code from within a bot
 	    // Map gameMap(BWAPI::BroodWar)
@@ -195,7 +196,6 @@ public class TutorialCode implements BWAPIEventListener  {
 	    try {
 			state.generateMoves(moveArray, currentPlayerID);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -206,7 +206,6 @@ public class TutorialCode implements BWAPIEventListener  {
 	}
 
 	private GameState getSampleState() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 /*
@@ -285,7 +284,6 @@ public class TutorialCode implements BWAPIEventListener  {
 
 	@Override
 	public void connected() {
-		// TODO Auto-generated method stub
 		System.out.println("BWAPI connected");
 		bwapi.loadTypeData();
 		try {
@@ -295,113 +293,56 @@ public class TutorialCode implements BWAPIEventListener  {
 		UnitProperties.Init(bwapi);
 		//tc.bwapi.start();
 		
-		System.out.println("BWAPI created"+ bwapi.getUnitType(3).getName());
 		//System.out.println(getSamplePlayerActionsFromState());
-			//runSampleGame();
-			/*
-			runSampleGame();
-			runSampleGame();
-			runSampleGame();
-			runSampleGame();
-			runSampleGame();
-			runSampleGame();
-			runSampleGame();
-			runSampleGame();
-			runSampleGame();
-			*/
+		//runSampleGame();
+
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void gameStarted() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void gameStarted() {}
 
 	@Override
-	public void gameUpdate() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void gameUpdate() {}
 
 	@Override
-	public void gameEnded() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void gameEnded() {}
 
 	@Override
-	public void keyPressed(int keyCode) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyPressed(int keyCode) {}
 
 	@Override
-	public void matchEnded(boolean winner) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void matchEnded(boolean winner) {}
 
 	@Override
-	public void playerLeft(int id) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void playerLeft(int id) {}
 
 	@Override
-	public void nukeDetect(int x, int y) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void nukeDetect(int x, int y) {}
 
 	@Override
-	public void nukeDetect() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void nukeDetect() {}
 
 	@Override
-	public void unitDiscover(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitDiscover(int unitID) {}
 
 	@Override
-	public void unitEvade(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitEvade(int unitID) {}
 
 	@Override
-	public void unitShow(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitShow(int unitID) {}
 
 	@Override
-	public void unitHide(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitHide(int unitID) {}
 
 	@Override
-	public void unitCreate(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitCreate(int unitID) {}
 
 	@Override
-	public void unitDestroy(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitDestroy(int unitID) {}
 
 	@Override
-	public void unitMorph(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitMorph(int unitID) {}
 }

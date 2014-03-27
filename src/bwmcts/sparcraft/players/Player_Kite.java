@@ -8,15 +8,11 @@ package bwmcts.sparcraft.players;
 import java.util.HashMap;
 import java.util.List;
 
-import javabot.JNIBWAPI;
 import bwmcts.sparcraft.Constants;
 import bwmcts.sparcraft.GameState;
-import bwmcts.sparcraft.PlayerProperties;
-import bwmcts.sparcraft.Position;
 import bwmcts.sparcraft.Unit;
 import bwmcts.sparcraft.UnitAction;
 import bwmcts.sparcraft.UnitActionTypes;
-import bwmcts.sparcraft.WeaponProperties;
 
 public class Player_Kite extends Player {
 	
@@ -129,5 +125,9 @@ public class Player_Kite extends Player {
 			
 			moveVec.add(actions.get(bestMoveIndex));
 		}
+	}
+	
+	public String toString(){
+		return "Kite";
 	}
 }

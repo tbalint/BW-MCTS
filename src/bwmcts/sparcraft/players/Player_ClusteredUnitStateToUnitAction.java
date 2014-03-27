@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import bwmcts.uct.UnitState;
 import bwmcts.uct.UnitStateTypes;
 import bwmcts.sparcraft.GameState;
 import bwmcts.sparcraft.Unit;
@@ -127,5 +126,9 @@ public class Player_ClusteredUnitStateToUnitAction extends Player {
 	
 	public void setScripts(HashMap<Integer,UnitStateTypes> scripts){
 		_scripts=scripts;
+	}
+	
+	public String toString(){
+		return "ClusteredUnits";
 	}
 }

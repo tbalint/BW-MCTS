@@ -1,11 +1,9 @@
 package bwmcts.combat;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import bwmcts.Util;
 import bwmcts.sparcraft.Position;
 import javabot.JNIBWAPI;
 import javabot.model.Unit;
@@ -61,9 +59,10 @@ public class AttackValueLogic implements ICombatLogic {
 		Unit bestEnemy = null;
 		for(Unit enemy : enemyUnits){
 			
-			Position enemyPosition = new Position(enemy.getX(), enemy.getY());
+			//Position enemyPosition = new Position(enemy.getX(), enemy.getY());
 			
-			int distance = Util.distance(position, enemyPosition);
+			//int distance = Util.distance(position, enemyPosition);
+			int distance = position.getDistance(enemy.getX(), enemy.getY());
 			//System.out.println("d = " + distance);
 			//System.out.println("enemy = " + bwapi.getUnitType(enemy.getTypeID()).getName());
 
@@ -81,7 +80,7 @@ public class AttackValueLogic implements ICombatLogic {
 			
 		}
 		
-		boolean outOfRange = false;
+		//boolean outOfRange = false;
 		if (bestEnemy == null){
 			//System.out.println("No enemy in range found");
 			closestLogic.actUnit(bwapi, unit);

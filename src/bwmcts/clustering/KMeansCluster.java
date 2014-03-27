@@ -28,8 +28,8 @@ public class KMeansCluster {
 		double x = 0;
 		double y = 0;
 		for(Unit unit : cluster.getUnits()){
-			x += unit.position().getX();
-			y += unit.position().getY();
+			x += unit.pos().getX();
+			y += unit.pos().getY();
 		}
 
 		mean.setX((int)(x / (double)cluster.getUnits().size()));

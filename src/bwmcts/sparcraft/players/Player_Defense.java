@@ -8,16 +8,14 @@ package bwmcts.sparcraft.players;
 import java.util.HashMap;
 import java.util.List;
 
-import javabot.JNIBWAPI;
+
 
 import bwmcts.sparcraft.Constants;
 import bwmcts.sparcraft.GameState;
-import bwmcts.sparcraft.PlayerProperties;
 import bwmcts.sparcraft.Position;
 import bwmcts.sparcraft.Unit;
 import bwmcts.sparcraft.UnitAction;
 import bwmcts.sparcraft.UnitActionTypes;
-import bwmcts.sparcraft.WeaponProperties;
 
 public class Player_Defense extends Player {
 	
@@ -50,7 +48,7 @@ public class Player_Defense extends Player {
 					
 				if (move.type() == UnitActionTypes.ATTACK)
 				{
-					Unit target						= (state.getUnit(state.getEnemy(move.player()), move._moveIndex));
+					Unit target						= (state.getUnit(GameState.getEnemy(move.player()), move._moveIndex));
 					double dpsHPValue				= (target.dpf() / target.currentHP());
 
 					if (dpsHPValue > actionHighestDPS)
@@ -117,5 +115,9 @@ public class Player_Defense extends Player {
 			
 			moveVec.add(moves.get(u).get(bestMoveIndex));
 		}
+	}
+	
+	public String toString(){
+		return "Defense";
 	}
 }

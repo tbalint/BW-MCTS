@@ -1,5 +1,9 @@
 package bwmcts.test;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,40 +23,75 @@ import bwmcts.uct.guctcd.ClusteringConfig;
 import bwmcts.uct.guctcd.GUCTCD;
 import bwmcts.uct.iuctcd.IUCTCD;
 import bwmcts.sparcraft.*;
-import bwmcts.sparcraft.players.Player;
-import bwmcts.sparcraft.players.Player_AttackClosest;
-import bwmcts.sparcraft.players.Player_Defense;
-import bwmcts.sparcraft.players.Player_Kite;
-import bwmcts.sparcraft.players.Player_KiteDPS;
-import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
-import bwmcts.sparcraft.players.Player_Random;
+import bwmcts.sparcraft.players.*;
 
 public class Test implements BWAPIEventListener  {
 	
 	private static boolean graphics = false;
+	
 	JNIBWAPI bwapi;
+	
+	StringBuffer buf;
 	
 	public static void main(String[] args) throws Exception{
 		System.out.println("Create TC instance");
 		Test tc=new Test();
-		tc.bwapi=new JNIBWAPI(tc);
-		tc.bwapi.start();
+		//tc.bwapi=new JNIBWAPI(tc);
+		//tc.bwapi.start();
 		
+		tc.bwapi = new JNIBWAPI_LOAD(tc);
+		tc.bwapi.loadTypeData();
+		
+		AnimationFrameData.Init();
+		PlayerProperties.Init();
+		WeaponProperties.Init(tc.bwapi);
+		UnitProperties.Init(tc.bwapi);
+		graphics = true;
+		
+		Constants.Max_Units = 200;
+		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
+		GUCTCD guctcdA = new GUCTCD(new UctConfig(0), 
+				new UctStats(),
+				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
+
+		GUCTCD guctcdB = new GUCTCD(new UctConfig(1), 
+				new UctStats(),
+				new ClusteringConfig(1, 6, new UPGMA()));
+
+		//Player p1 = new Player_NoOverKillAttackValue(0);
+		//Player p1 = new UctLogic(tc.bwapi, guctcdA, 40);
+		Player p1 = new UctLogic(tc.bwapi, new IUCTCD(new UctConfig(0), new UctStats()),40);
+		
+		Player p2 = new Player_NoOverKillAttackValue(1);
+		
+		tc.buf=new StringBuffer();
+		System.out.println(p1.toString()+ " vs "+p2.toString());
+		tc.buf.append(p1.toString()+ " vs "+p2.toString()+"\r\n");
+		
+		
+		tc.dragoonZTest(p1, p2, 2, new int[]{8,16,32,50,75});
+		
+		
+		try {
+			File f = new File(p1.toString()+ "_vs_"+p2.toString()+"_"+System.currentTimeMillis()+".txt");
+	        BufferedWriter out = new BufferedWriter(new FileWriter(f));
+	        out.write(tc.buf.toString());
+	        out.close();
+	    } catch (IOException e) {
+	    	e.printStackTrace();
+	    }
+
 	}
 
 	@Override
 	public void connected() {
-		// TODO Auto-generated method stub
 		System.out.println("BWAPI connected");
 		bwapi.loadTypeData();
 		try {
 		AnimationFrameData.Init();
 		PlayerProperties.Init();
 		WeaponProperties.Init(bwapi);
-		UnitProperties.Init(bwapi);
-		//tc.bwapi.start();
-		
-		System.out.println("BWAPI created"+ bwapi.getUnitType(3).getName());
+		UnitProperties.Init(bwapi);		
 		
 		graphics = true;
 		
@@ -91,13 +130,14 @@ public class Test implements BWAPIEventListener  {
 		//realisticTest(p1, p2, 20);
 		
 		//dragoonZTest(p1, p2, 20, new int[]{8,16,32,50,75,100});
+
 		dragoonZTest(p1, p2, 2, new int[]{50,75});
 		
 		//upgmaTest(p1, p2, 100, 25);
 		
 		//upgmaScenario(p1, p2);
 		
-		//simulatorTest(p1, p2, 1, 250, 10, 100);
+		simulatorTest(p1, p2, 1, 250, 10, 100);
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -294,7 +334,6 @@ public class Test implements BWAPIEventListener  {
 		try {
 			testUPGMAScenario(p1,p2);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -415,7 +454,6 @@ public class Test implements BWAPIEventListener  {
 	    try {
 			state.setMap(new Map(25, 20));
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	    
@@ -428,7 +466,6 @@ public class Test implements BWAPIEventListener  {
 		    try {
 				state.addUnit(u);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	    }
@@ -441,7 +478,6 @@ public class Test implements BWAPIEventListener  {
 		    try {
 				state.addUnit(u);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	    }
@@ -454,7 +490,6 @@ public class Test implements BWAPIEventListener  {
 		    try {
 				state.addUnit(u);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	    }
@@ -500,7 +535,9 @@ public class Test implements BWAPIEventListener  {
 		for(Integer i : n){
 			try {
 				System.out.println("--- units: " + i);
+				buf.append("--- units: " + i+"\r\n");
 				float result = testDragoonZealotGames(p1, p2, (int)i, runs);
+				buf.append("DRAGOON ZEALOT TEST RESULT: " + result+"\r\n");
 				System.out.println("DRAGOON ZEALOT TEST RESULT: " + result);
 				
 				//System.out.println("Result=" + result);
@@ -528,7 +565,7 @@ public class Test implements BWAPIEventListener  {
 		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
 		
 		System.out.println("Dragoons: " + n/2 + "\tZealots: " + n/2 + " on each side");
-		
+		buf.append("Dragoons: " + n/2 + "\tZealots: " + n/2 + " on each side\r\n");
 		List<Double> results = new ArrayList<Double>();
 		int wins = 0;
 		for(int i = 1; i <= games; i++){
@@ -542,13 +579,15 @@ public class Test implements BWAPIEventListener  {
 			if(i%1==0){
 				//System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
 				System.out.println("Win average: " + ((double)wins)/((double)i));
+				buf.append("Win average: " + ((double)wins)/((double)i)+"\r\n");
 			}
 		}
 		
 		// Calc deviation and average
 		System.out.println("--------------- Score average: " + average(results) + "\tDeviation: " + deviation(results));
+		buf.append("--------------- Score average: " + average(results) + "\tDeviation: " + deviation(results)+"\r\n");
 		System.out.println("--------------- Win average: " + ((double)wins)/((double)games));
-		
+		buf.append("--------------- Win average: " + ((double)wins)/((double)games)+"\r\n");
 		return (float)wins / (float)games;
 		
 	}
@@ -600,7 +639,7 @@ public class Test implements BWAPIEventListener  {
 		for(int i = 1; i < 16; i++){
 			try {
 				float result = oneTypeGames(p1, p2, i*8, type, runs);
-				//System.out.println("MARINE TEST RESULT: " + result);
+				System.out.println("MARINE TEST RESULT: " + result);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -749,92 +788,47 @@ public class Test implements BWAPIEventListener  {
 	}
 
 	@Override
-	public void gameStarted() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void gameStarted() {}
 
 	@Override
-	public void gameUpdate() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void gameUpdate() {}
 
 	@Override
-	public void gameEnded() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void gameEnded() {}
 
 	@Override
-	public void keyPressed(int keyCode) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyPressed(int keyCode) {}
 
 	@Override
-	public void matchEnded(boolean winner) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void matchEnded(boolean winner) {}
 
 	@Override
-	public void playerLeft(int id) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void playerLeft(int id) {}
 
 	@Override
-	public void nukeDetect(int x, int y) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void nukeDetect(int x, int y) {}
 
 	@Override
-	public void nukeDetect() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void nukeDetect() {}
 
 	@Override
-	public void unitDiscover(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitDiscover(int unitID) {}
 
 	@Override
-	public void unitEvade(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitEvade(int unitID) {}
 
 	@Override
-	public void unitShow(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitShow(int unitID) {}
 
 	@Override
-	public void unitHide(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitHide(int unitID) {}
 
 	@Override
-	public void unitCreate(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitCreate(int unitID) {}
 
 	@Override
-	public void unitDestroy(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitDestroy(int unitID) {}
 
 	@Override
-	public void unitMorph(int unitID) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unitMorph(int unitID) {}
 }

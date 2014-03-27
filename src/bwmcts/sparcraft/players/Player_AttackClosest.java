@@ -44,7 +44,7 @@ public class Player_AttackClosest extends Player {
 					
 				if (move.type() == UnitActionTypes.ATTACK)
 				{
-					Unit target			=state.getUnit(state.getEnemy(move.player()), move.index());
+					Unit target			=state.getUnit(GameState.getEnemy(move.player()), move.index());
 					int dist			=ourUnit.getDistanceSqToUnit(target, state.getTime());
 
 					if (dist < actionDistance)
@@ -76,7 +76,7 @@ public class Player_AttackClosest extends Player {
 				}
 				else if (move.type() == UnitActionTypes.MOVE)
 				{
-					Position ourDest			=new Position(ourUnit.position().getX() + Constants.Move_Dir[move.index()][0],	 ourUnit.position().getY() + Constants.Move_Dir[move.index()][1]);
+					Position ourDest			=new Position(ourUnit.pos().getX() + Constants.Move_Dir[move.index()][0],	 ourUnit.pos().getY() + Constants.Move_Dir[move.index()][1]);
 					int dist					=closestUnit.getDistanceSqToPosition(ourDest, state.getTime());
 
 					if (dist < closestMoveDist)
@@ -91,5 +91,9 @@ public class Player_AttackClosest extends Player {
 
 			moveVec.add(moves.get(u).get(bestMoveIndex));
 		}
+	}
+	
+	public String toString(){
+		return "AttackClosest";
 	}
 }
