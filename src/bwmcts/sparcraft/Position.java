@@ -105,7 +105,7 @@ public class Position {
 	public int getDistance(Position pos) {
 		int dX = x - pos.x;
         int dY = y - pos.y;
-
+        
         if (dX == 0)
         {
             return Math.abs(dY);
