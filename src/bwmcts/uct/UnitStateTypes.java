@@ -6,5 +6,5 @@
 package bwmcts.uct;
 
 public enum UnitStateTypes {
-	ATTACK, KITE;
+	ATTACK, KITE, PASS;
 }

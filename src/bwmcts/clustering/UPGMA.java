@@ -20,7 +20,7 @@ public class UPGMA implements ClusteringAlgorithm {
 	private double distMultiplier;
 	
 	@Override
-	public HashMap<Integer, List<Unit>> getClusters(Unit[] units, int numClusters, double hpMultiplier) {
+	public List<List<Unit>> getClusters(Unit[] units, int numClusters, double hpMultiplier) {
 		
 		this.hpMultiplier = hpMultiplier;
 		
@@ -101,18 +101,18 @@ public class UPGMA implements ClusteringAlgorithm {
 	    }  
 	}*/
 	
-	public HashMap<Integer,List<Unit>> getClusters(int clusters){
+	public List<List<Unit>> getClusters(int clusters){
 		if (K==0)
 			return null;
 		List<UPCluster> up = cutTree(this.getRoot(), clusters);
-		HashMap<Integer, List<Unit>> result = new HashMap<Integer,List<Unit>>();
+		List<List<Unit>> result = new ArrayList<List<Unit>>();
 		for (int i=0; i < up.size(); i++){
 			List<Unit> tmp = new ArrayList<Unit>();
 			for (int p: getLeafs(up.get(i))){
 				tmp.add(this.input.get(p-1));
 			}
 			
-			result.put(i, tmp);
+			result.add(tmp);
 		}
 	
 		return result;

@@ -1,4 +1,4 @@
-package bwmcts.uct.iuct;
+package bwmcts.uct.iuctcd;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,13 +8,14 @@ import java.util.List;
 import bwmcts.uct.UnitState;
 import bwmcts.uct.NodeType;
 import bwmcts.uct.UnitStateTypes;
-import bwmcts.uct.iuct.IuctNode;
+import bwmcts.uct.iuctcd.IuctNode;
 import bwmcts.sparcraft.GameState;
 import bwmcts.sparcraft.Players;
 import bwmcts.sparcraft.UnitAction;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_Kite;
 import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
+import bwmcts.sparcraft.players.Player_Pass;
 import bwmcts.uct.UCT;
 import bwmcts.uct.UctConfig;
 import bwmcts.uct.UctNode;
@@ -253,7 +254,7 @@ public class IUCTCD extends UCT {
 		List<UnitAction> allActions = new ArrayList<UnitAction>();
 		HashMap<Integer, List<UnitAction>> attackingMap = new HashMap<Integer, List<UnitAction>>();
 		HashMap<Integer, List<UnitAction>> kitingMap = new HashMap<Integer, List<UnitAction>>();
-		
+
 		for(Integer i : attackingUnits)
 			if (map.get(i) != null)
 				attackingMap.put(i, map.get(i));

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JFrame;
 
@@ -23,17 +24,19 @@ import bwmcts.sparcraft.UnitProperties;
 import bwmcts.sparcraft.WeaponProperties;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.uct.UCT;
+import bwmcts.uct.guctcd.GUCTCD;
 import javabot.JNIBWAPI;
 import javabot.util.BWColor;
 
-public class UctcdLogic extends Player implements ICombatLogic {
+public class UctLogic extends Player implements ICombatLogic {
 
 	private UCT uct;
 	private SparcraftUI ui;
 	private HashMap<Integer,UnitAction> actions=new HashMap<Integer,UnitAction>();
 	private int timeBudget;
+	private List<List<Unit>> clusters;
 	
-	public UctcdLogic(JNIBWAPI bwapi, UCT uct, int timeBudget){
+	public UctLogic(JNIBWAPI bwapi, UCT uct, int timeBudget){
 		
 		this.uct = uct;
 		
@@ -54,26 +57,9 @@ public class UctcdLogic extends Player implements ICombatLogic {
 			//state.print();
 			List<UnitAction> move=new ArrayList<UnitAction>();
 			move = uct.search(state.clone(), timeBudget);
-			/*
-			if (guctcd!=null){
-				
-				try{
-					UPGMA upgmaPlayerA = new UPGMA(state.getAllUnit()[bwapi.getSelf().getID()], guctcd.getHpMulitplier(), 1);
-					UPGMA upgmaPlayerB = new UPGMA(state.getAllUnit()[bwapi.getEnemies().get(0).getID()], guctcd.getHpMulitplier(), 1);
-					move = guctcd.search(state, upgmaPlayerA, upgmaPlayerB, timeBudget);
-					//System.out.println("GUCTCD: " + move);
-					//for(UnitAction action : move)
-						//System.out.print(action+";");
-					
-					drawClusters(bwapi, guctcd.getClustersA());
-					drawClusters(bwapi, guctcd.getClustersB());
-					
-				} catch(Exception e){
-					e.printStackTrace();
-				}
-				
+			if (uct instanceof GUCTCD){
+				clusters = ((GUCTCD)uct).getClusters();
 			}
-			*/
 			System.out.println();
 			executeActions(bwapi,state,move);
 		} catch(Exception e){
@@ -188,6 +174,9 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		moveVec.clear();
 		List<UnitAction> move=new ArrayList<UnitAction>();
 		move = uct.search(state.clone(), timeBudget);
+		if (uct instanceof GUCTCD){
+			clusters = ((GUCTCD)uct).getClusters();
+		}
 		/*
 		if (guctcd!=null){
 			
@@ -219,4 +208,20 @@ public class UctcdLogic extends Player implements ICombatLogic {
 		bwapi.drawText(0, 100, "isStartingAttack: "+my.isStartingAttack(), false);
 	}
 
+	public UCT getUct() {
+		return uct;
+	}
+
+	public void setUct(UCT uct) {
+		this.uct = uct;
+	}
+
+	public List<List<Unit>> getClusters() {
+		return clusters;
+	}
+
+	public void setClusters(List<List<Unit>> clusters) {
+		this.clusters = clusters;
+	}
+	
 }

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import bwmcts.clustering.UPGMA;
 import bwmcts.uct.UctNode;
@@ -40,8 +41,10 @@ public class GUCTCD extends UCT {
 
 	private ClusteringConfig guctConfig;
 	
-	private HashMap<Integer, List<Unit>> clustersA;
-	private HashMap<Integer, List<Unit>> clustersB;
+	private List<List<Unit>> clustersA;
+	private List<List<Unit>> clustersB;
+
+	private List<List<Unit>> clusters;
 	
 	public GUCTCD(UctConfig uctConfig, UctStats stats, ClusteringConfig guctConfig){
 		super(uctConfig, stats);
@@ -58,11 +61,19 @@ public class GUCTCD extends UCT {
 			return new ArrayList<UnitAction>(); 
 		}
 		
-		Date start = new Date();
+		long start = System.currentTimeMillis();
+		long startNs = System.nanoTime();
 		
 		// Get clusters
 		clustersA = guctConfig.getClusterAlg().getClusters(state.getAllUnit()[0], 6, guctConfig.getHpMulitplier());
 		clustersB = guctConfig.getClusterAlg().getClusters(state.getAllUnit()[1], 6, guctConfig.getHpMulitplier());
+		
+		if(config.getMaxPlayerIndex() == 0)
+			clusters = clustersA;
+		else
+			clusters = clustersB;
+		
+		System.out.println("Nano time: " + (System.nanoTime() - startNs));
 		
 		UctNode root = new GuctNode(null, NodeType.ROOT, new ArrayList<UnitState>(), config.getMaxPlayerIndex(), "ROOT");
 		
@@ -71,7 +82,7 @@ public class GUCTCD extends UCT {
 			stats.reset();
 		
 		int t = 0;
-		while(new Date().getTime() <= start.getTime() + timeBudget){
+		while(System.currentTimeMillis() <= start + timeBudget){
 			
 			traverse(root, state.clone());
 			t++;
@@ -159,7 +170,7 @@ public class GUCTCD extends UCT {
 		}
 		
 		// Which cluster?
-		HashMap<Integer, List<Unit>> clusters = clustersB;
+		List<List<Unit>> clusters = clustersB;
 		if (playerToMove == config.getMaxPlayerIndex())
 			clusters = clustersA;
 				
@@ -185,14 +196,16 @@ public class GUCTCD extends UCT {
 		
 	}
 	
-	private List<UnitState> getAllMove(UnitStateTypes type, HashMap<Integer, List<Unit>> clusters) {
+	private List<UnitState> getAllMove(UnitStateTypes type, List<List<Unit>> clusters) {
 
 		List<UnitState> states = new ArrayList<UnitState>();
 		
-		for(Integer c : clusters.keySet()){
+		int i = 0;
+		for(List<Unit> units : clusters){
 			
-			UnitState state = new UnitState(type, c, clusters.get(c).get(0).player());
+			UnitState state = new UnitState(type, i, units.get(0).player());
 			states.add(state);
+			i++;
 			
 		}
 		
@@ -253,19 +266,21 @@ public class GUCTCD extends UCT {
 		return NodeType.DEFAULT;
 	}
 
-	private List<UnitState> getRandomMove(int playerToMove, HashMap<Integer, List<Unit>> clusters) {
+	private List<UnitState> getRandomMove(int playerToMove, List<List<Unit>> clusters) {
 		
 		List<UnitState> states = new ArrayList<UnitState>();
 		
-		for(Integer c : clusters.keySet()){
+		int i = 0;
+		for(List<Unit> units : clusters){
 			
 			// Random state
 			UnitStateTypes type = UnitStateTypes.ATTACK;
 			if (Math.random() >= 0.5f)
 				type = UnitStateTypes.KITE;
 			
-			UnitState state = new UnitState(type, c, clusters.get(c).get(0).player());
+			UnitState state = new UnitState(type, i, units.get(0).player());
 			states.add(state);
+			i++;
 			
 		}
 		
@@ -296,7 +311,7 @@ public class GUCTCD extends UCT {
 		for(UnitState unitState : move){
 			
 			// Which cluster?
-			HashMap<Integer, List<Unit>> clusters = clustersB;
+			List<List<Unit>> clusters = clustersB;
 			if (player == config.getMaxPlayerIndex())
 				clusters = clustersA;
 			
@@ -341,6 +356,10 @@ public class GUCTCD extends UCT {
 		allActions.addAll(defendActions);
 		
 		return allActions;
+	}
+
+	public List<List<Unit>> getClusters() {
+		return clusters;
 	}
 	
 }

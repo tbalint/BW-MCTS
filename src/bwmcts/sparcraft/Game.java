@@ -55,7 +55,7 @@ public class Game {
 		this.rounds=0;
 		this.display=display;
 		if (display){
-	    	ui = new SparcraftUI(state);
+	    	ui = new SparcraftUI(state, p1, p2);
 	        
 	        // Setup of the frame containing the game
 	        JFrame f = new JFrame();

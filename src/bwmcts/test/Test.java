@@ -9,13 +9,15 @@ import javabot.JNIBWAPI;
 import javabot.types.UnitType;
 import javabot.types.UnitType.UnitTypes;
 import bwmcts.Util;
+import bwmcts.clustering.DynamicKMeans;
+import bwmcts.clustering.KMeans;
 import bwmcts.clustering.UPGMA;
-import bwmcts.combat.UctcdLogic;
+import bwmcts.combat.UctLogic;
 import bwmcts.uct.UctConfig;
 import bwmcts.uct.UctStats;
 import bwmcts.uct.guctcd.ClusteringConfig;
 import bwmcts.uct.guctcd.GUCTCD;
-import bwmcts.uct.iuct.IUCTCD;
+import bwmcts.uct.iuctcd.IUCTCD;
 import bwmcts.sparcraft.*;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_AttackClosest;
@@ -62,15 +64,15 @@ public class Test implements BWAPIEventListener  {
 		//Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 500, false), 200);
 		GUCTCD guctcdA = new GUCTCD(new UctConfig(0), 
 									new UctStats(),
-									new ClusteringConfig(1, 6, new UPGMA()));
+									new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
 
 		GUCTCD guctcdB = new GUCTCD(new UctConfig(1), 
 									new UctStats(),
 									new ClusteringConfig(1, 6, new UPGMA()));
 
-		Player p1 = new UctcdLogic(bwapi, new IUCTCD(new UctConfig(0), new UctStats()),40);
+		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(new UctConfig(0), new UctStats()),40);
 		//Player p1 = new UctcdLogic(bwapi, new OLDIUCTCD(1.6, 20, 1, 0, 50000, false),40);
-		//Player p1 = new UctcdLogic(bwapi, guctcdA, 40);
+		Player p1 = new UctLogic(bwapi, guctcdA, 40);
 		//Player p1 = new Player_NoOverKillAttackValue(0);
 		
 		//Player p2 = new UctcdLogic(bwapi, new IUCTCD(new UctConfig(1), new UctStats()),40);
@@ -89,7 +91,7 @@ public class Test implements BWAPIEventListener  {
 		//realisticTest(p1, p2, 20);
 		
 		//dragoonZTest(p1, p2, 20, new int[]{8,16,32,50,75,100});
-		dragoonZTest(p1, p2, 2, new int[]{8,16,32,50,75});
+		dragoonZTest(p1, p2, 2, new int[]{50,75});
 		
 		//upgmaTest(p1, p2, 100, 25);
 		

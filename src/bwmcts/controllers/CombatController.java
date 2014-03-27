@@ -7,7 +7,7 @@ import bwmcts.uct.UctConfig;
 import bwmcts.uct.UctStats;
 import bwmcts.uct.guctcd.GUCTCD;
 import bwmcts.uct.guctcd.ClusteringConfig;
-import bwmcts.uct.iuct.IUCTCD;
+import bwmcts.uct.iuctcd.IUCTCD;
 import javabot.BWAPIEventListener;
 import javabot.JNIBWAPI;
 import javabot.model.*;
@@ -62,7 +62,7 @@ public class CombatController implements BWAPIEventListener {
 		GUCTCD guctcdA = new GUCTCD(new UctConfig(0), 
 									new UctStats(), 
 									new ClusteringConfig(1, 6, new UPGMA()));
-		combatLogic = new UctcdLogic(bwapi, new IUCTCD(new UctConfig(0), new UctStats()),40);
+		combatLogic = new UctLogic(bwapi, new IUCTCD(new UctConfig(0), new UctStats()),40);
 		//combatLogic = new UctcdLogic(bwapi,new IUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false), 30);
 		//combatLogic =new GPortfolioGreedyLogic(bwapi,2,2,30,6);
 		//combatLogic = new PortfolioGreedyLogic(bwapi,1,1,20 );

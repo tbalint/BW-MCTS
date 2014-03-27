@@ -5,6 +5,8 @@ import javabot.types.UnitType.UnitTypes;
 import javax.swing.*;
 
 import bwmcts.clustering.UPGMA;
+import bwmcts.combat.UctLogic;
+import bwmcts.sparcraft.players.Player;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -27,8 +29,10 @@ public class SparcraftUI extends JComponent {
 	private static final long serialVersionUID = 1L;
 	private GameState _state;
 	public int c = 6;
+	private Player p1;
+	private Player p2;
 	
-	public SparcraftUI(GameState state) {
+	public SparcraftUI(GameState state, Player p1, Player p2) {
 		_state=state;
 		for (UnitTypes u: UnitTypes.values()){
 			//System.out.println(u.toString());
@@ -38,6 +42,8 @@ public class SparcraftUI extends JComponent {
 		//Terran_Marine = Toolkit.getDefaultToolkit().getImage("c:\\itu\\Sparcraft\\starcraft_images\\units\\Terran_Marine.png");
 		int  i=(int)(Math.random()*10 % 4); 
 		background=Toolkit.getDefaultToolkit().getImage(dirPath+"ground\\ground"+(i>0?i:"")+".png");
+		this.p1 = p1;
+		this.p2 = p2;
 	}
 	
 	
@@ -88,24 +94,34 @@ public class SparcraftUI extends JComponent {
 			
 		} 
 		
-		HashMap<Integer,List<Unit>>clusters=new UPGMA().getClusters(_state.getAllUnit()[0], c, 1);
+		if (p1 instanceof UctLogic){
+			List<List<Unit>> clustersP1 = ((UctLogic)p1).getClusters();
+			if (clustersP1!=null)
+				drawClusters(g, clustersP1);	
+		}
+		if (p2 instanceof UctLogic){
+			List<List<Unit>> clustersP2 = ((UctLogic)p2).getClusters();
+			if (clustersP2!=null)
+				drawClusters(g, clustersP2);
+		}
+	    
+	    
+	}
+	
+	private void drawClusters(Graphics g, List<List<Unit>> clusters) {
 	    int clusterId=0;
-	    if (clusters == null || clusters.values() == null)
+	    if (clusters == null)
 	    	return;
-	    for (List<Unit> list : clusters.values()){
+	    for (List<Unit> units : clusters){
 	    	g.setColor(getColor(clusterId++));
-	    	
-	    	for (Unit a:list){
-	    		
+	    	for (Unit a : units){
 	    		g.drawOval(a.currentPosition(_state.getTime()).getX()-12+offSetX, a.currentPosition(_state.getTime()).getY()-12+offSetY, 24, 24);
 	    		g.drawOval(a.currentPosition(_state.getTime()).getX()-13+offSetX, a.currentPosition(_state.getTime()).getY()-13+offSetY, 26, 26);
 	    		g.drawOval(a.currentPosition(_state.getTime()).getX()-14+offSetX, a.currentPosition(_state.getTime()).getY()-14+offSetY, 28, 28);
 	    	}
 	    }
-	    
-	    
 	}
-	
+
 	private void drawScaleForMap(Graphics g, int pixelWidth, int pixelHeight) {
 		for (int i=0; i<(int)pixelWidth+1;i+=50){
 			if (i!=0 && i % 100==0){
