@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import javabot.types.UnitType;
-
 import bwmcts.sparcraft.Position;
 import bwmcts.sparcraft.Unit;
 
@@ -103,4 +102,8 @@ public class DynamicKMeans implements ClusteringAlgorithm {
 		
 	}
 	
+	@Override
+	public String toString(){
+		return "DynamicKMeans";
+	}
 }

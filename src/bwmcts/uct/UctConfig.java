@@ -87,5 +87,11 @@ public class UctConfig {
 	public void setNokModelling(boolean nokModelling) {
 		this.nokModelling = nokModelling;
 	}
+	
+	public String toString(){
+		return "K: "+ K+ "\tmaxChildren: "+maxChildren+"\tmaxPlayerIndex: "+maxPlayerIndex+"\tdebug: "+debug+
+				"\tsimulationSteps: "+simulationSteps+"\tnokModelling: "+nokModelling+"\tLTD2: "+LTD2;
+
+	}
 
 }

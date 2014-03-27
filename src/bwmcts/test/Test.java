@@ -65,15 +65,25 @@ public class Test implements BWAPIEventListener  {
 		Player p2 = new Player_NoOverKillAttackValue(1);
 		
 		tc.buf=new StringBuffer();
-		System.out.println(p1.toString()+ " vs "+p2.toString());
-		tc.buf.append(p1.toString()+ " vs "+p2.toString()+"\r\n");
+		System.out.println("Player0: "+p1.toString());
+		System.out.println("Player1: "+p2.toString());
+		tc.buf.append("Player0: "+p1.toString()+"\r\n");
+		tc.buf.append("Player1: "+p2.toString()+"\r\n");
 		
 		
-		tc.dragoonZTest(p1, p2, 2, new int[]{8,16,32,50,75});
+		tc.dragoonZTest(p1, p2, 1, new int[]{8});
 		
 		
 		try {
-			File f = new File(p1.toString()+ "_vs_"+p2.toString()+"_"+System.currentTimeMillis()+".txt");
+			String player0=p1.toString();
+			if (player0.indexOf(" ")>0){
+				player0=player0.substring(0, player0.indexOf(" "));
+			}
+			String player1=p2.toString();
+			if (player1.indexOf(" ")>0){
+				player1=player1.substring(0, player1.indexOf(" "));
+			}
+			File f = new File(player0+ "_vs_"+player1+"_"+System.currentTimeMillis()+".txt");
 	        BufferedWriter out = new BufferedWriter(new FileWriter(f));
 	        out.write(tc.buf.toString());
 	        out.close();

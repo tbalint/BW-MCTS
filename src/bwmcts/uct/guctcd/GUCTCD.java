@@ -362,4 +362,8 @@ public class GUCTCD extends UCT {
 		return clusters;
 	}
 	
+	public String toString(){
+		return "GUCT - "+this.config.toString()+ "\t"+this.guctConfig.toString();
+	}
+	
 }
