@@ -4,7 +4,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,8 +63,8 @@ public class Test implements BWAPIEventListener  {
 				new ClusteringConfig(1, 6, new UPGMA()));
 
 		//Player p1 = new Player_NoOverKillAttackValue(0);
-		//Player p1 = new UctLogic(tc.bwapi, guctcdA, 40);
-		Player p1 = new UctLogic(tc.bwapi, new IUCTCD(new UctConfig(0), new UctStats()),40);
+		Player p1 = new UctLogic(tc.bwapi, guctcdA, 40);
+		//Player p1 = new UctLogic(tc.bwapi, new IUCTCD(new UctConfig(0), new UctStats()),40);
 		
 		Player p2 = new Player_NoOverKillAttackValue(1);
 		
@@ -83,7 +87,9 @@ public class Test implements BWAPIEventListener  {
 			if (player1.indexOf(" ")>0){
 				player1=player1.substring(0, player1.indexOf(" "));
 			}
-			File f = new File(player0+ "_vs_"+player1+"_"+System.currentTimeMillis()+".txt");
+			DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd__HH_mm_ss");
+			Calendar cal = Calendar.getInstance();
+			File f = new File(player0+ "_vs_"+player1+"_"+dateFormat.format(cal.getTime())+".txt");
 	        BufferedWriter out = new BufferedWriter(new FileWriter(f));
 	        out.write(tc.buf.toString());
 	        out.close();

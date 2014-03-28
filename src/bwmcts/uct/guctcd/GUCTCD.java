@@ -363,7 +363,7 @@ public class GUCTCD extends UCT {
 	}
 	
 	public String toString(){
-		return "GUCT - "+this.config.toString()+ "\t"+this.guctConfig.toString();
+		return "GUCT_"+this.guctConfig.toString()+ "\t"+this.config.toString();
 	}
 	
 }

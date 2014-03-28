@@ -40,7 +40,7 @@ public class ClusteringConfig {
 	}
 	
 	public String toString(){
-		return "hpMulitplier: "+hpMulitplier+"\tclusters: "+clusters+"\tclusterAlg: "+clusterAlg.toString();
+		return clusterAlg.toString()+" - hpMulitplier: "+hpMulitplier+"\tclusters: "+clusters;
 		
 	}
 	
