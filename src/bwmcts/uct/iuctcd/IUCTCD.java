@@ -280,4 +280,8 @@ public class IUCTCD extends UCT {
 		return allActions;
 	}
 	
+	public String toString(){
+		return "IUCTCD - "+this.config.toString();
+	}
+	
 }

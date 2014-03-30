@@ -230,4 +230,9 @@ public abstract class UCT {
 	    return (float) (1 / (1 + Math.exp(-x)));
 	}
 	
+	
+	public String toString(){
+		return "UCT - "+this.config.toString();
+	}
+	
 }

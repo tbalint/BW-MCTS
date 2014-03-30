@@ -20,6 +20,7 @@ public class KMeans implements ClusteringAlgorithm {
 		}
 		return getClusters(units, k, hp);
 	}
+	
 
 	public List<List<Unit>> getClusters(List<Unit> units, int k, double hp) {
 
@@ -121,5 +122,8 @@ public class KMeans implements ClusteringAlgorithm {
 
 		return selected;
 	}
-	
+	@Override
+	public String toString(){
+		return "Kmeans";
+	}
 }

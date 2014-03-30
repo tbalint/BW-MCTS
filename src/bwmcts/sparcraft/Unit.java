@@ -437,6 +437,10 @@ public class Unit implements Comparable<Unit> {
 		 System.out.printf("%s %5d [%5d %5d] (%5d, %5d)\n", _unitType.getName(), currentHP(), nextAttackActionTime(), nextMoveActionTime(), x(), y());
 	}
 	
+	public String toString(){
+		return String.format("%s %5d [%5d %5d] (%5d, %5d)\n", _unitType.getName(), currentHP(), nextAttackActionTime(), nextMoveActionTime(), x(), y());
+	}
+	
 	public int compareTo(Unit u) {
 		if (!isAlive() && !u.isAlive()){
 			return 0;

@@ -4,7 +4,6 @@ import javabot.types.UnitType.UnitTypes;
 
 import javax.swing.*;
 
-import bwmcts.clustering.UPGMA;
 import bwmcts.combat.UctLogic;
 import bwmcts.sparcraft.players.Player;
 

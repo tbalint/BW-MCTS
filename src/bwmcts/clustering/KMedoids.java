@@ -126,6 +126,11 @@ public class KMedoids {
 		
 	}
 
+	@Override
+	public String toString(){
+		return "KMedoids";
+	}
+	
 	private static List<Unit> selectRandomUnits(int k, List<Unit> units) {
 		
 		List<Unit> selected = new ArrayList<Unit>();

@@ -225,4 +225,9 @@ public class UctLogic extends Player implements ICombatLogic {
 		this.clusters = clusters;
 	}
 	
+	public String toString(){
+		
+		return uct.toString();
+	}
+	
 }

@@ -28,6 +28,11 @@ public class UPGMA implements ClusteringAlgorithm {
 		return getClusters(numClusters);
 		
 	}
+	
+	@Override
+	public String toString(){
+		return "UPGMA";
+	}
 
 	private void init(Unit[] in){
 

@@ -39,4 +39,9 @@ public class ClusteringConfig {
 		this.clusters = clusters;
 	}
 	
+	public String toString(){
+		return clusterAlg.toString()+" - hpMulitplier: "+hpMulitplier+"\tclusters: "+clusters;
+		
+	}
+	
 }
