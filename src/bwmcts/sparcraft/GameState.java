@@ -284,8 +284,10 @@ public class GameState {
 		_prevNumUnits[playerID]++;
 
 	    // And do the clean-up
+		try{
 		finishedMoving();
 		calculateStartingHealth();
+		} catch(Exception e){}
 	}
 	public void addUnitWithID(Unit u){
 		 checkFull(u.player());
@@ -806,7 +808,7 @@ public class GameState {
 
 	            if (!isWalkable(pos))
 	            {
-	            	throw new Exception("Unit is on non-walkable map tile");
+	            	throw new Exception("Unit is on non-walkable map tile: "+pos.toString());
 	            }
 	        }
 	    }

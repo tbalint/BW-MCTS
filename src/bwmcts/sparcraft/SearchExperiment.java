@@ -5,14 +5,27 @@
 **/
 package bwmcts.sparcraft;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
 import javabot.JNIBWAPI;
+import javabot.types.TechType;
 import javabot.types.UnitType;
 import javabot.types.UnitType.UnitTypes;
-
-import bwmcts.sparcraft.players.Player;
+import javabot.types.UpgradeType;
+import bwmcts.sparcraft.players.*;
+import bwmcts.test.JNIBWAPI_LOAD;
 
 public class SearchExperiment {
 
@@ -22,104 +35,122 @@ public class SearchExperiment {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
+		
+		SearchExperiment se=new SearchExperiment(args[0]);
+
+		try {
+			se.runExperiment();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	Player[] players=new Player[2];
-    String[] playerStrings=new String[2];
-    List<GameState> states;
+	HashMap<Integer,List<Player>> players=new HashMap<Integer,List<Player>>();
+	HashMap<Integer,List<String>> playerStrings=new HashMap<Integer,List<String>>();
+    List<GameState> states=new ArrayList<GameState>();
     Map map;
-    boolean  showDisplay;
+    boolean  showDisplay= false;
 
     String  resultsFile;
-    boolean                        appendTimeStamp;
+    boolean                        appendTimeStamp=true;
     String                 timeString;
     String                 configFileFull;
     String                 configFileSmall;
     String                 imageDir;
 
 	Player[] resultsPlayers=new Player[2];
-	int                        resultsStateNumber;
-	int                        resultsNumUnits;
-	int                        resultsEval;
-	int                        resultsRounds;
-	int                        resultsTime;
-    int                         numGames;
-	int                         numWins;
-    int                         numLosses;
-	int                         numDraws;
-
-	Random					rand;
+	//int                        resultsStateNumber;
+	//int                        resultsNumUnits;
+	//int                        resultsEval;
+	//int                        resultsRounds;
+	//int                        resultsTime;
+    int[][]                         numGames;
+	int[][]                         numWins;
+    int[][]                         numLosses;
+	int[][]                         numDraws;
+	
+	
+	JNIBWAPI bwapi;
+	Random					rand = new Random();
 
 	public SearchExperiment(String configFile){
-		
-		showDisplay=false;
-		appendTimeStamp=true;
-		rand=new Random();
+		bwapi = new JNIBWAPI_LOAD(null);
+		bwapi.loadTypeData();
+		AnimationFrameData.Init();
+		PlayerProperties.Init();
+		WeaponProperties.Init(bwapi);
+		UnitProperties.Init(bwapi);	
 		configFileSmall = getBaseFilename(configFile);
-		map = new Map(40, 22);
+		map = new Map(40,40);
 		setCurrentDateTime();
 		parseConfigFile(configFile);
-		writeConfig(configFile);
+		try {
+			writeConfig(configFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		setupResults();
+		
 	}
 
 	public void setupResults(){
-	   /* int np1 = players[0].size();
-	    int np2 = players[1].size();
+	    int np1 = players.get(0).size();
+	    int np2 = players.get(1).size();
 	
-	    resultsStateNumber  = ivvv(np1, ivv(np2, iv()));
-		resultsNumUnits     = ivvv(np1, ivv(np2, iv()));
-		resultsEval         = ivvv(np1, ivv(np2, iv()));
-		resultsRounds       = ivvv(np1, ivv(np2, iv()));
-		resultsTime         = dvvv(np1, dvv(np2, dv()));
-	    numGames            = ivv(np1, iv(np2, 0));
-	    numWins             = ivv(np1, iv(np2, 0));
-	    numLosses           = ivv(np1, iv(np2, 0));
-	    numDraws            = ivv(np1, iv(np2, 0));*/
+	    //resultsStateNumber  = new int[np1][np2];
+		//resultsNumUnits     = ivvv(np1, ivv(np2, iv()));
+		//resultsEval         = ivvv(np1, ivv(np2, iv()));
+		//resultsRounds       = ivvv(np1, ivv(np2, iv()));
+		//resultsTime         = dvvv(np1, dvv(np2, dv()));
+	    numGames            = new int[np1][np2];
+	    numWins             = new int[np1][np2];
+	    numLosses           = new int[np1][np2];
+	    numDraws            = new int[np1][np2];
 	}
 	
-	public void writeConfig(String configfile)
-	{/*
-	    std::ofstream config(getConfigOutFileName().c_str());
-	    if (!config.is_open())
-	    {
-	        System::FatalError("Problem Opening Output File: Config");
-	    }
-	
-	    std::vector<std::string> lines(getLines(configfile));
-	
-	    for (size_t l(0); l<lines.size(); ++l)
-	    {
-	        config << lines[l] << std::endl;
-	    }
-	
-	    config.close();*/
+	public void writeConfig(String configfile) throws IOException
+	{
+		File f= new File(getConfigOutFileName());
+
+		
+		List<String> lines=getLines(configfile);
+		BufferedWriter out = new BufferedWriter(new FileWriter(f));
+		for (String s : lines){
+			out.write(s);
+			out.newLine();
+		}
+		
+
+        out.close();
+
 	}
 	
-	public void writeResultsSummary()
-	{/*
-		std::ofstream results(getResultsSummaryFileName().c_str());
-	    if (!results.is_open())
-	    {
-	        System::FatalError("Problem Opening Output File: Results Summary");
-	    }
-	
-		for (size_t p1(0); p1 < players[0].size(); ++p1)
+	public void writeResultsSummary() throws IOException
+	{
+		File f= new File(getResultsSummaryFileName());
+
+		
+		BufferedWriter out = new BufferedWriter(new FileWriter(f));
+
+
+        
+		
+		for (int p1=0; p1 < players.get(0).size(); ++p1)
 		{
-	        for (size_t p2(0); p2 < players[1].size(); ++p2)
+	        for (int p2=0; p2 < players.get(1).size(); ++p2)
 		    {
 	            double score = 0;
 	            if (numGames[p1][p2] > 0)
 	            {
 	                score = ((double)numWins[p1][p2] / (double)(numGames[p1][p2])) + 0.5*((double)numDraws[p1][p2] / (double)numGames[p1][p2]);
 	            }
-	
-	            results << std::setiosflags(std::ios::fixed) << std::setw(12) << std::setprecision(7) << score << " ";
+	            out.write(String.valueOf(score));
 	        }
 	
-	        results << std::endl;
+	        out.newLine();
 		}
 	
-	    results.close();*/
+	    out.close();
 	}
 	
 	public void padString(String str, int length)
@@ -175,249 +206,221 @@ public class SearchExperiment {
 	}
 	
 	public void setCurrentDateTime() 
-	{/*
-	    time_t     now = time(0);
-	    struct tm  tstruct;
-	    char       buf[80];
-	    
-	    std::fill(buf, buf+80, '0');
-	    tstruct = *localtime(&now);
-	    strftime(buf, sizeof(buf), "%Y-%m-%d_%X", &tstruct);
-	    //strftime(buf, sizeof(buf), "%X", &tstruct);
-	
-	    // need to replace ':' for windows filenames
-	    for (int i(0); i<80; i++)
-	    {
-	        if (buf[i] == ':')
-	        {
-	            buf[i] = '-';
-	        }
-	    }
-	
-	    timeString = std::string(buf);*/
-		timeString = new java.util.Date(System.currentTimeMillis()).toString();
+	{
+		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd__HH_mm_ss");
+		Calendar cal = Calendar.getInstance();
+		
+		timeString = dateFormat.format(cal.getTime());
 	}
 	
-	public List<String> getLines(String filename)
-	{/*
-	    // set up the file
-	    std::ifstream fin(filename.c_str());
-	    if (!fin.is_open())
-	    {
-	         System::FatalError("Problem Opening File: " + filename);
-	    }
-	
-		std::string line;
-	
-	    std::vector<std::string> lines;
-	
+	public List<String> getLines(String filename) throws IOException
+	{
+		File f= new File(filename);
+		if (!f.exists()){
+			System.out.println("Problem Opening File: " + filename);
+		}
+
+		BufferedReader br = new BufferedReader(new FileReader(f));
+		List<String> lines=new ArrayList<String>();
 	    // each line of the file will be a new player to add
-	    while (fin.good())
+		String s;
+	    while ((s=br.readLine()) !=null)
 	    {
-	        // get the line and set up the string stream
-	        getline(fin, line);
+	    	
+	    	lines.add(s);
 	       
-	        // skip blank lines and comments
-	        if (line.length() > 1 && line[0] != '#')
-	        {
-	            lines.push_back(line);
-	        }
 	    }
 	
-		fin.close();
-	
-	    return lines;*/
-		return null;
+	    br.close();
+	    return lines;
 	}
 	
 	public void parseConfigFile(String filename)
-	{/*
-	    std::vector<std::string> lines(getLines(filename));
+	{
+
+	    List<String> lines;
+		try {
+			lines = getLines(filename);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
 	
-	    for (size_t l(0); l<lines.size(); ++l)
+	    for (String line : lines)
 	    {
-	        std::istringstream iss(lines[l]);
-	        std::string option;
-	        iss >> option;
+	    	if (line.startsWith("#") || line.length()<4){
+	    		continue;
+	    	}
+	    	String[] data = line.split(" ");
+	    	int i=0;
+	        String option=data[i++];
 	
-	        if (strcmp(option.c_str(), "Player") == 0)
+	        if (option.equals("Player"))
 	        {
-	            addPlayer(lines[l]);
+	            addPlayer(line);
 	        }
-	        else if (strcmp(option.c_str(), "State") == 0)
+	        else if (option.equals("State"))
 	        {
-	            addState(lines[l]);
+	            addState(line);
 	        }
-	        else if (strcmp(option.c_str(), "MapFile") == 0)
+	        else if (option.equals("MapFile"))
 	        {
-	            std::string fileString;
-	            iss >> fileString;
-	            map = new Map;
-	            map->load(fileString);
+	            String fileString= data[i++];
+	            
+	            map = new Map(50,50);
+	            //TODO
+	            //map.load(fileString);
 	        }
-	        else if (strcmp(option.c_str(), "Display") == 0)
+	        else if (option.equals("Display"))
 	        {
-	            std::string option;
-	            iss >> option;
-	            iss >> imageDir;
-	            if (strcmp(option.c_str(), "true") == 0)
+	            option=data[i++];
+	            
+	            if (option.equals("true"))
 	            {
 	                showDisplay = true;
+	                
 	            }
 	        }
-	        else if (strcmp(option.c_str(), "ResultsFile") == 0)
+	        else if (option.equals("ResultsFile"))
 	        {
-	            std::string fileString;
-	            std::string append;
-	            iss >> fileString;
-	            iss >> append;
+	            String fileString=data[i++];
+	            String append=data[i++];
+	            
 	            resultsFile = fileString;
 	
-	            appendTimeStamp = strcmp(append.c_str(), "true") == 0 ? true : false;
+	            appendTimeStamp = Boolean.parseBoolean(append);
 	        }
-	        else if (strcmp(option.c_str(), "PlayerUpgrade") == 0)
+	        else if (option.equals("PlayerUpgrade"))
 	        {
-	            int playerID(0);
-	            std::string upgradeName;
-	            int upgradeLevel(0);
+	            int playerID=Integer.parseInt(data[i++]);
+	            String upgradeName=data[i++];
+	            int upgradeLevel=Integer.parseInt(data[i++]);
 	
-	            iss >> playerID;
-	            iss >> upgradeName;
-	            iss >> upgradeLevel;
-	
-	            PlayerProperties::Get(playerID).SetUpgradeLevel(BWAPI::UpgradeTypes::getUpgradeType(upgradeName), upgradeLevel);
+	            PlayerProperties.Get(playerID).SetUpgradeLevel(bwapi.getUpgradeType(UpgradeType.UpgradeTypes.valueOf(upgradeName).ordinal()), upgradeLevel);
 	        }
-	        else if (strcmp(option.c_str(), "PlayerTech") == 0)
+	        else if (option.equals("PlayerTech"))
 	        {
-	            int playerID(0);
-	            std::string techName;
+	            int playerID=Integer.parseInt(data[i++]);
+	            String techName=data[i++];
+
 	
-	            iss >> playerID;
-	            iss >> techName;
-	
-	            PlayerProperties::Get(playerID).SetResearched(BWAPI::TechTypes::getTechType(techName), true);
+	            PlayerProperties.Get(playerID).SetResearched(bwapi.getTechType(TechType.TechTypes.valueOf(techName).ordinal()), true);
 	        }
 	        else
 	        {
-	            System::FatalError("Invalid Option in Configuration File: " + option);
+	            System.out.println("Invalid Option in Configuration File: " + option);
+	            return;
 	        }
-	    }*/
+	    }
 	}
 	
 	public void addState(String line)
 	{
-	   // std::istringstream iss(line);
-	
+		
+		String[] data = line.split(" ");
+		int i=1;
 	    // the first number is the playerID
-	    //String state;
-	    //String stateType;
-	    //int numStates;
-	    /*
-	    iss >> state;
-	    iss >> stateType;
-	    iss >> numStates;
+	    //String state= data[i++];
+	    String stateType= data[i++];
+	    int numStates= Integer.parseInt(data[i++]);
+
 	
-	    if (strcmp(stateType.c_str(), "StateSymmetric") == 0)
+	    if (stateType.equals("StateSymmetric"))
 	    { 
-	        int xLimit, yLimit;
-	        iss >> xLimit;
-	        iss >> yLimit;
+	        int xLimit= Integer.parseInt(data[i++]);
+	        int yLimit= Integer.parseInt(data[i++]);
 	
-	        std::vector<std::string> unitVec;
-	        std::vector<int> numUnitVec;
-	        std::string unitType;
-	        int numUnits;
+	        List<String>unitVec=new ArrayList<String>();
+	        List<Integer> numUnitVec=new ArrayList<Integer>();
 	
-	        while (iss >> unitType)
+	        while (i<data.length)
 	        {
-	            iss >> numUnits;
-	            unitVec.push_back(unitType);
-	            numUnitVec.push_back(numUnits);
+	        	
+	            unitVec.add(data[i++]);
+	            numUnitVec.add(Integer.parseInt(data[i++]));
 	        }
 	
-	        //std::cout << "\nAdding " << numStates <<  " Symmetric State(s)\n\n";
-	
-	        for (int s(0); s<numStates; ++s)
+	        for (int s=0; s<numStates; ++s)
 	        {
-	            states.push_back(getSymmetricState(unitVec, numUnitVec, xLimit, yLimit));
+	            states.add(getSymmetricState(bwapi,unitVec, numUnitVec, xLimit, yLimit));
 	        }
 	    }
-	    else if (strcmp(stateType.c_str(), "StateRawDataFile") == 0)
+	    else if (stateType.equals("StateRawDataFile"))
 	    {
-	        std::string filename;
-	        iss >> filename;
-	
-	        for (int i(0); i<numStates; ++i)
+	        String filename=data[i++];
+
+	        for (int s=0; s<numStates; ++s)
 	        {
-	            states.push_back(GameState(filename));
+	            states.add(new GameState(filename));
 	        }
 	    }
-	    else if (strcmp(stateType.c_str(), "StateDescriptionFile") == 0)
+	    else if (stateType.equals("StateDescriptionFile"))
 	    {
-	        std::string filename;
-	        iss >> filename;
-	        
-	        for (int i(0); i<numStates; ++i)
+	        String filename= data[i++];
+
+	        for (int s=0; s<numStates; ++s)
 	        {
-	            parseStateDescriptionFile(filename);
+	            parseStateDescriptionFile(bwapi,filename);
 	        }
 	    }
-	    else if (strcmp(stateType.c_str(), "SeparatedState") == 0)
+	    else if (stateType.equals("SeparatedState"))
 	    {
-	        int xLimit, yLimit;
-	        int cx1, cy1, cx2, cy2;
-	        iss >> xLimit;
-	        iss >> yLimit;
-	        iss >> cx1;
-	        iss >> cy1;
-	        iss >> cx2;
-	        iss >> cy2;
+	        int xLimit= Integer.parseInt(data[i++]);
+	        int yLimit= Integer.parseInt(data[i++]);
+	        int cx1= Integer.parseInt(data[i++]); 
+	        int cy1= Integer.parseInt(data[i++]); 
+	        int cx2= Integer.parseInt(data[i++]); 
+	        int cy2= Integer.parseInt(data[i++]);
+
 	
-	        std::vector<std::string> unitVec;
-	        std::vector<int> numUnitVec;
-	        std::string unitType;
-	        int numUnits;
-	
-	        while (iss >> unitType)
+	        List<String>unitVec=new ArrayList<String>();
+	        List<Integer> numUnitVec=new ArrayList<Integer>();
+	        while (i<data.length)
 	        {
-	            iss >> numUnits;
-	            unitVec.push_back(unitType);
-	            numUnitVec.push_back(numUnits);
+	        	
+	            unitVec.add(data[i++]);
+	            numUnitVec.add(Integer.parseInt(data[i++]));
 	        }
-	
-	        //std::cout << "\nAdding " << numStates <<  " Symmetric State(s)\n\n";
-	
-	        for (int s(0); s<numStates/2; ++s)
+	        System.out.println(cx1+","+ cy1+","+ cx2+","+ cy2+","+ xLimit+","+ yLimit);
+	        for (int s=0; s<numStates/2; ++s)
 	        {
-	            addSeparatedState(unitVec, numUnitVec, cx1, cy1, cx2, cy2, xLimit, yLimit);
+	        	
+	            addSeparatedState(bwapi,unitVec, numUnitVec, cx1, cy1, cx2, cy2, xLimit, yLimit);
 	        }
 	    }
 	    else
 	    {
-	        System::FatalError("Invalid State Type in Configuration File: " + stateType);
-	    } */ 
+	        System.out.println("Invalid State Type in Configuration File: " + stateType);
+	        return;
+	    } 
 	}
 	
 	public void parseStateDescriptionFile(JNIBWAPI bwapi, String fileName)
 	{
-	    List<String> lines = getLines(fileName);
+	    List<String> lines;
+		try {
+			lines = getLines(fileName);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
 	    
 	    GameState currentState=new GameState();
 	
-	    for (int u=0; u<lines.size(); u++)
+	    for (String s : lines)
 	    {
-	        //Stringstream iss(lines[u]);
-	        String unitType="";
-	        int playerID=0;
-	        int x=0;
-	        int y=0;
+	    	String[] t=s.split(" ");
+	    	if (t.length==4){
+		        String unitType=t[0];
+		        int playerID=Integer.parseInt(t[1]);
+		        int x=Integer.parseInt(t[2]);
+		        int y=Integer.parseInt(t[3]);
+		        currentState.addUnit(getUnitType(bwapi,unitType), playerID, new Position(x, y));
+	    	} else {
+	    		System.out.println("Wrong string: " + s);
+	    	}
 	
-	        //iss >> unitType;
-	        //iss >> playerID;
-	        //iss >> x;
-	        //iss >> y;
-	
-	        currentState.addUnit(getUnitType(bwapi,unitType), playerID, new Position(x, y));
+	        
 	    }
 	
 	    states.add(currentState);
@@ -442,8 +445,7 @@ public class SearchExperiment {
 	
 	public void addPlayer(String line)
 	{
-	    //std::istringstream iss(line);
-	
+	    String[] data=line.split(" ");
 	    // Regular expressions for line validation (if I ever want to use them)
 	    //std::regex ScriptRegex("[a-zA-Z]+[ ]+[0-1][ ]+[a-zA-Z]+[ ]*");
 	    //std::regex AlphaBetaRegex("[a-zA-Z]+[ ]+[0-1][ ]+[a-zA-Z]+[ ]+[0-9]+[ ]+[0-9]+[ ]+[a-zA-Z]+[ ]+[a-zA-Z]+[ ]+[a-zA-Z]+[ ]+[a-zA-Z]+[ ]+[a-zA-Z]+[ ]+[a-zA-Z]+[ ]*");
@@ -451,59 +453,43 @@ public class SearchExperiment {
 	    //std::regex PortfolioRegex("[a-zA-Z]+[ ]+[0-1][ ]+[a-zA-Z]+[ ]+[0-9]+[ ]+[a-zA-Z]+[ ]+[0-9]+[ ][0-9]+[ ]*");
 	
 	    // the first number is the playerID
-	
+	    int i=1;
 	    //String player;
-	    //int playerID;
-	    //int playerModelID;
-	    //String playerModelString;
+	    int playerID=Integer.parseInt(data[i++]);
+	    int playerModelID=0;
+	    String playerModelString=data[i++];
 	    
-	    //iss >> player;
-	    //iss >> playerID;
-	    //iss >> playerModelString;
-	
-/*	    playerStrings[playerID].push_back(playerModelString);
-	
-	    playerModelID = PlayerModels.getID(playerModelString);
-	
-	    //std::cout << "Player " << playerID << " adding type " << playerModelString << " (" << playerModelID << ")" << std::endl;
-	
-	   	if (playerModelID == PlayerModels.AttackClosest)		
+
+	    
+	    //TODO
+	    //playerStrings[playerID].add(playerModelString);
+	    List<Player>player=new ArrayList<Player>();
+	    if (players.containsKey(playerID)){
+	    	player=players.get(playerID);
+	    };
+
+
+	   	if (playerModelString.equals("AttackClosest"))		
 	    { 
-	        players[playerID].push_back(PlayerPtr(new Player_AttackClosest(playerID))); 
+	        player.add( new Player_AttackClosest(playerID)); 
 	    }
-		else if (playerModelID == PlayerModels.AttackDPS)
+		else if (playerModelString.equals("Kite"))					
 	    { 
-	        players[playerID].push_back(PlayerPtr(new Player_AttackDPS(playerID))); 
+			player.add(new Player_Kite(playerID)); 
 	    }
-		else if (playerModelID == PlayerModels.AttackWeakest)		
+		else if (playerModelString.equals("KiteDPS"))				
 	    { 
-	        players[playerID].push_back(PlayerPtr(new Player_AttackWeakest(playerID))); 
+			player.add(new Player_KiteDPS(playerID)); 
 	    }
-		else if (playerModelID == PlayerModels.Kiter)				
+		else if (playerModelString.equals("NOKDPS"))		
 	    { 
-	        players[playerID].push_back(PlayerPtr(new Player_Kiter(playerID))); 
+			player.add(new Player_NoOverKillAttackValue(playerID)); 
 	    }
-		else if (playerModelID == PlayerModels.KiterDPS)			
+		else if (playerModelString.equals("Random"))					
 	    { 
-	        players[playerID].push_back(PlayerPtr(new Player_KiterDPS(playerID))); 
+			player.add(new Player_Random(playerID)); 
 	    }
-	    else if (playerModelID == PlayerModels.Kiter_NOKDPS)			
-	    { 
-	        players[playerID].push_back(PlayerPtr(new Player_Kiter_NOKDPS(playerID))); 
-	    }
-	    else if (playerModelID == PlayerModels.Cluster)			
-	    { 
-	        players[playerID].push_back(PlayerPtr(new Player_Cluster(playerID))); 
-	    }
-		else if (playerModelID == PlayerModels.NOKDPS)	
-	    { 
-	        players[playerID].push_back(PlayerPtr(new Player_NOKDPS(playerID))); 
-	    }
-		else if (playerModelID == PlayerModels.Random)				
-	    { 
-	        players[playerID].push_back(PlayerPtr(new Player_Random(playerID))); 
-	    }
-	    else if (playerModelID == PlayerModels.PortfolioGreedySearch)				
+	    /*else if (playerModelID == PlayerModels.PortfolioGreedySearch)				
 	    { 
 	        String enemyPlayerModel;
 	        int timeLimit=0;
@@ -662,11 +648,12 @@ public class SearchExperiment {
 	
 	        PlayerPtr uctPlayer(new Player_UCT(playerID, params));
 	        players[playerID].push_back(uctPlayer); 
-	    }
+	    }*/
 		else
 	    {
-	        System::FatalError("Invalid Player Type in Configuration File: " + playerModelString);
-	    }*/
+	        System.out.println("Invalid Player Type in Configuration File: " + playerModelString);
+	    }
+	   	players.put(playerID, player);
 	}
 	
 	public Position getRandomPosition(int xlimit, int ylimit)
@@ -677,21 +664,19 @@ public class SearchExperiment {
 		return new Position(x, y);
 	}
 	
-	public GameState getSymmetricState(JNIBWAPI bwapi, String[] unitTypes, int[] numUnits, int xLimit, int yLimit)
+	public GameState getSymmetricState(JNIBWAPI bwapi, List<String> unitTypes, List<Integer> numUnits, int xLimit, int yLimit)
 	{
 		GameState state=new GameState();
 	
 	    Position mid= new Position(640, 360);
 	
-	    //std::cout << "   Adding";
-	
 	    // for each unit type to add
-	    for (int i=0; i<unitTypes.length; i++)
+	    for (int i=0; i<unitTypes.size(); i++)
 	    {
-	        UnitType type = bwapi.getUnitType(UnitTypes.valueOf(unitTypes[i]).ordinal());
+	        UnitType type = bwapi.getUnitType(UnitTypes.valueOf(unitTypes.get(i)).ordinal());
 	
 	        // add the symmetric unit for each count in the numUnits Vector
-	        for (int u=0; u<numUnits[i]; u++)
+	        for (int u=0; u<numUnits.get(i); u++)
 		    {
 	            Position r= new Position((rand.nextInt() % (2*xLimit)) - xLimit, (rand.nextInt() % (2*yLimit)) - yLimit);
 	            Position u1= new Position(mid.getX() + r.getX(), mid.getY() + r.getY());
@@ -702,12 +687,11 @@ public class SearchExperiment {
 		    }
 	    }
 	    
-	    //std::cout << std::endl;
 		state.finishedMoving();
 		return state;
 	}
 	
-	public void addSeparatedState(JNIBWAPI bwapi,  String[] unitTypes, int[] numUnits,
+	public void addSeparatedState(JNIBWAPI bwapi,  List<String> unitTypes, List<Integer> numUnits,
 	                                                int cx1, int cy1, 
 	                                                int cx2, int cy2,
 									                int xLimit, int yLimit)
@@ -716,17 +700,17 @@ public class SearchExperiment {
 	    GameState state2=new GameState();
 	
 	    // for each unit type to add
-	    for (int i=0; i<unitTypes.length; i++)
+	    for (int i=0; i<unitTypes.size(); i++)
 	    {
-	        UnitType type = bwapi.getUnitType(UnitTypes.valueOf(unitTypes[i]).ordinal());
+	    	
+	        UnitType type = bwapi.getUnitType(UnitTypes.valueOf(unitTypes.get(i)).ordinal());
 	
 	        // add the symmetric unit for each count in the numUnits Vector
-	        for (int u=0; u<numUnits[i]; u++)
+	        for (int u=0; u<numUnits.get(i); u++)
 		    {
 	            Position r=new Position((rand.nextInt() % (2*xLimit)) - xLimit, (rand.nextInt() % (2*yLimit)) - yLimit);
-	            Position u1=new Position(cx1 + r.getX(), cy1 + r.getY());
-	            Position u2=new Position(cx2 - r.getX(), cy2 - r.getY());
-	
+	            Position u1=new Position(Math.abs(cx1 + r.getX()), Math.abs(cy1 + r.getY()));
+	            Position u2=new Position(Math.abs(cx2 - r.getX()), Math.abs(cy2 - r.getY()));
 	            state.addUnit(type, Players.Player_One.ordinal(), u1);
 	            state.addUnit(type, Players.Player_Two.ordinal(), u2);
 	            state2.addUnit(type, Players.Player_One.ordinal(), u2);
@@ -735,7 +719,8 @@ public class SearchExperiment {
 	    }
 	    
 		state.finishedMoving();
-	
+		state2.finishedMoving();
+		
 		states.add(state);
 	    states.add(state2);
 	}
@@ -824,85 +809,62 @@ public class SearchExperiment {
 	    return filename;
 	}
 	
-	public void runExperiment()
-	{/*
-	    std::ofstream results(getResultsOutFileName().c_str());
-	    if (!results.is_open())
-	    {
-	        System::FatalError("Problem Opening Output File: Results Raw");
-	    }
+	public void runExperiment() throws Exception
+	{
+		
+		File f= new File(getResultsOutFileName());
+
+		
+		BufferedWriter out = new BufferedWriter(new FileWriter(f));
 	    
 	    // set the map file for all states
-	    for (size_t state(0); state < states.size(); ++state)
+	    for (int state=0; state < states.size(); ++state)
 		{
-	        states[state].setMap(map);
+	        states.get(state).setMap(map);
 	    }
 	
-		#ifdef USING_VISUALIZATION_LIBRARIES
-			Display * disp = NULL;
-	        if (showDisplay)
-	        {
-	            disp = new Display(map ? map->getBuildTileWidth() : 40, map ? map->getBuildTileHeight() : 22);
-	            disp->SetImageDir(imageDir);
-	            disp->OnStart();
-			    disp->LoadMapTexture(map, 19);
-	        }
-		#endif
+
 	
-		results << "   P1    P2    ST  UNIT       EVAL    RND           MS | UnitType PlayerID CurrentHP XPos YPos\n";
-	    
+		out.write("   P1    P2    ST  UNIT       EVAL    RND           MS | UnitType PlayerID CurrentHP XPos YPos");
+	    out.newLine();
 		// for each player one player
-		for (size_t p1Player(0); p1Player < players[0].size(); p1Player++)
+		for (int p1Player=0; p1Player < players.get(0).size(); p1Player++)
 		{
 			// for each player two player
-			for (size_t p2Player(0); p2Player < players[1].size(); p2Player++)
+			for (int p2Player=0; p2Player < players.get(1).size(); p2Player++)
 			{
 				// for each state we care about
-				for (size_t state(0); state < states.size(); ++state)
+				for (int state=0; state < states.size(); ++state)
 				{
-	                char buf[255];
-	                fprintf(stderr, "%s  ", configFileSmall.c_str());
-					fprintf(stderr, "%5d %5d %5d %5d", (int)p1Player, (int)p2Player, (int)state, (int)states[state].numUnits(Players::Player_One));
-					sprintf(buf, "%5d %5d %5d %5d", (int)p1Player, (int)p2Player, (int)state, (int)states[state].numUnits(Players::Player_One));
-	                results << buf;
+					
+	                //fprintf(stderr, "%s  ", configFileSmall.c_str());
+					//fprintf(stderr, "%5d %5d %5d %5d", (int)p1Player, (int)p2Player, (int)state, (int)states[state].numUnits(Players::Player_One));
+					//sprintf(buf, "%5d %5d %5d %5d", (int)p1Player, (int)p2Player, (int)state, (int)states[state].numUnits(Players::Player_One));
+	                //results << buf;
 	
-					resultsPlayers[0].push_back(p1Player);
-					resultsPlayers[1].push_back(p2Player);
-					resultsStateNumber[p1Player][p2Player].push_back(state);
-					resultsNumUnits[p1Player][p2Player].push_back(states[state].numUnits(Players::Player_One));
+					//resultsPlayers[0].push_back(p1Player);
+					//resultsPlayers[1].push_back(p2Player);
+					//resultsStateNumber[p1Player][p2Player].push_back(state);
+					//resultsNumUnits[p1Player][p2Player].push_back(states[state].numUnits(Players::Player_One));
 					
 					// get player one
-					PlayerPtr playerOne(players[0][p1Player]);
+					Player playerOne =players.get(0).get(p1Player);
 	
-					// give it a new transposition table if it's an alpha beta player
-					Player_AlphaBeta * p1AB = dynamic_cast<Player_AlphaBeta *>(playerOne.get());
-					if (p1AB)
-					{
-						p1AB->setTranspositionTable(TTPtr(new TranspositionTable()));
-					}
-	
+
 					// get player two
-					PlayerPtr playerTwo(players[1][p2Player]);
-					Player_AlphaBeta * p2AB = dynamic_cast<Player_AlphaBeta *>(playerTwo.get());
-					if (p2AB)
-					{
-						p2AB->setTranspositionTable(TTPtr(new TranspositionTable()));
-					}
+					Player playerTwo =players.get(1).get(p2Player);
+
 	
 					// construct the game
-					Game g(states[state], playerOne, playerTwo, 20000);
-					#ifdef USING_VISUALIZATION_LIBRARIES
-	                    if (showDisplay)
-	                    {
-						    g.disp = disp;
-	                        disp->SetExpDesc(getExpDescription(p1Player, p2Player, state));
-	                    }
-					#endif
+					Game g= new Game(states.get(state), playerOne, playerTwo, 20000,showDisplay);
+
 	
 					// play the game to the end
+					float time=System.currentTimeMillis();
 					g.play();
+					time=System.currentTimeMillis()-time;
 					
-					ScoreType gameEval = g.getState().eval(Players::Player_One, SparCraft::EvaluationMethods::LTD2).val();
+					int gameEval = g.getState().eval(0, EvaluationMethods.LTD2)._val;
 	
 	                numGames[p1Player][p2Player]++;
 	                if (gameEval > 0)
@@ -918,41 +880,40 @@ public class SearchExperiment {
 	                    numDraws[p1Player][p2Player]++;
 	                }
 	
-					double ms = g.getTime();
-					sprintf(buf, " %10d %6d %12.2lf", gameEval, g.getRounds(), ms);
-					fprintf(stderr, "%12d %12.2lf\n", gameEval, ms);
-	
-					resultsEval[p1Player][p2Player].push_back(gameEval);
-					resultsRounds[p1Player][p2Player].push_back(g.getRounds());
-					resultsTime[p1Player][p2Player].push_back(ms);
-	
-	                results << buf;
-	                printStateUnits(results, g.getState());
-	                results << std::endl;
+	                //out.write(String.format( " %10d %6d %12.2lf", gameEval, g.getRounds(), time));
+
+
+					//resultsEval[p1Player][p2Player].push_back(gameEval);
+					//resultsRounds[p1Player][p2Player].push_back(g.getRounds());
+					//resultsTime[p1Player][p2Player].push_back(ms);
+	                
+	                out.write(printStateUnits( g.getState()));
+	                
+	                out.newLine();
 	                
 	                writeResultsSummary();
 				}
 			}
 		}
 	    
-	    results.close();
-	    */
+	    out.close();
+
 	}
 	
 	
-	public void printStateUnits(String results, GameState state)
+	public String printStateUnits( GameState state)
 	{
-	 /*   stringstream ss;
+		StringBuffer results=new StringBuffer();
 	    for (int p=0; p<Constants.Num_Players; p++)
 	    {
 	        for (int u=0; u<state.numUnits(p); u++)
 	        {
 	            Unit unit=state.getUnit(p,u);
-	            Position pos= unit.currentPosition(state.getTime());
+	            unit.currentPosition(state.getTime());
 	                        
-	            //ss << " | " << unit.name() << " " << (int)unit.player() << " " << unit.currentHP() << " " << pos.x() << " " << pos.y();
+	            results.append(unit.toString());
 	        }
 	    }
-	    //results << ss.str();*/
+	    return results.toString();
 	}
 }
