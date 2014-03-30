@@ -1,197 +1,31 @@
-<node label=ROOT score=-174.54839 visited=62 type=ROOT playerToMove=1 moves=>
-	<node label=NOK-AV score=-178.0 visited=16 type=SOLO playerToMove=1 moves=ATTACKATTACK>
-		<node label=NOK-AV score=-178.0 visited=8 type=SOLO playerToMove=1 moves=ATTACK>
-			<node label=NOK-AV score=-178.0 visited=1 type=SOLO playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKATTACK/>
-			<node label=KITE score=-178.0 visited=1 type=SOLO playerToMove=0 moves=KITEKITEKITEKITEKITEKITE/>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=0 moves=KITEKITEATTACKKITEATTACKKITE/>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKKITE/>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=0 moves=KITEKITEKITEATTACKATTACKATTACK/>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=0 moves=KITEATTACKATTACKATTACKKITEATTACK/>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=0 moves=ATTACKATTACKKITEKITEKITEATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEKITEATTACKATTACKKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKATTACKKITEKITEATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKATTACKKITEKITEATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKKITEATTACKKITEATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEATTACKKITEKITEKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEATTACKKITEATTACKKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKKITEKITEATTACKKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEKITEKITEATTACKKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEKITEATTACKKITEKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKKITEATTACKATTACKATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKATTACKATTACKKITEATTACK/>
-		</node>
-		<node label=KITE score=-178.0 visited=7 type=SOLO playerToMove=1 moves=KITE>
-			<node label=NOK-AV score=-178.0 visited=1 type=SOLO playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKATTACK/>
-			<node label=KITE score=-178.0 visited=1 type=SOLO playerToMove=0 moves=KITEKITEKITEKITEKITEKITE/>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=0 moves=KITEATTACKKITEKITEATTACKKITE/>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=0 moves=ATTACKKITEKITEKITEKITEATTACK/>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=0 moves=ATTACKKITEKITEATTACKATTACKKITE/>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=0 moves=ATTACKKITEATTACKKITEKITEKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKKITEKITEKITEATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEKITEKITEKITEKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEATTACKATTACKKITEATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKKITEKITEKITEKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEATTACKKITEATTACKATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKKITEATTACKATTACKKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEATTACKATTACKKITEKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKATTACKKITEKITEKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEATTACKKITEKITEATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEKITEATTACKATTACKATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEKITEKITEKITEATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEATTACKATTACKATTACKKITE/>
+<node label=ROOT score=66.75 visited=20 type=ROOT playerToMove=1 moves=>
+	<node label=NOK-AV score=98.25 visited=16 type=FIRST playerToMove=1 moves=ATTACK;>
+		<node label=NOK-AV score=94.13333 visited=15 type=SECOND playerToMove=0 moves=ATTACK;ATTACK;>
+			<node label=NOK-AV score=89.42857 visited=14 type=FIRST playerToMove=0 moves=ATTACK;ATTACK;ATTACK;ATTACK;>
+				<node label=NOK-AV score=128.5 visited=4 type=SECOND playerToMove=1 moves=ATTACK;ATTACK;>
+					<node label=NOK-AV score=160.0 visited=2 type=FIRST playerToMove=1 moves=ATTACK;>
+						<node label=NOK-AV score=160.0 visited=1 type=SECOND playerToMove=0 moves=ATTACK;/>
+					</node>
+					<node label=KITE score=34.0 visited=1 type=FIRST playerToMove=1 moves=KITE;/>
+				</node>
+				<node label=KITE score=37.333332 visited=3 type=SECOND playerToMove=1 moves=KITE;KITE;>
+					<node label=NOK-AV score=19.0 visited=1 type=FIRST playerToMove=1 moves=ATTACK;/>
+					<node label=KITE score=74.0 visited=1 type=FIRST playerToMove=1 moves=KITE;/>
+				</node>
+				<node label=RANDOM score=118.0 visited=3 type=SECOND playerToMove=1 moves=ATTACK;KITE;>
+					<node label=NOK-AV score=160.0 visited=1 type=FIRST playerToMove=1 moves=ATTACK;/>
+					<node label=KITE score=34.0 visited=1 type=FIRST playerToMove=1 moves=KITE;/>
+				</node>
+				<node label=RANDOM score=37.333332 visited=3 type=SECOND playerToMove=1 moves=KITE;ATTACK;>
+					<node label=NOK-AV score=19.0 visited=1 type=FIRST playerToMove=1 moves=ATTACK;/>
+					<node label=KITE score=74.0 visited=1 type=FIRST playerToMove=1 moves=KITE;/>
+				</node>
+			</node>
 		</node>
 	</node>
-	<node label=KITE score=-175.6 visited=15 type=SOLO playerToMove=1 moves=KITEKITE>
-		<node label=NOK-AV score=-175.0 visited=4 type=SOLO playerToMove=1 moves=ATTACKATTACK>
-			<node label=NOK-AV score=-178.0 visited=1 type=SOLO playerToMove=1 moves=ATTACKATTACKATTACK/>
-			<node label=KITE score=-166.0 visited=1 type=SOLO playerToMove=1 moves=KITEKITEKITE/>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=1 moves=KITEATTACKKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=ATTACKKITEATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=KITEKITEATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=ATTACKKITEKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=ATTACKATTACKKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=KITEATTACKATTACK/>
-		</node>
-		<node label=KITE score=-178.0 visited=4 type=SOLO playerToMove=1 moves=KITEKITE>
-			<node label=NOK-AV score=-178.0 visited=1 type=SOLO playerToMove=1 moves=ATTACKATTACKATTACK/>
-			<node label=KITE score=-178.0 visited=1 type=SOLO playerToMove=1 moves=KITEKITEKITE/>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=1 moves=ATTACKATTACKKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=ATTACKKITEATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=KITEATTACKKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=ATTACKKITEKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=KITEKITEATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=KITEATTACKATTACK/>
-		</node>
-		<node label=RANDOM score=-174.0 visited=3 type=SOLO playerToMove=1 moves=KITEATTACK>
-			<node label=NOK-AV score=-178.0 visited=1 type=SOLO playerToMove=1 moves=ATTACKATTACKATTACK/>
-			<node label=KITE score=-166.0 visited=1 type=SOLO playerToMove=1 moves=KITEKITEKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=KITEKITEATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=ATTACKATTACKKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=ATTACKKITEATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=KITEATTACKATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=ATTACKKITEKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=KITEATTACKKITE/>
-		</node>
-		<node label=RANDOM score=-174.0 visited=3 type=SOLO playerToMove=1 moves=ATTACKKITE>
-			<node label=NOK-AV score=-178.0 visited=1 type=SOLO playerToMove=1 moves=ATTACKATTACKATTACK/>
-			<node label=KITE score=-166.0 visited=1 type=SOLO playerToMove=1 moves=KITEKITEKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=ATTACKATTACKKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=KITEKITEATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=KITEATTACKKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=ATTACKKITEATTACK/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=ATTACKKITEKITE/>
-			<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=1 moves=KITEATTACKATTACK/>
-		</node>
-	</node>
-	<node label=RANDOM score=-178.0 visited=15 type=SOLO playerToMove=1 moves=KITEATTACK>
-		<node label=NOK-AV score=-178.0 visited=7 type=SOLO playerToMove=1 moves=ATTACK>
-			<node label=NOK-AV score=-178.0 visited=2 type=SOLO playerToMove=1 moves=ATTACKATTACK>
-				<node label=NOK-AV score=-178.0 visited=1 type=SOLO playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKATTACK/>
-				<node label=KITE score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEKITEKITEKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEATTACKKITEATTACKATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEATTACKATTACKKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEKITEKITEATTACKKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEATTACKATTACKATTACKATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKATTACKKITEKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKKITEATTACKKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEKITEKITEATTACKKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKKITEATTACKKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEKITEATTACKATTACKATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEATTACKATTACKATTACKKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKATTACKATTACKKITEATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKATTACKATTACKATTACKATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEKITEATTACKATTACKKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKATTACKKITEATTACKKITE/>
-			</node>
-			<node label=KITE score=-178.0 visited=2 type=SOLO playerToMove=1 moves=KITEKITE>
-				<node label=NOK-AV score=-178.0 visited=1 type=FIRST playerToMove=1 moves=ATTACK/>
-				<node label=KITE score=NaN visited=0 type=FIRST playerToMove=1 moves=KITE/>
-			</node>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=1 moves=ATTACKKITE/>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=1 moves=KITEATTACK/>
-		</node>
-		<node label=KITE score=-178.0 visited=7 type=SOLO playerToMove=1 moves=KITE>
-			<node label=NOK-AV score=-178.0 visited=2 type=SOLO playerToMove=1 moves=ATTACKATTACK>
-				<node label=NOK-AV score=-178.0 visited=1 type=SOLO playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKATTACK/>
-				<node label=KITE score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEKITEKITEKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEKITEATTACKATTACKATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEKITEATTACKKITEATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKATTACKATTACKKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEKITEKITEATTACKATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKKITEATTACKATTACKATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEATTACKKITEKITEATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEKITEATTACKKITEATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKATTACKKITEKITEATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKKITEATTACKKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKATTACKKITEKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEKITEATTACKKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEATTACKATTACKKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEATTACKATTACKATTACKKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEATTACKKITEATTACKKITE/>
-			</node>
-			<node label=KITE score=-178.0 visited=2 type=SOLO playerToMove=1 moves=KITEKITE>
-				<node label=NOK-AV score=-178.0 visited=1 type=FIRST playerToMove=1 moves=ATTACK/>
-				<node label=KITE score=NaN visited=0 type=FIRST playerToMove=1 moves=KITE/>
-			</node>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=1 moves=ATTACKKITE/>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=1 moves=KITEATTACK/>
-		</node>
-	</node>
-	<node label=RANDOM score=-178.0 visited=15 type=SOLO playerToMove=1 moves=ATTACKKITE>
-		<node label=NOK-AV score=-178.0 visited=7 type=SOLO playerToMove=1 moves=ATTACK>
-			<node label=NOK-AV score=-178.0 visited=2 type=SOLO playerToMove=1 moves=ATTACKATTACK>
-				<node label=NOK-AV score=-178.0 visited=1 type=SOLO playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKATTACK/>
-				<node label=KITE score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEKITEKITEKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKATTACKKITEATTACKKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEATTACKATTACKATTACKKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKKITEKITEKITEATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEATTACKKITEATTACKATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEATTACKKITEKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEATTACKATTACKATTACKATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEKITEATTACKKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEKITEATTACKKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKKITEATTACKKITEATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEKITEKITEKITEATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKKITEATTACKATTACKATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKATTACKATTACKATTACKATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKKITEKITEATTACKKITE/>
-			</node>
-			<node label=KITE score=-178.0 visited=2 type=SOLO playerToMove=1 moves=KITEKITE>
-				<node label=NOK-AV score=-178.0 visited=1 type=FIRST playerToMove=1 moves=ATTACK/>
-				<node label=KITE score=NaN visited=0 type=FIRST playerToMove=1 moves=KITE/>
-			</node>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=1 moves=ATTACKKITE/>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=1 moves=KITEATTACK/>
-		</node>
-		<node label=KITE score=-178.0 visited=7 type=SOLO playerToMove=1 moves=KITE>
-			<node label=NOK-AV score=-178.0 visited=2 type=SOLO playerToMove=1 moves=ATTACKATTACK>
-				<node label=NOK-AV score=-178.0 visited=1 type=SOLO playerToMove=0 moves=ATTACKATTACKATTACKATTACKATTACKATTACK/>
-				<node label=KITE score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEKITEKITEKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEATTACKATTACKATTACKKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEKITEATTACKKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKKITEKITEKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEKITEKITEKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKKITEKITEKITEATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKATTACKKITEATTACKATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKKITEATTACKKITEATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEKITEATTACKKITEKITEATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKKITEKITEKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKKITEKITEATTACKATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKATTACKKITEATTACKATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEATTACKKITEATTACKKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKATTACKATTACKKITEATTACK/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=KITEATTACKKITEATTACKKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKATTACKKITEATTACKKITEKITE/>
-				<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=ATTACKKITEATTACKATTACKKITEKITE/>
-			</node>
-			<node label=KITE score=-178.0 visited=2 type=SOLO playerToMove=1 moves=KITEKITE>
-				<node label=NOK-AV score=-178.0 visited=1 type=FIRST playerToMove=1 moves=ATTACK/>
-				<node label=KITE score=NaN visited=0 type=FIRST playerToMove=1 moves=KITE/>
-			</node>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=1 moves=ATTACKKITE/>
-			<node label=RANDOM score=-178.0 visited=1 type=SOLO playerToMove=1 moves=KITEATTACK/>
+	<node label=KITE score=-79.0 visited=3 type=FIRST playerToMove=1 moves=KITE;>
+		<node label=NOK-AV score=-79.0 visited=2 type=SECOND playerToMove=0 moves=ATTACK;ATTACK;>
+			<node label=NOK-AV score=-79.0 visited=1 type=FIRST playerToMove=0 moves=ATTACK;ATTACK;ATTACK;ATTACK;/>
 		</node>
 	</node>
 </node>

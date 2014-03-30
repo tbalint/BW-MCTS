@@ -3,11 +3,10 @@
 * https://code.google.com/p/sparcraft/
 * author of the source: David Churchill
 **/
-package bwmcts.uct.guctcd;
+package bwmcts.uct.flatguctcd;
 
 import java.util.List;
 
-import bwmcts.sparcraft.Unit;
 import bwmcts.uct.UnitState;
 import bwmcts.uct.NodeType;
 import bwmcts.uct.UctNode;

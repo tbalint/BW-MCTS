@@ -21,14 +21,7 @@ public class DynamicKMeans implements ClusteringAlgorithm {
 
 	public List<List<Unit>> getClusters(Unit[] uarr, int k, double hp) {
 
-		List<Unit> units = new ArrayList<Unit>();
-		for(Unit u : uarr){
-			if (u==null)
-				break;
-			if (u._currentHP<=0)
-				continue;
-			units.add(u);
-		}
+		List<Unit> units = getReadyUnits(uarr);
 		
 		KMeans kmeans = new KMeans();
 		Map<UnitType, List<Unit>> types = splitByType(units);
@@ -44,6 +37,22 @@ public class DynamicKMeans implements ClusteringAlgorithm {
 		
 		return clusters;
 		
+	}
+	
+	private List<Unit> getReadyUnits(Unit[] units) {
+		
+		List<Unit> ready = new ArrayList<Unit>();
+		for(Unit unit : units){
+			if (unit==null)
+				continue;
+			if (unit._currentHP<=0)
+				continue;
+			//if (unit.canAttackNow() || unit.canAttackNow() || unit.canHealNow()){
+				ready.add(unit);
+			//}
+		}
+		
+		return ready;
 	}
 
 	private boolean refine(List<List<Unit>> clusters, KMeans kmeans) {

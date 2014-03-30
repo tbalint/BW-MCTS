@@ -1,0 +1,37 @@
+NOK-AV vs NOK-AV
+--- units: 5
+Dragoons: 2	Zealots: 2 on each side
+Win average: 0.0
+--------------- Score average: -328.0	Deviation: 0.0
+--------------- Win average: 0.0
+DRAGOON ZEALOT TEST RESULT: 0.0
+--- units: 10
+Dragoons: 5	Zealots: 5 on each side
+Win average: 1.0
+--------------- Score average: 118.0	Deviation: 0.0
+--------------- Win average: 1.0
+DRAGOON ZEALOT TEST RESULT: 1.0
+--- units: 20
+Dragoons: 10	Zealots: 10 on each side
+Win average: 0.0
+--------------- Score average: -236.0	Deviation: 0.0
+--------------- Win average: 0.0
+DRAGOON ZEALOT TEST RESULT: 0.0
+--- units: 40
+Dragoons: 20	Zealots: 20 on each side
+Win average: 1.0
+--------------- Score average: 119.0	Deviation: 0.0
+--------------- Win average: 1.0
+DRAGOON ZEALOT TEST RESULT: 1.0
+--- units: 80
+Dragoons: 40	Zealots: 40 on each side
+Win average: 0.0
+--------------- Score average: -118.0	Deviation: 0.0
+--------------- Win average: 0.0
+DRAGOON ZEALOT TEST RESULT: 0.0
+--- units: 160
+Dragoons: 80	Zealots: 80 on each side
+Win average: 1.0
+--------------- Score average: 120.0	Deviation: 0.0
+--------------- Win average: 1.0
+DRAGOON ZEALOT TEST RESULT: 1.0

@@ -1,0 +1,37 @@
+bwmcts.combat.UctLogic@18a47e0 vs bwmcts.combat.UctLogic@174cc1f
+--- units: 5
+Dragoons: 2	Zealots: 2 on each side
+Win average: 1.0
+--------------- Score average: 340.0	Deviation: 0.0
+--------------- Win average: 1.0
+DRAGOON ZEALOT TEST RESULT: 1.0
+--- units: 10
+Dragoons: 5	Zealots: 5 on each side
+Win average: 1.0
+--------------- Score average: 316.0	Deviation: 0.0
+--------------- Win average: 1.0
+DRAGOON ZEALOT TEST RESULT: 1.0
+--- units: 20
+Dragoons: 10	Zealots: 10 on each side
+Win average: 1.0
+--------------- Score average: 262.0	Deviation: 0.0
+--------------- Win average: 1.0
+DRAGOON ZEALOT TEST RESULT: 1.0
+--- units: 40
+Dragoons: 20	Zealots: 20 on each side
+Win average: 1.0
+--------------- Score average: 204.0	Deviation: 0.0
+--------------- Win average: 1.0
+DRAGOON ZEALOT TEST RESULT: 1.0
+--- units: 80
+Dragoons: 40	Zealots: 40 on each side
+Win average: 1.0
+--------------- Score average: 76.0	Deviation: 0.0
+--------------- Win average: 1.0
+DRAGOON ZEALOT TEST RESULT: 1.0
+--- units: 160
+Dragoons: 80	Zealots: 80 on each side
+Win average: 1.0
+--------------- Score average: 41.0	Deviation: 0.0
+--------------- Win average: 1.0
+DRAGOON ZEALOT TEST RESULT: 1.0

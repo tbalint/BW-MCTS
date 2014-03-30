@@ -1,0 +1,11 @@
+bwmcts.combat.UctLogic@5a9de6 vs NOK-AV
+--- units: 8
+Dragoons: 4	Zealots: 4 on each side
+--- units: 16
+Dragoons: 8	Zealots: 8 on each side
+--- units: 32
+Dragoons: 16	Zealots: 16 on each side
+--- units: 50
+Dragoons: 25	Zealots: 25 on each side
+--- units: 75
+Dragoons: 37	Zealots: 37 on each side

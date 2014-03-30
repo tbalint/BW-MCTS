@@ -44,7 +44,7 @@ public class Game {
 		this.display=display;
 		if (display){
 
-	    	ui = SparcraftUI.getUI(state);
+	    	ui = SparcraftUI.getUI(state, p1, p2);
 	        
 	    }
 	}

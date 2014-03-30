@@ -23,8 +23,8 @@ import bwmcts.uct.UctStats;
 
 public class IUCTCD extends UCT {
 	
-	public IUCTCD(UctConfig config, UctStats stats) {
-		super(config, stats);
+	public IUCTCD(UctConfig config) {
+		super(config);
 	}
 	
 	@Override
@@ -54,9 +54,12 @@ public class IUCTCD extends UCT {
 		}
 		
 		stats.getIterations().add(t);
+		//System.out.println("IUCTCD: " + t);
 		
 		//UctNode best = mostWinningChildOf(root);
-		UctNode best = mostVisitedChildOf(root);
+		//UctNode best = mostVisitedChildOf(root);
+		UctNode best = bestValueChildOf(root);
+		//System.out.println(((IuctNode)best).getAbstractMove().size());
 		
 		if (best == null){
 			System.out.println("IUCTCD: NULL MOVE!");

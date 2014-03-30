@@ -3,13 +3,14 @@
 * https://code.google.com/p/sparcraft/
 * author of the source: David Churchill
 **/
-package bwmcts.uct.guctcd;
+package bwmcts.uct.flatguctcd;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -36,25 +37,21 @@ import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 import bwmcts.uct.UCT;
 import bwmcts.uct.UctConfig;
 import bwmcts.uct.UctStats;
-import bwmcts.uct.iuctcd.IuctNode;
+import bwmcts.uct.guctcd.ClusteringConfig;
 
-public class GUCTCD extends UCT {
+public class FlatGUCTCD extends UCT {
 
 	private ClusteringConfig guctConfig;
 	
-	private List<List<Unit>> clustersA;
-	private List<List<Unit>> clustersB;
-
 	private List<List<Unit>> clusters;
+	private List<List<Unit>> clustersB;
 	
-	public GUCTCD(UctConfig uctConfig, ClusteringConfig guctConfig){
+	public FlatGUCTCD(UctConfig uctConfig, ClusteringConfig guctConfig){
 		super(uctConfig);
 		this.guctConfig = guctConfig;
 	}
 
 	public List<UnitAction> search(GameState state, long timeBudget){
-		
-		//System.out.println("Search called");
 		
 		if (config.getMaxPlayerIndex() == 0 && state.whoCanMove() == Players.Player_Two){
 			return new ArrayList<UnitAction>(); 
@@ -66,13 +63,13 @@ public class GUCTCD extends UCT {
 		long startNs = System.nanoTime();
 		
 		// Get clusters
-		clustersA = guctConfig.getClusterAlg().getClusters(state.getAllUnit()[0], 6, guctConfig.getHpMulitplier());
-		clustersB = guctConfig.getClusterAlg().getClusters(state.getAllUnit()[1], 6, guctConfig.getHpMulitplier());
-		
-		if(config.getMaxPlayerIndex() == 0)
-			clusters = clustersA;
-		else
-			clusters = clustersB;
+		clusters = guctConfig.getClusterAlg().getClusters(state.getAllUnit()[config.getMaxPlayerIndex()], 6, guctConfig.getHpMulitplier());
+		clustersB = new ArrayList<List<Unit>>();
+		int enemy = 0;
+		if (config.getMaxPlayerIndex() == 0)
+			enemy = 1;
+		List<Unit> enemyUnits = Arrays.asList(state.getAllUnit()[enemy]);
+		clustersB.add(enemyUnits);
 		
 		//System.out.println("Nano time: " + (System.nanoTime() - startNs));
 		
@@ -92,11 +89,9 @@ public class GUCTCD extends UCT {
 		}
 		
 		stats.getIterations().add(t);
-		//System.out.println("GUCTCD: " + t);
 		
-		//UctNode best = mostVisitedChildOf(root);
-		UctNode best = bestValueChildOf(root);
-		System.out.println(((GuctNode)best).getAbstractMove().size());
+		UctNode best = mostVisitedChildOf(root);
+		//GuctNode best = mostWinningChildOf(root);
 			
 		if (config.isDebug())
 			writeToFile(root.print(0), "tree.xml");
@@ -104,7 +99,7 @@ public class GUCTCD extends UCT {
 		if (best == null)
 			return new ArrayList<UnitAction>();
 		
-		List<UnitAction> actions = best.getMove();
+		List<UnitAction> actions = statesToActions(((GuctNode)best).getAbstractMove(), state.clone());
 		
 		return actions;
 		
@@ -113,18 +108,18 @@ public class GUCTCD extends UCT {
 	private float traverse(UctNode node, GameState state) {
 		
 		float score = 0;
-		if (node.getVisits() == 0){
+		if (node.getType() != NodeType.ROOT){
 			if (node.getMove() == null)
 				node.setMove(statesToActions(((GuctNode)node).getAbstractMove(), state));
 			updateState(node, state, true);
 			score = evaluate(state.clone());
 		} else {
-			int playerToMove = getPlayerToMove(node, state);
 			updateState(node, state, false);
 			if (state.isTerminal()){
 				score = evaluate(state.clone());
 			} else {
-				if (expandable(node, playerToMove))
+				int playerToMove = getPlayerToMove(node, state);
+				if (node.getChildren().isEmpty())
 					generateChildren(node, state, playerToMove);
 				score = traverse(selectNode(node), state);
 			}
@@ -143,23 +138,9 @@ public class GUCTCD extends UCT {
 		
 		return score;
 	}
-	
-	private boolean expandable(UctNode node, int playerToMove) {
-		
-		boolean us = playerToMove == config.getMaxPlayerIndex();
-		if (!us && config.isNokModelling() && !node.getChildren().isEmpty())
-			return false;
-		
-		if (node.getVisits() > config.getMaxChildren())
-			return false;
-
-		return true;
-	}
 
 	private void generateChildren(UctNode node, GameState state, int playerToMove) {
 
-		List<UnitState> move = new ArrayList<UnitState>();
-		
 		HashMap<Integer, List<UnitAction>> map;
 		if (node.getPossibleMoves() == null){
 
@@ -167,58 +148,40 @@ public class GUCTCD extends UCT {
 			try {
 				state.generateMoves(map, playerToMove);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			node.setPossibleMoves(map);
 			
 		}
-		
-		List<List<Unit>> clus = null;
-		if (playerToMove == 0)
-			clus = clustersA;
-		else
-			clus = clustersB;
 				
-		String label = "";
-		if (node.getChildren().isEmpty()){
-			move.addAll(getAllMove(UnitStateTypes.ATTACK, clus));
-			label = "NOK-AV";
-		} else if (node.getChildren().size() == 1 && playerToMove == config.getMaxPlayerIndex()){
-			move.addAll(getAllMove(UnitStateTypes.KITE, clus));
-			label = "KITE";
-		} else if (playerToMove == config.getMaxPlayerIndex()){
-			move = getRandomMove(playerToMove, clus); // Possible moves?
-			label = "RANDOM";
-		}
+		List<UnitState> moveAttack = new ArrayList<UnitState>();
+		moveAttack.addAll(getAllMove(UnitStateTypes.ATTACK, clusters));
+		GuctNode childAttack = new GuctNode((GuctNode)node, getChildNodeType(node, state), moveAttack, playerToMove, "NOK-AV");
+		node.getChildren().add(childAttack);
 		
-		if (move == null)
-			return;
-	
+		List<UnitState> moveKite = new ArrayList<UnitState>();
+		moveKite.addAll(getAllMove(UnitStateTypes.KITE, clusters));
+		GuctNode childKite = new GuctNode((GuctNode)node, getChildNodeType(node, state), moveKite, playerToMove, "NOK-AV");
+		node.getChildren().add(childKite);
+		
+		int e = 2;
+		while(e < config.getMaxChildren()){
+			List<UnitState> moveRandom = new ArrayList<UnitState>();
+			moveRandom = getRandomMove(playerToMove, clusters);
+			if (uniqueMove(moveRandom, node)){
+				GuctNode childRandom = new GuctNode((GuctNode)node, getChildNodeType(node, state), moveRandom, playerToMove, "NOK-AV");
+				node.getChildren().add(childRandom);
+			}
+			e++;
+		}
+		/*
 		if (uniqueMove(move, node)){
 			GuctNode child = new GuctNode((GuctNode)node, getChildNodeType(node, state), move, playerToMove, label);
 			node.getChildren().add(child);
 		}
-		
+		*/
 	}
 	
-	private List<List<Unit>> cleanClusters(GameState state, List<List<Unit>> clusters) {
-		
-		List<List<Unit>> readyClusters = new ArrayList<List<Unit>>();
-		
-		for(List<Unit> cluster : clusters){
-			List<Unit> readyCluster = new ArrayList<Unit>();
-			for(Unit unit : cluster){
-				if (unit.firstTimeFree() == state.getTime())
-					readyCluster.add(unit);
-			}
-			if (!readyCluster.isEmpty())
-				readyClusters.add(readyCluster);
-		}
-		System.out.println(clusters.size() + " : " + readyClusters.size());
-		return readyClusters;
-	}
-
 	private List<UnitState> getAllMove(UnitStateTypes type, List<List<Unit>> clusters) {
 
 		List<UnitState> states = new ArrayList<UnitState>();
@@ -241,20 +204,13 @@ public class GUCTCD extends UCT {
 			return true;
 		
 		for (UctNode child : node.getChildren()){
-			boolean identical = true;
-			if (child.getMove().size() != move.size()){
-				identical = false;
-			} else {
-				for(int i = 0; i < move.size(); i++){
-					if (!((GuctNode)child).getAbstractMove().get(i).equals(move.get(i))){
-						identical = false;
-						break;
-					}
-				}
+			int identical = 0;
+			for(int i = 0; i < move.size(); i++){
+				if (((GuctNode)child).getAbstractMove().get(i).equals(move.get(i)))
+					identical++;
 			}
-			if (identical){
+			if (identical == move.size())
 				return false;
-			}
 		}
 		
 		return true;
@@ -316,31 +272,23 @@ public class GUCTCD extends UCT {
 		if (move == null || move.isEmpty() || move.get(0) == null)
 			return new ArrayList<UnitAction>();
 		
-		int player = move.get(0).player;
-		
-		Player attack = new Player_NoOverKillAttackValue(player);
-		Player kite = new Player_Kite(player);
+		Player attack = new Player_NoOverKillAttackValue(config.getMaxPlayerIndex());
+		Player kite = new Player_Kite(config.getMaxPlayerIndex());
 		
 		HashMap<Integer, List<UnitAction>> map = new HashMap<Integer, List<UnitAction>>();
 		
 		try {
-			state.generateMoves(map, player);
+			state.generateMoves(map, config.getMaxPlayerIndex());
 		} catch (Exception e) {e.printStackTrace();}
 		
 		List<Integer> attackingUnits = new ArrayList<Integer>();
 		List<Integer> kitingUnits = new ArrayList<Integer>();
 		
-		List<List<Unit>> clus = null;
-		if (player == 0)
-			clus = clustersA;
-		else
-			clus = clustersB;
-		
 		// Divide units into two groups
 		for(UnitState unitState : move){
 			
 			// Add units in cluster
-			for(Unit u : clus.get(unitState.unit)){
+			for(Unit u : clusters.get(unitState.unit)){
 				
 				if (u.isAlive() && (u.canAttackNow() || u.canMoveNow())){
 				
@@ -362,7 +310,7 @@ public class GUCTCD extends UCT {
 		// Loop through the map
 		for(Integer i : map.keySet()){
 			int u = map.get(i).get(0)._unit;
-			int unitId = state.getUnit(player, u).getId();
+			int unitId = state.getUnit(config.getMaxPlayerIndex(), u).getId();
 			if (attackingUnits.contains(unitId))
 				attackingMap.put(i, map.get(i)); 
 			if (kitingUnits.contains(unitId))

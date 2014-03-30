@@ -14,6 +14,11 @@ public class UctConfig {
 		this.maxPlayerIndex = maxPlayerIndex;
 	}
 	
+	public UctConfig(int maxPlayerIndex, boolean debug){
+		this.maxPlayerIndex = maxPlayerIndex;
+		this.debug = debug;
+	}
+	
 	public UctConfig(
 							double k, 
 							int maxChildren, 

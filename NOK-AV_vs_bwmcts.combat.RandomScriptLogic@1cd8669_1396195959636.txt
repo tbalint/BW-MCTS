@@ -1,0 +1,9 @@
+NOK-AV vs bwmcts.combat.RandomScriptLogic@1cd8669
+--- units: 20
+Dragoons: 10	Zealots: 10 on each side
+Win average: 0.0
+Win average: 0.5
+--- units: 40
+Dragoons: 20	Zealots: 20 on each side
+--- units: 80
+Dragoons: 40	Zealots: 40 on each side

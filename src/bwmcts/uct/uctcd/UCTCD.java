@@ -26,14 +26,11 @@ import bwmcts.uct.UctStats;
 public class UCTCD extends UCT {
 	
 	private static final String name = "UCTCD";
-
-	protected UctConfig config;
-	protected UctStats stats;
 	
 	private HashMap<Integer, Integer> currentMoves;
 
-	public UCTCD(UctConfig config, UctStats stats) {
-		super(config, stats);
+	public UCTCD(UctConfig config) {
+		super(config);
 	}
 
 	@Override
@@ -71,7 +68,8 @@ public class UCTCD extends UCT {
 		stats.getIterations().add(t);
 		
 		// Select best action
-		UctNode best = mostVisitedChildOf(root);
+		//UctNode best = mostVisitedChildOf(root);
+		UctNode best = bestValueChildOf(root);
 		
 		if (best == null){
 			System.out.println("UCTCD: NULL MOVE!");

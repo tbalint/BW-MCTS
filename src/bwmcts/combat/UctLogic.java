@@ -18,7 +18,9 @@ import bwmcts.sparcraft.UnitProperties;
 import bwmcts.sparcraft.WeaponProperties;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.uct.UCT;
+import bwmcts.uct.flatguctcd.FlatGUCTCD;
 import bwmcts.uct.guctcd.GUCTCD;
+import bwmcts.uct.rguctcd.RGUCTCD;
 import javabot.JNIBWAPI;
 import javabot.util.BWColor;
 
@@ -169,6 +171,12 @@ public class UctLogic extends Player implements ICombatLogic {
 		move = uct.search(state.clone(), timeBudget);
 		if (uct instanceof GUCTCD){
 			clusters = ((GUCTCD)uct).getClusters();
+		}
+		if (uct instanceof RGUCTCD){
+			clusters = ((RGUCTCD)uct).getClusters();
+		}
+		if (uct instanceof FlatGUCTCD){
+			clusters = ((FlatGUCTCD)uct).getClusters();
 		}
 		/*
 		if (guctcd!=null){

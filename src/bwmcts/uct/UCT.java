@@ -26,10 +26,10 @@ public abstract class UCT {
 	protected UctConfig config;
 	protected UctStats stats;
 
-	public UCT(UctConfig config, UctStats stats) {
+	public UCT(UctConfig config) {
 		super();
 		this.config = config;
-		this.stats = stats;
+		this.stats = new UctStats();
 	}
 
 	public abstract List<UnitAction> search(GameState state, long timeBudget);
@@ -138,8 +138,8 @@ public abstract class UCT {
 	protected UctNode selectNode(UctNode parent) {
 		
 		float bestScore = Float.MAX_VALUE;
-		boolean maxPlayer = parent.getMovingPlayerIndex() == config.getMaxPlayerIndex();
-		if (maxPlayer)
+		boolean maxPlayerMoving = parent.getMovingPlayerIndex() == config.getMaxPlayerIndex();
+		if (maxPlayerMoving)
 			bestScore = -Float.MAX_VALUE;
 			
 		UctNode bestNode = null;
@@ -151,7 +151,7 @@ public abstract class UCT {
 	            if (config.isLTD2())
 	            	score = sigmoid(score);
 	            float uctVal = (float) (config.getK() * Math.sqrt(Math.log(parent.getVisits()) / child.getVisits()));
-	            float currentVal = maxPlayer ? (score + uctVal) : (score - uctVal);
+	            float currentVal = maxPlayerMoving ? (score + uctVal) : (score - uctVal);
 	            
 	            child.setUctValue(currentVal);
 				
@@ -161,11 +161,11 @@ public abstract class UCT {
 				
 			}
 			
-			if (maxPlayer && child.getUctValue() > bestScore){
+			if (maxPlayerMoving && child.getUctValue() > bestScore){
 				bestScore = child.getUctValue();
 				bestNode = child;
 			}
-			if (!maxPlayer && child.getUctValue() < bestScore){
+			if (!maxPlayerMoving && child.getUctValue() < bestScore){
 				bestScore = child.getUctValue();
 				bestNode = child;
 			}
@@ -188,14 +188,18 @@ public abstract class UCT {
 	}
 	
 	protected UctNode bestValueChildOf(UctNode parent) {
-		float bestValue = config.getMaxPlayerIndex() == 0 ? -100000f : 100000f;
+		float bestValue = -100000f;
 		UctNode best = null;
 		for(UctNode node : parent.getChildren()){
-			if (node.getTotalScore()/node.getVisits()>bestValue && node.getVisits() > 0){
+			if (node.getVisits() > 0 && node.getTotalScore()/node.getVisits() > bestValue){
 				best = node;
 				bestValue = node.getTotalScore()/node.getVisits();
 			}
 		}
+		
+		if (best==null && !parent.getChildren().isEmpty())
+			best = parent.getChildren().get(0);
+		
 		return best;
 	}
 	

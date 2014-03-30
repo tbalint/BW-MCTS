@@ -16,12 +16,16 @@ import bwmcts.Util;
 import bwmcts.clustering.DynamicKMeans;
 import bwmcts.clustering.KMeans;
 import bwmcts.clustering.UPGMA;
+import bwmcts.combat.RandomScriptLogic;
 import bwmcts.combat.UctLogic;
 import bwmcts.uct.UctConfig;
 import bwmcts.uct.UctStats;
+import bwmcts.uct.flatguctcd.FlatGUCTCD;
 import bwmcts.uct.guctcd.ClusteringConfig;
 import bwmcts.uct.guctcd.GUCTCD;
 import bwmcts.uct.iuctcd.IUCTCD;
+import bwmcts.uct.rguctcd.RGUCTCD;
+import bwmcts.uct.uctcd.UCTCD;
 import bwmcts.sparcraft.*;
 import bwmcts.sparcraft.players.*;
 
@@ -48,28 +52,37 @@ public class Test implements BWAPIEventListener  {
 		UnitProperties.Init(tc.bwapi);
 		graphics = true;
 		
-		Constants.Max_Units = 200;
+		Constants.Max_Units = 300;
 		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
 		GUCTCD guctcdA = new GUCTCD(new UctConfig(0), 
-				new UctStats(),
 				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
 
 		GUCTCD guctcdB = new GUCTCD(new UctConfig(1), 
-				new UctStats(),
-				new ClusteringConfig(1, 6, new UPGMA()));
+				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
+		
+		RGUCTCD rguctcdB = new RGUCTCD(new UctConfig(1), 
+				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
+		
+		FlatGUCTCD flatGuctcdA = new FlatGUCTCD(new UctConfig(0, true), 
+				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
+		
+		FlatGUCTCD flatGuctcdB = new FlatGUCTCD(new UctConfig(1, true), 
+				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
 
 		//Player p1 = new Player_NoOverKillAttackValue(0);
 		//Player p1 = new UctLogic(tc.bwapi, guctcdA, 40);
-		Player p1 = new UctLogic(tc.bwapi, new IUCTCD(new UctConfig(0), new UctStats()),40);
+		Player p1 = new UctLogic(tc.bwapi, new IUCTCD(new UctConfig(0)),40);
 		
-		Player p2 = new Player_NoOverKillAttackValue(1);
+		//Player p2 = new Player_NoOverKillAttackValue(1);
+		//Player p2 = new UctLogic(tc.bwapi, new IUCTCD(new UctConfig(1, false)),40);
+		//Player p2 = new RandomScriptLogic(1);
+		Player p2 = new UctLogic(tc.bwapi, guctcdB, 40);
 		
 		tc.buf=new StringBuffer();
 		System.out.println(p1.toString()+ " vs "+p2.toString());
 		tc.buf.append(p1.toString()+ " vs "+p2.toString()+"\r\n");
 		
-		
-		tc.dragoonZTest(p1, p2, 2, new int[]{8,16,32,50,75});
+		tc.dragoonZTest(p1, p2, 5, new int[]{80});
 		
 		
 		try {
@@ -85,6 +98,7 @@ public class Test implements BWAPIEventListener  {
 
 	@Override
 	public void connected() {
+		/*
 		System.out.println("BWAPI connected");
 		bwapi.loadTypeData();
 		try {
@@ -102,16 +116,14 @@ public class Test implements BWAPIEventListener  {
 		
 		//Player p1 = new UctcdLogic(bwapi, new UCTCD(1.6, 20, 1, 0, 500, false), 200);
 		GUCTCD guctcdA = new GUCTCD(new UctConfig(0), 
-									new UctStats(),
 									new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
 
 		GUCTCD guctcdB = new GUCTCD(new UctConfig(1), 
-									new UctStats(),
 									new ClusteringConfig(1, 6, new UPGMA()));
 
-		//Player p1 = new UctcdLogic(bwapi, new IUCTCD(new UctConfig(0), new UctStats()),40);
+		Player p1 = new UctLogic(bwapi, new UCTCD(new UctConfig(0)),40);
 		//Player p1 = new UctcdLogic(bwapi, new OLDIUCTCD(1.6, 20, 1, 0, 50000, false),40);
-		Player p1 = new UctLogic(bwapi, guctcdA, 40);
+		//Player p1 = new UctLogic(bwapi, guctcdA, 40);
 		//Player p1 = new Player_NoOverKillAttackValue(0);
 		
 		//Player p2 = new UctcdLogic(bwapi, new IUCTCD(new UctConfig(1), new UctStats()),40);
@@ -143,6 +155,7 @@ public class Test implements BWAPIEventListener  {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 	}
 
 	private void PortfolioTest(Player p1, Player p2) throws Exception {
@@ -687,6 +700,8 @@ public class Test implements BWAPIEventListener  {
 		
 		GameState initialState = gameState(unitsA, unitsB);
 		
+		shufflePositions(initialState, 100);
+		
 		p1.setID(0);
 		p2.setID(1);
 	    
@@ -714,6 +729,40 @@ public class Test implements BWAPIEventListener  {
 	    return score._val;
 	}
 	
+	private void shufflePositions(GameState state, int amount) {
+		
+		for(Unit unit : state.getAllUnit()[0]){
+			if (unit == null || unit.pos() == null)
+				continue;
+			int x = unit.pos().getX();
+			int y = unit.pos().getY();
+			int rX = (int) ((-amount)/2 + Math.random() * amount);
+			int rY = (int) ((-amount)/2 + Math.random() * amount);
+			int newX = x + rX;
+			int newY = y + rY;
+			
+			if(newX > 30 && newX < state.getMap().getPixelWidth()-30 && 
+					newY > 30 && newY < state.getMap().getPixelHeight()-30){
+				unit.pos().setX(x + rX);
+				unit.pos().setY(y + rY);
+			}
+			
+		}
+		
+		for(Unit unit : state.getAllUnit()[1]){
+			if (unit == null || unit.pos() == null)
+				continue;
+			
+			int x = unit.pos().getX();
+			int y = unit.pos().getY();
+			int rX = (int) ((-amount)/2 + Math.random() * amount);
+			int rY = (int) ((-amount)/2 + Math.random() * amount);
+			unit.pos().setX(x + rX);
+			unit.pos().setY(y + rY);
+		}
+		
+	}
+
 	private GameState gameState(HashMap<UnitTypes, Integer> unitsA,
 			HashMap<UnitTypes, Integer> unitsB) throws Exception {
 		
@@ -723,8 +772,8 @@ public class Test implements BWAPIEventListener  {
 	    
 	    int startXA = 275;
 	    int startXB = 575;
-	    int space = 20;
-	    int startY = space*4;
+	    int space = 30;
+	    int startY = 30;
 	    int unitsPerLine = 16;
 	    
 	    for(UnitTypes type : unitsA.keySet()){

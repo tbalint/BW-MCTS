@@ -3,7 +3,7 @@
 * https://code.google.com/p/sparcraft/
 * author of the source: David Churchill
 **/
-package bwmcts.uct.guctcd;
+package bwmcts.uct.rguctcd;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,9 +36,10 @@ import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 import bwmcts.uct.UCT;
 import bwmcts.uct.UctConfig;
 import bwmcts.uct.UctStats;
+import bwmcts.uct.guctcd.ClusteringConfig;
 import bwmcts.uct.iuctcd.IuctNode;
 
-public class GUCTCD extends UCT {
+public class RGUCTCD extends UCT {
 
 	private ClusteringConfig guctConfig;
 	
@@ -47,7 +48,7 @@ public class GUCTCD extends UCT {
 
 	private List<List<Unit>> clusters;
 	
-	public GUCTCD(UctConfig uctConfig, ClusteringConfig guctConfig){
+	public RGUCTCD(UctConfig uctConfig, ClusteringConfig guctConfig){
 		super(uctConfig);
 		this.guctConfig = guctConfig;
 	}
@@ -76,8 +77,14 @@ public class GUCTCD extends UCT {
 		
 		//System.out.println("Nano time: " + (System.nanoTime() - startNs));
 		
-		UctNode root = new GuctNode(null, NodeType.ROOT, new ArrayList<UnitState>(), config.getMaxPlayerIndex(), "ROOT");
+		UctNode root = new RGuctNode(null, NodeType.ROOT, new ArrayList<UnitState>(), config.getMaxPlayerIndex(), "ROOT");
 		root.setVisits(1);
+		if(config.getMaxPlayerIndex() == 0)
+			((RGuctNode)root).setClusters(cleanClusters(state, clustersA));
+		else
+			((RGuctNode)root).setClusters(cleanClusters(state, clustersB));
+		
+		
 		
 		// Reset stats if new game
 		if (state.getTime()==0)
@@ -96,7 +103,7 @@ public class GUCTCD extends UCT {
 		
 		//UctNode best = mostVisitedChildOf(root);
 		UctNode best = bestValueChildOf(root);
-		System.out.println(((GuctNode)best).getAbstractMove().size());
+		System.out.println(((RGuctNode)best).getAbstractMove().size());
 			
 		if (config.isDebug())
 			writeToFile(root.print(0), "tree.xml");
@@ -113,13 +120,19 @@ public class GUCTCD extends UCT {
 	private float traverse(UctNode node, GameState state) {
 		
 		float score = 0;
+		int playerToMove = getPlayerToMove(node, state);
 		if (node.getVisits() == 0){
+			if (((RGuctNode)node).getClusters() == null){
+				if (playerToMove == 0)
+					((RGuctNode)node).setClusters(cleanClusters(state, clustersA));
+				else
+					((RGuctNode)node).setClusters(cleanClusters(state, clustersB));
+			}
 			if (node.getMove() == null)
-				node.setMove(statesToActions(((GuctNode)node).getAbstractMove(), state));
+				node.setMove(statesToActions(((RGuctNode)node).getAbstractMove(), ((RGuctNode)node).getClusters(), state));
 			updateState(node, state, true);
 			score = evaluate(state.clone());
 		} else {
-			int playerToMove = getPlayerToMove(node, state);
 			updateState(node, state, false);
 			if (state.isTerminal()){
 				score = evaluate(state.clone());
@@ -174,21 +187,18 @@ public class GUCTCD extends UCT {
 			
 		}
 		
-		List<List<Unit>> clus = null;
-		if (playerToMove == 0)
-			clus = clustersA;
-		else
-			clus = clustersB;
+		if (node.getType() == NodeType.ROOT)
+			clusters = ((RGuctNode)node).getClusters();
 				
 		String label = "";
 		if (node.getChildren().isEmpty()){
-			move.addAll(getAllMove(UnitStateTypes.ATTACK, clus));
+			move.addAll(getAllMove(UnitStateTypes.ATTACK, ((RGuctNode)node).getClusters()));
 			label = "NOK-AV";
 		} else if (node.getChildren().size() == 1 && playerToMove == config.getMaxPlayerIndex()){
-			move.addAll(getAllMove(UnitStateTypes.KITE, clus));
+			move.addAll(getAllMove(UnitStateTypes.KITE, ((RGuctNode)node).getClusters()));
 			label = "KITE";
 		} else if (playerToMove == config.getMaxPlayerIndex()){
-			move = getRandomMove(playerToMove, clus); // Possible moves?
+			move = getRandomMove(playerToMove, ((RGuctNode)node).getClusters()); // Possible moves?
 			label = "RANDOM";
 		}
 		
@@ -196,7 +206,7 @@ public class GUCTCD extends UCT {
 			return;
 	
 		if (uniqueMove(move, node)){
-			GuctNode child = new GuctNode((GuctNode)node, getChildNodeType(node, state), move, playerToMove, label);
+			RGuctNode child = new RGuctNode((RGuctNode)node, getChildNodeType(node, state), move, playerToMove, label);
 			node.getChildren().add(child);
 		}
 		
@@ -246,7 +256,7 @@ public class GUCTCD extends UCT {
 				identical = false;
 			} else {
 				for(int i = 0; i < move.size(); i++){
-					if (!((GuctNode)child).getAbstractMove().get(i).equals(move.get(i))){
+					if (!((RGuctNode)child).getAbstractMove().get(i).equals(move.get(i))){
 						identical = false;
 						break;
 					}
@@ -261,7 +271,7 @@ public class GUCTCD extends UCT {
 		
 	}
 
-	private NodeType getChildNodeType(GuctNode parent, GameState prevState) {
+	private NodeType getChildNodeType(RGuctNode parent, GameState prevState) {
 		
 		if(!prevState.bothCanMove()){
 			
@@ -311,7 +321,7 @@ public class GUCTCD extends UCT {
 		
 	}
 
-	private List<UnitAction> statesToActions(List<UnitState> move, GameState state) {
+	private List<UnitAction> statesToActions(List<UnitState> move, List<List<Unit>> clus, GameState state) {
 		
 		if (move == null || move.isEmpty() || move.get(0) == null)
 			return new ArrayList<UnitAction>();
@@ -330,15 +340,12 @@ public class GUCTCD extends UCT {
 		List<Integer> attackingUnits = new ArrayList<Integer>();
 		List<Integer> kitingUnits = new ArrayList<Integer>();
 		
-		List<List<Unit>> clus = null;
-		if (player == 0)
-			clus = clustersA;
-		else
-			clus = clustersB;
-		
 		// Divide units into two groups
 		for(UnitState unitState : move){
 			
+			if (clus.size() <= unitState.unit){
+				break;
+			}
 			// Add units in cluster
 			for(Unit u : clus.get(unitState.unit)){
 				

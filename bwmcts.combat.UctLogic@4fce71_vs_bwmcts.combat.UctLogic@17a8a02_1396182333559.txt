@@ -1,0 +1,3 @@
+bwmcts.combat.UctLogic@4fce71 vs bwmcts.combat.UctLogic@17a8a02
+--- units: 75
+Dragoons: 37	Zealots: 37 on each side

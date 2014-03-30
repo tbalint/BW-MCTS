@@ -29,23 +29,9 @@ public class KMeans implements ClusteringAlgorithm {
 			
 			// Assign to clusters
 			List<KMeansCluster> clusters = assignToClusters(k, seeds, units);
-			//System.out.println("--------------");
-			//System.out.println("Seeds: ");
-			/*
-			for(Position seed : seeds)
-				System.out.println(seed);
-			 */
+
 			// Update cluster means
 			boolean change = updateClusterMeans(clusters);
-			
-			//System.out.println("Clusters: ");
-			/*
-			for(KMeansCluster cluster : clusters){
-				System.out.println("Mean: " + cluster.getMean());
-				for(Unit unit : cluster.getUnits()){
-					System.out.println("\t" + unit.pos());
-				}
-			}*/
 			
 			// If no change return clusters
 			if (!change){
@@ -64,6 +50,8 @@ public class KMeans implements ClusteringAlgorithm {
 
 	}
 	
+	
+
 	private double distance(Position a, Position b) {
 
 		double disX = a.getX() - b.getX();

@@ -1,0 +1,36 @@
+bwmcts.combat.UctLogic@9ed927 vs NOK-AV
+--- units: 8
+Dragoons: 4	Zealots: 4 on each side
+Win average: 1.0
+Win average: 1.0
+--------------- Score average: 66.5	Deviation: 18.5
+--------------- Win average: 1.0
+DRAGOON ZEALOT TEST RESULT: 1.0
+--- units: 16
+Dragoons: 8	Zealots: 8 on each side
+Win average: 1.0
+Win average: 1.0
+--------------- Score average: 44.0	Deviation: 7.0
+--------------- Win average: 1.0
+DRAGOON ZEALOT TEST RESULT: 1.0
+--- units: 32
+Dragoons: 16	Zealots: 16 on each side
+Win average: 0.0
+Win average: 0.5
+--------------- Score average: -33.5	Deviation: 81.5
+--------------- Win average: 0.5
+DRAGOON ZEALOT TEST RESULT: 0.5
+--- units: 50
+Dragoons: 25	Zealots: 25 on each side
+Win average: 1.0
+Win average: 0.5
+--------------- Score average: -17.5	Deviation: 64.5
+--------------- Win average: 0.5
+DRAGOON ZEALOT TEST RESULT: 0.5
+--- units: 75
+Dragoons: 37	Zealots: 37 on each side
+Win average: 0.0
+Win average: 0.0
+--------------- Score average: -89.0	Deviation: 32.0
+--------------- Win average: 0.0
+DRAGOON ZEALOT TEST RESULT: 0.0

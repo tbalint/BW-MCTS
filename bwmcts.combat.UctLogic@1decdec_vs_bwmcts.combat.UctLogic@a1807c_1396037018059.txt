@@ -1,0 +1,151 @@
+bwmcts.combat.UctLogic@1decdec vs bwmcts.combat.UctLogic@a1807c
+--- units: 8
+Dragoons: 4	Zealots: 4 on each side
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 0.875
+Win average: 0.7777777777777778
+Win average: 0.7
+Win average: 0.7272727272727273
+Win average: 0.75
+Win average: 0.7692307692307693
+Win average: 0.7857142857142857
+Win average: 0.8
+Win average: 0.8125
+Win average: 0.7647058823529411
+Win average: 0.7222222222222222
+Win average: 0.7368421052631579
+Win average: 0.75
+--------------- Score average: 87.45	Deviation: 108.77613479067914
+--------------- Win average: 0.75
+DRAGOON ZEALOT TEST RESULT: 0.75
+--- units: 16
+Dragoons: 8	Zealots: 8 on each side
+Win average: 1.0
+Win average: 1.0
+Win average: 0.6666666666666666
+Win average: 0.75
+Win average: 0.6
+Win average: 0.6666666666666666
+Win average: 0.5714285714285714
+Win average: 0.5
+Win average: 0.5555555555555556
+Win average: 0.5
+Win average: 0.5454545454545454
+Win average: 0.5
+Win average: 0.5384615384615384
+Win average: 0.5714285714285714
+Win average: 0.6
+Win average: 0.625
+Win average: 0.6470588235294118
+Win average: 0.6111111111111112
+Win average: 0.631578947368421
+Win average: 0.65
+--------------- Score average: 63.0	Deviation: 82.4881809715792
+--------------- Win average: 0.65
+DRAGOON ZEALOT TEST RESULT: 0.65
+--- units: 32
+Dragoons: 16	Zealots: 16 on each side
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 0.9473684210526315
+Win average: 0.95
+--------------- Score average: 178.6	Deviation: 65.72168591872853
+--------------- Win average: 0.95
+DRAGOON ZEALOT TEST RESULT: 0.95
+--- units: 50
+Dragoons: 25	Zealots: 25 on each side
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 0.875
+Win average: 0.7777777777777778
+Win average: 0.8
+Win average: 0.8181818181818182
+Win average: 0.8333333333333334
+Win average: 0.8461538461538461
+Win average: 0.7857142857142857
+Win average: 0.7333333333333333
+Win average: 0.75
+Win average: 0.7058823529411765
+Win average: 0.7222222222222222
+Win average: 0.6842105263157895
+Win average: 0.65
+--------------- Score average: 43.65	Deviation: 70.3699332101431
+--------------- Win average: 0.65
+DRAGOON ZEALOT TEST RESULT: 0.65
+--- units: 75
+Dragoons: 37	Zealots: 37 on each side
+Win average: 0.0
+Win average: 0.0
+Win average: 0.0
+Win average: 0.0
+Win average: 0.0
+Win average: 0.0
+Win average: 0.14285714285714285
+Win average: 0.125
+Win average: 0.1111111111111111
+Win average: 0.1
+Win average: 0.09090909090909091
+Win average: 0.16666666666666666
+Win average: 0.15384615384615385
+Win average: 0.14285714285714285
+Win average: 0.2
+Win average: 0.1875
+Win average: 0.17647058823529413
+Win average: 0.2222222222222222
+Win average: 0.21052631578947367
+Win average: 0.25
+--------------- Score average: -17.2	Deviation: 66.50082706252607
+--------------- Win average: 0.25
+DRAGOON ZEALOT TEST RESULT: 0.25
+--- units: 100
+Dragoons: 50	Zealots: 50 on each side
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 0.8333333333333334
+Win average: 0.8571428571428571
+Win average: 0.875
+Win average: 0.7777777777777778
+Win average: 0.7
+Win average: 0.7272727272727273
+Win average: 0.75
+Win average: 0.7692307692307693
+Win average: 0.7142857142857143
+Win average: 0.7333333333333333
+Win average: 0.6875
+Win average: 0.7058823529411765
+Win average: 0.7222222222222222
+Win average: 0.6842105263157895
+Win average: 0.7
+--------------- Score average: 64.25	Deviation: 72.26608817419135
+--------------- Win average: 0.7
+DRAGOON ZEALOT TEST RESULT: 0.7

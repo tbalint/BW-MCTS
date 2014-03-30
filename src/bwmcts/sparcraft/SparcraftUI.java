@@ -59,6 +59,14 @@ public class SparcraftUI extends JComponent {
         return instance;
     }
 	
+	public static synchronized SparcraftUI getUI(GameState state, Player p1, Player p2) {
+        if (instance == null) {
+            instance = new SparcraftUI(p1, p2);
+        }
+        instance.setGameState(state);
+        
+        return instance;
+    }
 	
 	public void paint(Graphics g){
 		Map map=_state.getMap();

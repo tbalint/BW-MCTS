@@ -3,7 +3,7 @@
 * https://code.google.com/p/sparcraft/
 * author of the source: David Churchill
 **/
-package bwmcts.uct.guctcd;
+package bwmcts.uct.rguctcd;
 
 import java.util.List;
 
@@ -12,11 +12,12 @@ import bwmcts.uct.UnitState;
 import bwmcts.uct.NodeType;
 import bwmcts.uct.UctNode;
 
-public class GuctNode extends UctNode {
+public class RGuctNode extends UctNode {
 
 	private List<UnitState> abstractMove;
+	private List<List<Unit>> clusters;
 	
-	public GuctNode(GuctNode parent, NodeType type, List<UnitState> abstractMove, int movingPlayerIndex, String label) {
+	public RGuctNode(RGuctNode parent, NodeType type, List<UnitState> abstractMove, int movingPlayerIndex, String label) {
 		super(parent, type, null, movingPlayerIndex, label);
 		this.abstractMove = abstractMove;
 	}
@@ -36,6 +37,14 @@ public class GuctNode extends UctNode {
 
 	public void setAbstractMove(List<UnitState> abstractMove) {
 		this.abstractMove = abstractMove;
+	}
+
+	public List<List<Unit>> getClusters() {
+		return clusters;
+	}
+
+	public void setClusters(List<List<Unit>> clusters) {
+		this.clusters = clusters;
 	}
 	
 }

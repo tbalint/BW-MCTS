@@ -60,9 +60,8 @@ public class CombatController implements BWAPIEventListener {
 		//combatLogic =new GuctcdLogic(bwapi,new GUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false));
 		//combatLogic
 		GUCTCD guctcdA = new GUCTCD(new UctConfig(0), 
-									new UctStats(), 
 									new ClusteringConfig(1, 6, new UPGMA()));
-		combatLogic = new UctLogic(bwapi, new IUCTCD(new UctConfig(0), new UctStats()),40);
+		combatLogic = new UctLogic(bwapi, new IUCTCD(new UctConfig(0)),40);
 		//combatLogic = new UctcdLogic(bwapi,new IUCTCD(1.6,20,bwapi.getEnemies().get(0).getID(),bwapi.getSelf().getID(),500,false), 30);
 		//combatLogic =new GPortfolioGreedyLogic(bwapi,2,2,30,6);
 		//combatLogic = new PortfolioGreedyLogic(bwapi,1,1,20 );
