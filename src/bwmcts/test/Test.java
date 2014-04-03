@@ -74,12 +74,12 @@ public class Test implements BWAPIEventListener  {
 
 		//Player p1 = new Player_NoOverKillAttackValue(0);
 		//Player p1 = new UctLogic(tc.bwapi, guctcdA, 40);
-		Player p1 = new UctLogic(tc.bwapi, new IUCTCD(new UctConfig(0)),40);
+		Player p1 = new UctLogic(tc.bwapi, new UCTCD(new UctConfig(0, true)),40);
 		
 		//Player p2 = new Player_NoOverKillAttackValue(1);
-		//Player p2 = new UctLogic(tc.bwapi, new IUCTCD(new UctConfig(1, false)),40);
+		Player p2 = new UctLogic(tc.bwapi, new IUCTCD(new UctConfig(1, false)),40);
 		//Player p2 = new RandomScriptLogic(1);
-		Player p2 = new UctLogic(tc.bwapi, guctcdB, 40);
+		//Player p2 = new UctLogic(tc.bwapi, guctcdB, 40);
 		
 		tc.buf=new StringBuffer();
 		System.out.println("Player0: "+p1.toString());
@@ -87,7 +87,7 @@ public class Test implements BWAPIEventListener  {
 		tc.buf.append("Player0: "+p1.toString()+"\r\n");
 		tc.buf.append("Player1: "+p2.toString()+"\r\n");
 		
-		tc.dragoonZTest(p1, p2, 5, new int[]{80});
+		tc.dragoonZTest(p1, p2, 5, new int[]{20});
 		
 		try {
 			String player0=p1.toString();

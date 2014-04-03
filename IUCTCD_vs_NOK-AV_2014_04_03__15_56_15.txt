@@ -1,0 +1,4 @@
+Player0: IUCTCD - K: 1.600000023841858	maxChildren: 20	maxPlayerIndex: 0	debug: false	simulationSteps: 2147483647	nokModelling: true	LTD2: true
+Player1: NOK-AV
+--- units: 80
+Dragoons: 40	Zealots: 40 on each side

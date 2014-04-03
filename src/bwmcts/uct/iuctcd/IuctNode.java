@@ -14,6 +14,7 @@ import bwmcts.uct.UctNode;
 public class IuctNode extends UctNode {
 
 	private List<UnitState> abstractMove;
+	private List<List<UnitState>> possibleAbstractMoves;
 	
 	public IuctNode(IuctNode parent, NodeType type, List<UnitState> abstractMove, int movingPlayerIndex, String label) {
 		super(parent, type, null, movingPlayerIndex, label);
@@ -36,5 +37,15 @@ public class IuctNode extends UctNode {
 	public void setAbstractMove(List<UnitState> abstractMove) {
 		this.abstractMove = abstractMove;
 	}
+
+	public List<List<UnitState>> getPossibleAbstractMoves() {
+		return possibleAbstractMoves;
+	}
+
+	public void setPossibleAbstractMoves(List<List<UnitState>> possibleAbstractMoves) {
+		this.possibleAbstractMoves = possibleAbstractMoves;
+	}
+	
+	
 
 }

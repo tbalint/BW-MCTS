@@ -1,6 +1,8 @@
 package bwmcts.uct.iuctcd;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -114,8 +116,10 @@ public class IUCTCD extends UCT {
 		
 		List<UnitState> move = new ArrayList<UnitState>();
 		
+		boolean onlyNok = config.isNokModelling() && playerToMove != config.getMaxPlayerIndex();
+		List<Integer> readyUnitIds = new ArrayList<Integer>();
 		HashMap<Integer, List<UnitAction>> map;
-		if (node.getPossibleMoves() == null){
+		if (((IuctNode)node).getPossibleAbstractMoves() == null){
 
 			map = new HashMap<Integer, List<UnitAction>>();
 			try {
@@ -123,34 +127,51 @@ public class IUCTCD extends UCT {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			node.setPossibleMoves(map);
+			readyUnitIds = getReadyUnitIds(map);
+			((IuctNode)node).setPossibleAbstractMoves(getPossibleMoves(playerToMove, readyUnitIds, config.getMaxChildren()));
 			
 		}
-		
-		boolean onlyNok = config.isNokModelling() && playerToMove != config.getMaxPlayerIndex();
 		
 		String label = "";
-		if (node.getChildren().isEmpty()){
-			move.addAll(getAllMove(UnitStateTypes.ATTACK, node.getPossibleMoves()));
+		
+		if (onlyNok && node.getChildren().isEmpty()){
+			move.addAll(getAllMove(UnitStateTypes.ATTACK, readyUnitIds, playerToMove));
 			label = "NOK-AV";
-		} else if (!onlyNok && node.getChildren().size() == 1){
-			move.addAll(getAllMove(UnitStateTypes.KITE, node.getPossibleMoves()));
-			label = "KITE";
-		} else if (!onlyNok){
-			move = getRandomMove(playerToMove, node.getPossibleMoves()); // Possible moves?
-			label = "RANDOM";
+		} else if (((IuctNode)node).getPossibleAbstractMoves().size() >= node.getVisits()){
+			move.addAll(((IuctNode)node).getPossibleAbstractMoves().get(node.getVisits()-1));
+			if (node.getVisits()==1){
+				label = "NOK-AV";
+			}else if (node.getVisits()==2){
+				label = "KITER";
+			}else{
+				label = "MIX";
+				if (sameScript(move))
+					return;
+			}
 		}
-			
-		if (move == null)
+		
+		if (move == null || move.isEmpty())
 			return;
-	
-		if (uniqueMove(move, (IuctNode)node)){
-			IuctNode child = new IuctNode((IuctNode)node, getChildNodeType(node, state), move, playerToMove, label);
-			node.getChildren().add(child);
+		
+		if (move.isEmpty()){
+			int i = 0;
+			i++;
 		}
+	
+		IuctNode child = new IuctNode((IuctNode)node, getChildNodeType(node, state), move, playerToMove, label);
+		node.getChildren().add(child);	
 		
 	}
 	
+
+	private boolean sameScript(List<UnitState> move) {
+		UnitStateTypes type = move.get(0).type;
+		for(UnitState state : move){
+			if (state.type != type)
+				return false;
+		}
+		return true;
+	}
 
 	private boolean uniqueMove(List<UnitState> move, IuctNode node) {
 
@@ -178,17 +199,13 @@ public class IUCTCD extends UCT {
 		
 	}
 
-	private List<UnitState> getAllMove(UnitStateTypes type, HashMap<Integer, List<UnitAction>> map) {
+	private List<UnitState> getAllMove(UnitStateTypes type, List<Integer> readyUnitIds, int playerToMove) {
 
 		List<UnitState> states = new ArrayList<UnitState>();
 		
-		for(Integer i : map.keySet()){
+		for(Integer i : readyUnitIds){
 			
-			List<UnitAction> actions = map.get(i);
-			if (actions.isEmpty())
-				continue;
-			
-			UnitState state = new UnitState(type, actions.get(0)._unit, actions.get(0)._player);
+			UnitState state = new UnitState(type, i, playerToMove);
 			states.add(state);
 			
 		}
@@ -222,6 +239,113 @@ public class IUCTCD extends UCT {
 		return move;
 		
 	}
+	
+	private List<List<UnitState>> getPossibleMoves(int playerToMove, List<Integer> readyUnitIds, int n) {
+		
+		if (readyUnitIds.isEmpty())
+			return new ArrayList<List<UnitState>>();
+
+		List<List<UnitState>> moves = new ArrayList<List<UnitState>>();
+		moves.add(getAllMove(UnitStateTypes.ATTACK, readyUnitIds, playerToMove));
+		moves.add(getAllMove(UnitStateTypes.KITE, readyUnitIds, playerToMove));
+		
+		n-=2;
+		if (n>0){
+			List<List<UnitState>> randomMoves = randomMoves(playerToMove, readyUnitIds, n);
+			for (List<UnitState> move : randomMoves){
+				if (!move.isEmpty())
+					moves.add(move);
+			}
+		}
+			
+		
+		return moves;
+		
+	}
+	
+
+	private List<Integer> getReadyUnitIds(HashMap<Integer, List<UnitAction>> map) {
+		List<Integer> readyUnitIds = new ArrayList<Integer>();
+		for(Integer i : map.keySet()){
+			
+			// Skip empty actions
+			List<UnitAction> actions = map.get(i);
+			if (actions.isEmpty())
+				continue;
+			
+			readyUnitIds.add(i);
+			
+		}
+		
+		return readyUnitIds;
+		
+	}
+
+	private List<List<UnitState>> randomMoves(int playerToMove, List<Integer> readyUnitIds, int n) {
+			
+		int r = readyUnitIds.size();
+		if (r == 0 || n<=0)
+			return new ArrayList<List<UnitState>>();
+		
+		if (r==1){
+			UnitStateTypes type = UnitStateTypes.ATTACK;
+			if (Math.random() >= 0.5f)
+				type = UnitStateTypes.KITE;
+			UnitState unitState = new UnitState(type, readyUnitIds.get(0), playerToMove);
+			List<UnitState> move = new ArrayList<UnitState>();
+			move.add(unitState);
+			List<List<UnitState>> moves = new ArrayList<List<UnitState>>();
+			moves.add(move);
+			return moves;
+		}
+
+		List<List<UnitState>> movesAll = new ArrayList<List<UnitState>>();
+		List<List<UnitState>> movesNok = new ArrayList<List<UnitState>>();
+		List<List<UnitState>> movesKite = new ArrayList<List<UnitState>>();
+		List<UnitState> moveNok = new ArrayList<UnitState>();
+		List<UnitState> moveKite = new ArrayList<UnitState>();
+		UnitState unitStateNok = new UnitState(UnitStateTypes.ATTACK, readyUnitIds.get(0), playerToMove);
+		UnitState unitStateKite = new UnitState(UnitStateTypes.KITE, readyUnitIds.get(0), playerToMove);
+		moveNok.add(unitStateNok);
+		moveKite.add(unitStateKite);
+		movesNok.add(moveNok);
+		movesKite.add(moveKite);
+		
+		n -= 2;
+		
+		int a = (int)Math.ceil((double)n/2);
+		int b = (int)Math.floor((double)n/2);
+		
+		List<List<UnitState>> submoves = randomMoves(playerToMove, readyUnitIds.subList(1, readyUnitIds.size()), a);
+		
+		int added = 0;
+		for(List<UnitState> submove : submoves){
+			List<UnitState> moveN = new ArrayList<UnitState>();
+			for(UnitState s : moveNok)
+				moveN.add(s);
+			moveN.addAll(submove);
+			movesAll.add(moveN);
+			added++;
+			if (added >= n)
+				break;
+			List<UnitState> moveK = new ArrayList<UnitState>();
+			for(UnitState s : moveKite)
+				moveK.add(s);
+			moveK.addAll(submove);
+			movesAll.add(moveK);
+			added++;
+			if (added >= n)
+				break;	
+		}
+		
+		//movesAll.addAll(movesNok);
+		//movesAll.addAll(movesKite);
+		
+		return movesAll;
+	}
+
+
+
 
 	private List<UnitAction> statesToActions(List<UnitState> move, GameState state) {
 		

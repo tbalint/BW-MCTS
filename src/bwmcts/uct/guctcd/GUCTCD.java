@@ -69,6 +69,8 @@ public class GUCTCD extends UCT {
 		clustersA = guctConfig.getClusterAlg().getClusters(state.getAllUnit()[0], 6, guctConfig.getHpMulitplier());
 		clustersB = guctConfig.getClusterAlg().getClusters(state.getAllUnit()[1], 6, guctConfig.getHpMulitplier());
 		
+		// Opponent clustering is empty!
+		
 		if(config.getMaxPlayerIndex() == 0)
 			clusters = clustersA;
 		else
@@ -96,7 +98,7 @@ public class GUCTCD extends UCT {
 		
 		//UctNode best = mostVisitedChildOf(root);
 		UctNode best = bestValueChildOf(root);
-		System.out.println(((GuctNode)best).getAbstractMove().size());
+		//System.out.println(((GuctNode)best).getAbstractMove().size());
 			
 		if (config.isDebug())
 			writeToFile(root.print(0), "tree.xml");

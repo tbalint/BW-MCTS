@@ -58,7 +58,7 @@ public class DynamicKMeans implements ClusteringAlgorithm {
 		List<List<Unit>> removedClusters = new ArrayList<List<Unit>>();
 		List<List<Unit>> newClusters = new ArrayList<List<Unit>>();
 		for(List<Unit> units : clusters){
-			if (getAverageDistance(new KMeansCluster(units)) > minDistance){
+			if (getMaxDistance(new KMeansCluster(units)) > minDistance){
 				List<List<Unit>> split = kmeans.getClusters(units, 2, 0);
 				removedClusters.add(units);
 				newClusters.add(split.get(0));
@@ -82,6 +82,18 @@ public class DynamicKMeans implements ClusteringAlgorithm {
 			distance += distance(cluster.getMean(), unit.pos());
 		
 		return distance / (double)cluster.getUnits().size();
+	}
+	
+	public double getMaxDistance(KMeansCluster cluster) {
+
+		double maxDistance = Double.MIN_VALUE;
+		for(Unit unit : cluster.getUnits()){
+			double dis = distance(cluster.getMean(), unit.pos());
+			if (dis > maxDistance)
+				maxDistance = dis;
+		}
+		
+		return maxDistance;
 	}
 	
 	private double distance(Position a, Position b) {
