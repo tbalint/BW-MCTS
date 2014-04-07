@@ -217,7 +217,7 @@ public class GUCTCD extends UCT {
 			if (!readyCluster.isEmpty())
 				readyClusters.add(readyCluster);
 		}
-		System.out.println(clusters.size() + " : " + readyClusters.size());
+		//System.out.println(clusters.size() + " : " + readyClusters.size());
 		return readyClusters;
 	}
 

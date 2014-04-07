@@ -1,0 +1,62 @@
+Player0: IUCTCD - K: 1.600000023841858	maxChildren: 20	maxPlayerIndex: 0	debug: false	simulationSteps: 2147483647	nokModelling: true	LTD2: true
+Player1: NOK-AV
+--- units: 20
+Dragoons: 10	Zealots: 10 on each side
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+--------------- Score average: 205.7	Deviation: 31.981400844866066
+--------------- Win average: 1.0
+DRAGOON ZEALOT TEST RESULT: 1.0
+--- units: 40
+Dragoons: 20	Zealots: 20 on each side
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+--------------- Score average: 192.3	Deviation: 30.874099177141996
+--------------- Win average: 1.0
+DRAGOON ZEALOT TEST RESULT: 1.0
+--- units: 80
+Dragoons: 40	Zealots: 40 on each side
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+--------------- Score average: 168.8	Deviation: 31.590504902581092
+--------------- Win average: 1.0
+DRAGOON ZEALOT TEST RESULT: 1.0
+--- units: 140
+Dragoons: 70	Zealots: 70 on each side
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+--------------- Score average: 132.8	Deviation: 20.913153755471697
+--------------- Win average: 1.0
+DRAGOON ZEALOT TEST RESULT: 1.0

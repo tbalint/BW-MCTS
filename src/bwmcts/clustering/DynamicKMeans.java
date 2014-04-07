@@ -1,6 +1,7 @@
 package bwmcts.clustering;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,14 @@ public class DynamicKMeans implements ClusteringAlgorithm {
 
 	public List<List<Unit>> getClusters(Unit[] uarr, int k, double hp) {
 
+		//List<Unit> units = new ArrayList<Unit>();
 		List<Unit> units = getReadyUnits(uarr);
+		/*
+		for(Unit unit : uarr){
+			if (unit==null)
+				break;
+			units.add(unit);
+		}*/
 		
 		KMeans kmeans = new KMeans();
 		Map<UnitType, List<Unit>> types = splitByType(units);

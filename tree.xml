@@ -1,22 +1,65 @@
-<node label=ROOT score=-32.4375 visited=16 type=ROOT playerToMove=0 moves=>
-	<node label=NOK-AV score=-163.0 visited=1 type=SOLO playerToMove=0 moves=MOVE(322,76);MOVE(362,73);MOVE(320,91);MOVE(357,149);MOVE(263,240);ATTACK(429,256);MOVE(365,174);MOVE(355,238);MOVE(327,300);MOVE(311,282);/>
-	<node label=KITE score=-163.0 visited=1 type=SOLO playerToMove=0 moves=MOVE(322,76);MOVE(362,73);MOVE(320,91);MOVE(357,149);MOVE(263,240);ATTACK(429,256);MOVE(365,174);MOVE(355,238);MOVE(327,300);MOVE(311,282);/>
-	<node label=RANDOM score=145.0 visited=1 type=SOLO playerToMove=0 moves=MOVE(290,76);MOVE(330,73);MOVE(288,91);MOVE(325,149);MOVE(231,240);ATTACK(429,256);MOVE(333,174);MOVE(323,238);MOVE(295,300);MOVE(279,282);/>
-	<node label=RANDOM score=-227.0 visited=1 type=SOLO playerToMove=0 moves=MOVE(306,60);MOVE(362,73);MOVE(320,91);MOVE(341,165);MOVE(247,224);MOVE(407,232);MOVE(349,158);MOVE(339,254);MOVE(311,284);MOVE(311,282);/>
-	<node label=RANDOM score=-96.0 visited=1 type=SOLO playerToMove=0 moves=MOVE(322,76);MOVE(346,57);MOVE(304,75);MOVE(341,133);MOVE(263,240);MOVE(391,248);MOVE(349,190);MOVE(339,222);MOVE(327,300);MOVE(295,298);/>
-	<node label=RANDOM score=166.0 visited=1 type=SOLO playerToMove=0 moves=MOVE(306,92);MOVE(346,89);MOVE(304,107);MOVE(357,149);MOVE(247,256);MOVE(391,216);MOVE(365,174);MOVE(355,238);MOVE(311,316);MOVE(295,266);/>
-	<node label=RANDOM score=154.0 visited=1 type=SOLO playerToMove=0 moves=MOVE(290,76);MOVE(330,73);MOVE(288,91);MOVE(325,149);MOVE(231,240);MOVE(375,232);MOVE(333,174);MOVE(323,238);MOVE(295,300);MOVE(279,282);/>
-	<node label=RANDOM score=-205.0 visited=1 type=SOLO playerToMove=0 moves=MOVE(306,60);MOVE(362,73);MOVE(320,91);MOVE(341,165);MOVE(247,224);ATTACK(429,256);MOVE(349,158);MOVE(339,254);MOVE(311,284);MOVE(311,282);/>
-	<node label=RANDOM score=34.0 visited=1 type=SOLO playerToMove=0 moves=MOVE(322,76);MOVE(346,57);MOVE(304,75);MOVE(341,133);MOVE(263,240);MOVE(407,232);MOVE(349,190);MOVE(339,222);MOVE(327,300);MOVE(295,298);/>
-	<node label=RANDOM score=-79.0 visited=1 type=SOLO playerToMove=0 moves=MOVE(306,92);MOVE(346,89);MOVE(304,107);MOVE(357,149);MOVE(247,256);MOVE(391,248);MOVE(365,174);MOVE(355,238);MOVE(311,316);MOVE(295,266);/>
-	<node label=RANDOM score=49.0 visited=1 type=SOLO playerToMove=0 moves=MOVE(290,76);MOVE(330,73);MOVE(288,91);MOVE(325,149);MOVE(231,240);MOVE(391,216);MOVE(333,174);MOVE(323,238);MOVE(295,300);MOVE(279,282);/>
-	<node label=RANDOM score=-180.0 visited=1 type=SOLO playerToMove=0 moves=MOVE(306,60);MOVE(362,73);MOVE(320,91);MOVE(341,165);MOVE(247,224);MOVE(375,232);MOVE(349,158);MOVE(339,254);MOVE(311,284);MOVE(311,282);/>
-	<node label=RANDOM score=-19.0 visited=1 type=SOLO playerToMove=0 moves=MOVE(322,76);MOVE(346,57);MOVE(304,75);MOVE(341,133);MOVE(263,240);ATTACK(429,256);MOVE(349,190);MOVE(339,222);MOVE(327,300);MOVE(295,298);/>
-	<node label=RANDOM score=25.0 visited=1 type=SOLO playerToMove=0 moves=MOVE(306,92);MOVE(346,89);MOVE(304,107);MOVE(357,149);MOVE(247,256);MOVE(407,232);MOVE(365,174);MOVE(355,238);MOVE(311,316);MOVE(295,266);/>
-	<node label=RANDOM score=40.0 visited=1 type=SOLO playerToMove=0 moves=MOVE(290,76);MOVE(330,73);MOVE(288,91);MOVE(325,149);MOVE(231,240);MOVE(391,248);MOVE(333,174);MOVE(323,238);MOVE(295,300);MOVE(279,282);/>
-	<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=MOVE(306,60);MOVE(362,73);MOVE(320,91);MOVE(341,165);MOVE(247,224);MOVE(391,216);MOVE(349,158);MOVE(339,254);MOVE(311,284);MOVE(311,282);/>
-	<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=MOVE(322,76);MOVE(346,57);MOVE(304,75);MOVE(341,133);MOVE(263,240);MOVE(375,232);MOVE(349,190);MOVE(339,222);MOVE(327,300);MOVE(295,298);/>
-	<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=MOVE(306,92);MOVE(346,89);MOVE(304,107);MOVE(357,149);MOVE(247,256);ATTACK(429,256);MOVE(365,174);MOVE(355,238);MOVE(311,316);MOVE(295,266);/>
-	<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=MOVE(290,76);MOVE(330,73);MOVE(288,91);MOVE(325,149);MOVE(231,240);MOVE(407,232);MOVE(333,174);MOVE(323,238);MOVE(295,300);MOVE(279,282);/>
-	<node label=RANDOM score=NaN visited=0 type=SOLO playerToMove=0 moves=MOVE(306,60);MOVE(362,73);MOVE(320,91);MOVE(341,165);MOVE(247,224);MOVE(391,248);MOVE(349,158);MOVE(339,254);MOVE(311,284);MOVE(311,282);/>
+<node label=ROOT score=-29.131578 visited=38 type=ROOT playerToMove=0 moves=>
+	<node label=NOK-AV score=-28.105263 visited=19 type=FIRST playerToMove=0 moves=ATTACK;>
+		<node label=NOK-AV score=-27.5 visited=18 type=SECOND playerToMove=1 moves=ATTACK;>
+			<node label=NOK-AV score=-26.82353 visited=17 type=FIRST playerToMove=1 moves=ATTACK;ATTACK;>
+				<node label=NOK-AV score=-43.125 visited=8 type=SECOND playerToMove=0 moves=ATTACK;>
+					<node label=NOK-AV score=-39.0 visited=4 type=FIRST playerToMove=0 moves=ATTACK;>
+						<node label=NOK-AV score=-39.0 visited=3 type=SECOND playerToMove=1 moves=ATTACK;ATTACK;>
+							<node label=NOK-AV score=-39.0 visited=2 type=SOLO playerToMove=1 moves=ATTACK;>
+								<node label=NOK-AV score=-39.0 visited=1 type=FIRST playerToMove=1 moves=ATTACK;/>
+							</node>
+						</node>
+					</node>
+					<node label=KITE score=-50.0 visited=3 type=FIRST playerToMove=0 moves=KITE;>
+						<node label=NOK-AV score=-50.0 visited=2 type=SECOND playerToMove=1 moves=ATTACK;ATTACK;>
+							<node label=NOK-AV score=-50.0 visited=1 type=FIRST playerToMove=1 moves=ATTACK;/>
+						</node>
+					</node>
+				</node>
+				<node label=KITE score=-9.0 visited=8 type=SECOND playerToMove=0 moves=KITE;>
+					<node label=NOK-AV score=-89.0 visited=2 type=FIRST playerToMove=0 moves=ATTACK;>
+						<node label=NOK-AV score=-89.0 visited=1 type=SECOND playerToMove=1 moves=ATTACK;ATTACK;/>
+					</node>
+					<node label=KITE score=39.0 visited=5 type=FIRST playerToMove=0 moves=KITE;>
+						<node label=NOK-AV score=39.0 visited=4 type=SECOND playerToMove=1 moves=ATTACK;ATTACK;>
+							<node label=NOK-AV score=39.0 visited=2 type=SOLO playerToMove=0 moves=ATTACK;>
+								<node label=NOK-AV score=39.0 visited=1 type=FIRST playerToMove=0 moves=ATTACK;/>
+							</node>
+							<node label=KITE score=39.0 visited=1 type=SOLO playerToMove=0 moves=KITE;/>
+						</node>
+					</node>
+				</node>
+			</node>
+		</node>
+	</node>
+	<node label=KITE score=-31.833334 visited=18 type=FIRST playerToMove=0 moves=KITE;>
+		<node label=NOK-AV score=-31.411764 visited=17 type=SECOND playerToMove=1 moves=ATTACK;>
+			<node label=NOK-AV score=-30.9375 visited=16 type=FIRST playerToMove=1 moves=ATTACK;ATTACK;>
+				<node label=NOK-AV score=-43.125 visited=8 type=SECOND playerToMove=0 moves=ATTACK;>
+					<node label=NOK-AV score=-39.0 visited=4 type=FIRST playerToMove=0 moves=ATTACK;>
+						<node label=NOK-AV score=-39.0 visited=3 type=SECOND playerToMove=1 moves=ATTACK;ATTACK;>
+							<node label=NOK-AV score=-39.0 visited=1 type=SOLO playerToMove=0 moves=ATTACK;/>
+							<node label=KITE score=-39.0 visited=1 type=SOLO playerToMove=0 moves=KITE;/>
+						</node>
+					</node>
+					<node label=KITE score=-50.0 visited=3 type=FIRST playerToMove=0 moves=KITE;>
+						<node label=NOK-AV score=-50.0 visited=2 type=SECOND playerToMove=1 moves=ATTACK;ATTACK;>
+							<node label=NOK-AV score=-50.0 visited=1 type=SOLO playerToMove=0 moves=ATTACK;/>
+						</node>
+					</node>
+				</node>
+				<node label=KITE score=-15.857142 visited=7 type=SECOND playerToMove=0 moves=KITE;>
+					<node label=NOK-AV score=-89.0 visited=2 type=FIRST playerToMove=0 moves=ATTACK;>
+						<node label=NOK-AV score=-89.0 visited=1 type=SECOND playerToMove=1 moves=ATTACK;ATTACK;/>
+					</node>
+					<node label=KITE score=39.0 visited=4 type=FIRST playerToMove=0 moves=KITE;>
+						<node label=NOK-AV score=39.0 visited=3 type=SECOND playerToMove=1 moves=ATTACK;ATTACK;>
+							<node label=NOK-AV score=39.0 visited=1 type=SOLO playerToMove=0 moves=ATTACK;/>
+							<node label=KITE score=39.0 visited=1 type=SOLO playerToMove=0 moves=KITE;/>
+						</node>
+					</node>
+				</node>
+			</node>
+		</node>
+	</node>
 </node>

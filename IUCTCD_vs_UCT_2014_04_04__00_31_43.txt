@@ -1,0 +1,164 @@
+Player0: IUCTCD - K: 1.600000023841858	maxChildren: 20	maxPlayerIndex: 0	debug: false	simulationSteps: 2147483647	nokModelling: true	LTD2: true
+Player1: UCT - K: 1.600000023841858	maxChildren: 20	maxPlayerIndex: 1	debug: false	simulationSteps: 2147483647	nokModelling: true	LTD2: true
+--- units: 10
+Dragoons: 5	Zealots: 5 on each side
+Win average: 0.0
+Win average: 0.0
+Win average: 0.3333333333333333
+Win average: 0.5
+Win average: 0.6
+Win average: 0.6666666666666666
+Win average: 0.7142857142857143
+Win average: 0.625
+Win average: 0.6666666666666666
+Win average: 0.7
+Win average: 0.7272727272727273
+Win average: 0.75
+Win average: 0.7692307692307693
+Win average: 0.7857142857142857
+Win average: 0.8
+Win average: 0.75
+Win average: 0.7647058823529411
+Win average: 0.7777777777777778
+Win average: 0.7894736842105263
+Win average: 0.8
+Win average: 0.8095238095238095
+Win average: 0.8181818181818182
+Win average: 0.8260869565217391
+Win average: 0.8333333333333334
+Win average: 0.84
+Win average: 0.8461538461538461
+Win average: 0.8518518518518519
+Win average: 0.8571428571428571
+Win average: 0.8620689655172413
+Win average: 0.8666666666666667
+Win average: 0.8709677419354839
+Win average: 0.84375
+Win average: 0.8484848484848485
+Win average: 0.8235294117647058
+Win average: 0.8285714285714286
+Win average: 0.8055555555555556
+Win average: 0.8108108108108109
+Win average: 0.7894736842105263
+Win average: 0.7948717948717948
+Win average: 0.8
+--------------- Score average: 74.35	Deviation: 115.93695485047034
+--------------- Win average: 0.8
+DRAGOON ZEALOT TEST RESULT: 0.8
+--- units: 20
+Dragoons: 10	Zealots: 10 on each side
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 0.75
+Win average: 0.8
+Win average: 0.6666666666666666
+Win average: 0.7142857142857143
+Win average: 0.75
+Win average: 0.7777777777777778
+Win average: 0.8
+Win average: 0.7272727272727273
+Win average: 0.75
+Win average: 0.7692307692307693
+Win average: 0.7142857142857143
+Win average: 0.6666666666666666
+Win average: 0.6875
+Win average: 0.6470588235294118
+Win average: 0.6666666666666666
+Win average: 0.6842105263157895
+Win average: 0.65
+Win average: 0.6666666666666666
+Win average: 0.6818181818181818
+Win average: 0.6956521739130435
+Win average: 0.7083333333333334
+Win average: 0.72
+Win average: 0.7307692307692307
+Win average: 0.7037037037037037
+Win average: 0.7142857142857143
+Win average: 0.7241379310344828
+Win average: 0.7333333333333333
+Win average: 0.7419354838709677
+Win average: 0.71875
+Win average: 0.696969696969697
+Win average: 0.7058823529411765
+Win average: 0.6857142857142857
+Win average: 0.6944444444444444
+Win average: 0.7027027027027027
+Win average: 0.6842105263157895
+Win average: 0.6666666666666666
+Win average: 0.65
+--------------- Score average: 46.35	Deviation: 109.88620250058693
+--------------- Win average: 0.65
+DRAGOON ZEALOT TEST RESULT: 0.65
+--- units: 40
+Dragoons: 20	Zealots: 20 on each side
+Win average: 1.0
+Win average: 1.0
+Win average: 0.6666666666666666
+Win average: 0.75
+Win average: 0.8
+Win average: 0.8333333333333334
+Win average: 0.8571428571428571
+Win average: 0.75
+Win average: 0.7777777777777778
+Win average: 0.8
+Win average: 0.8181818181818182
+Win average: 0.8333333333333334
+Win average: 0.8461538461538461
+Win average: 0.8571428571428571
+Win average: 0.8
+Win average: 0.8125
+Win average: 0.8235294117647058
+Win average: 0.8333333333333334
+Win average: 0.8421052631578947
+Win average: 0.85
+Win average: 0.8571428571428571
+Win average: 0.8636363636363636
+Win average: 0.8695652173913043
+Win average: 0.875
+Win average: 0.84
+Win average: 0.8076923076923077
+Win average: 0.7777777777777778
+Win average: 0.7857142857142857
+Win average: 0.7931034482758621
+Win average: 0.8
+Win average: 0.8064516129032258
+Win average: 0.8125
+Win average: 0.8181818181818182
+Win average: 0.8235294117647058
+Win average: 0.8
+Win average: 0.8055555555555556
+Win average: 0.8108108108108109
+Win average: 0.8157894736842105
+Win average: 0.8205128205128205
+Win average: 0.825
+--------------- Score average: 79.0	Deviation: 84.20124702164452
+--------------- Win average: 0.825
+DRAGOON ZEALOT TEST RESULT: 0.825
+--- units: 80
+Dragoons: 40	Zealots: 40 on each side
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 1.0
+Win average: 0.9473684210526315
+Win average: 0.95
+Win average: 0.9523809523809523
+Win average: 0.9545454545454546
+Win average: 0.9130434782608695
+--- units: 140
+Dragoons: 70	Zealots: 70 on each side

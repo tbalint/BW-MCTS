@@ -84,8 +84,6 @@ public class RGUCTCD extends UCT {
 		else
 			((RGuctNode)root).setClusters(cleanClusters(state, clustersB));
 		
-		
-		
 		// Reset stats if new game
 		if (state.getTime()==0)
 			stats.reset();
@@ -103,8 +101,10 @@ public class RGUCTCD extends UCT {
 		
 		//UctNode best = mostVisitedChildOf(root);
 		UctNode best = bestValueChildOf(root);
-		System.out.println(((RGuctNode)best).getAbstractMove().size());
-			
+		if (((RGuctNode)best).getAbstractMove().size() != clusters.size()){
+			System.out.println("Scripts: " + ((RGuctNode)best).getAbstractMove().size() + ", clusters: " + clusters.size());
+		}
+		
 		if (config.isDebug())
 			writeToFile(root.print(0), "tree.xml");
 		
@@ -206,6 +206,10 @@ public class RGUCTCD extends UCT {
 			return;
 	
 		if (uniqueMove(move, node)){
+			if (label.equals("RANDOM") && move.size() == 1){
+				System.out.println("sd");
+				boolean a = uniqueMove(move, node);
+			}
 			RGuctNode child = new RGuctNode((RGuctNode)node, getChildNodeType(node, state), move, playerToMove, label);
 			node.getChildren().add(child);
 		}
@@ -225,7 +229,7 @@ public class RGUCTCD extends UCT {
 			if (!readyCluster.isEmpty())
 				readyClusters.add(readyCluster);
 		}
-		System.out.println(clusters.size() + " : " + readyClusters.size());
+		//System.out.println(clusters.size() + " : " + readyClusters.size());
 		return readyClusters;
 	}
 
@@ -252,14 +256,10 @@ public class RGUCTCD extends UCT {
 		
 		for (UctNode child : node.getChildren()){
 			boolean identical = true;
-			if (child.getMove().size() != move.size()){
-				identical = false;
-			} else {
-				for(int i = 0; i < move.size(); i++){
-					if (!((RGuctNode)child).getAbstractMove().get(i).equals(move.get(i))){
-						identical = false;
-						break;
-					}
+			for(int i = 0; i < move.size(); i++){
+				if (((RGuctNode)child).getAbstractMove().get(i).type != move.get(i).type){
+					identical = false;
+					break;
 				}
 			}
 			if (identical){
