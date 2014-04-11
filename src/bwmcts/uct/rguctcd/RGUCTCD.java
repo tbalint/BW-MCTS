@@ -101,9 +101,9 @@ public class RGUCTCD extends UCT {
 		
 		//UctNode best = mostVisitedChildOf(root);
 		UctNode best = bestValueChildOf(root);
-		if (((RGuctNode)best).getAbstractMove().size() != clusters.size()){
-			System.out.println("Scripts: " + ((RGuctNode)best).getAbstractMove().size() + ", clusters: " + clusters.size());
-		}
+		//if (((RGuctNode)best).getAbstractMove().size() != clusters.size()){
+		//	System.out.println("Scripts: " + ((RGuctNode)best).getAbstractMove().size() + ", clusters: " + clusters.size());
+		//}
 		
 		if (config.isDebug())
 			writeToFile(root.print(0), "tree.xml");

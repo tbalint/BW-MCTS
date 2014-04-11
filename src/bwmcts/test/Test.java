@@ -76,11 +76,12 @@ public class Test implements BWAPIEventListener  {
 				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
 
 		//Player p1 = new Player_NoOverKillAttackValue(0);
-		Player p1 = new UctLogic(tc.bwapi, guctcdA, 40);
+		//Player p1 = new UctLogic(tc.bwapi, rguctcdA, 40);
 		//Player p1 = new UctLogic(tc.bwapi, new IUCTCD(new UctConfig(0)),40);
+		Player p1 = new RandomScriptLogic(0);
 		
-		//Player p2 = new Player_NoOverKillAttackValue(1);
-		Player p2 = new UctLogic(tc.bwapi, new UCTCD(new UctConfig(1)),40);
+		Player p2 = new Player_NoOverKillAttackValue(1);
+		//Player p2 = new UctLogic(tc.bwapi, new UCTCD(new UctConfig(1)),40);
 		//Player p2 = new RandomScriptLogic(1);
 		//Player p2 = new UctLogic(tc.bwapi, guctcdB, 40);
 		
@@ -90,8 +91,8 @@ public class Test implements BWAPIEventListener  {
 		tc.buf.append("Player0: "+p1.toString()+"\r\n");
 		tc.buf.append("Player1: "+p2.toString()+"\r\n");
 		
-		tc.dragoonZTest(p1, p2, 100, new int[]{4,8,16,32,48,64,80,96,112,128,144});
-		//tc.dragoonZTest(p1, p2, 10, new int[]{8,32,80,112,144});
+		//tc.dragoonZTest(p1, p2, 100, new int[]{4,8,16,32,48,64,80,96,112,128,144});
+		tc.dragoonZTest(p1, p2, 100, new int[]{4,8,16,32,48,64,80,96});
 		
 		try {
 			String player0=p1.toString();

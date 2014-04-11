@@ -176,6 +176,8 @@ public class WeaponType {
 		damageAmount = data[index++];	
 		damageBonus = data[index++];	
 		damageCooldown = data[index++];	
+		//damageCooldown = 1;
+		
 		damageFactor = data[index++];	
 		upgradeTypeID = data[index++];	
 		damageTypeID = data[index++];	
