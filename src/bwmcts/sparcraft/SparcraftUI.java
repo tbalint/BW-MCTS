@@ -8,6 +8,7 @@ import bwmcts.combat.UctLogic;
 import bwmcts.sparcraft.players.Player;
 
 import java.awt.*;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class SparcraftUI extends JComponent {
 	
 	HashMap<String,Image> images=new HashMap<String,Image>();
 	Image background;
-	String dirPath="img\\";
+	String dirPath="img" + File.separator;
 	//Image Terran_Marine;
 	/**
 	 * 
@@ -41,10 +42,10 @@ public class SparcraftUI extends JComponent {
         f.setVisible(true);
 		for (UnitTypes u: UnitTypes.values()){
 
-			images.put(u.toString(), Toolkit.getDefaultToolkit().getImage(dirPath+"units\\"+u.toString()+".png"));
+			images.put(u.toString(), Toolkit.getDefaultToolkit().getImage(dirPath+"units" + File.separator+u.toString()+".png"));
 		}
 		int  i=(int)(Math.random()*10 % 4); 
-		background=Toolkit.getDefaultToolkit().getImage(dirPath+"ground\\ground"+(i>0?i:"")+".png");
+		background=Toolkit.getDefaultToolkit().getImage(dirPath+"ground" + File.separator+"ground"+(i>0?i:"")+".png");
 		this.p1 = p1;
 		this.p2 = p2;
 	}

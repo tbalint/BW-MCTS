@@ -53,7 +53,7 @@ public class Test implements BWAPIEventListener  {
 		PlayerProperties.Init();
 		WeaponProperties.Init(tc.bwapi);
 		UnitProperties.Init(tc.bwapi);
-		//graphics = true;
+		graphics = true;
 		
 		Constants.Max_Units = 300;
 		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
@@ -75,10 +75,10 @@ public class Test implements BWAPIEventListener  {
 		FlatGUCTCD flatGuctcdB = new FlatGUCTCD(new UctConfig(1, true), 
 				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
 
-		//Player p1 = new Player_NoOverKillAttackValue(0);
+		Player p1 = new Player_NoOverKillAttackValue(0);
 		//Player p1 = new UctLogic(tc.bwapi, rguctcdA, 40);
 		//Player p1 = new UctLogic(tc.bwapi, new IUCTCD(new UctConfig(0)),40);
-		Player p1 = new RandomScriptLogic(0);
+		//Player p1 = new RandomScriptLogic(0);
 		
 		Player p2 = new Player_NoOverKillAttackValue(1);
 		//Player p2 = new UctLogic(tc.bwapi, new UCTCD(new UctConfig(1)),40);
@@ -569,6 +569,7 @@ public class Test implements BWAPIEventListener  {
 				System.out.println("--- units: " + i);
 				buf.append("--- units: " + i+"\r\n");
 				float result = testDragoonZealotGames(p1, p2, (int)i, runs);
+				//float result = testDragoonZealotGames(p1, p2, 60, runs);
 				buf.append("DRAGOON ZEALOT TEST RESULT: " + result+"\r\n");
 				System.out.println("DRAGOON ZEALOT TEST RESULT: " + result);
 				
